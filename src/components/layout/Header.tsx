@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, ShoppingCart, User, Menu, X, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -155,6 +155,20 @@ const navigationData = {
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    // Cleanup function to restore scroll on component unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMenuOpen]);
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
@@ -340,62 +354,85 @@ const Header = () => {
           </NavigationMenu>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Overlay */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border">
-            {/* Mobile Search */}
-            <div className="mb-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search bike parts..."
-                  className="pl-10 bg-surface border-border"
-                />
+          <>
+            {/* Backdrop */}
+            <div 
+              className="fixed inset-0 bg-black/50 z-40 md:hidden"
+              onClick={() => setIsMenuOpen(false)}
+            />
+            
+            {/* Side Drawer */}
+            <div className="fixed top-0 left-0 h-full w-4/5 max-w-sm bg-background border-r border-border z-50 md:hidden">
+              {/* Drawer Header */}
+              <div className="flex items-center justify-between p-4 border-b border-border">
+                <h2 className="text-lg font-semibold text-foreground">Menu</h2>
+                <button onClick={() => setIsMenuOpen(false)}>
+                  <X className="h-6 w-6 text-muted-foreground" />
+                </button>
+              </div>
+              
+              {/* Scrollable Content */}
+              <div className="flex flex-col h-full">
+                {/* Mobile Search */}
+                <div className="p-4 border-b border-border">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search bike parts..."
+                      className="pl-10 bg-surface border-border"
+                    />
+                  </div>
+                </div>
+
+                {/* Scrollable Navigation */}
+                <nav className="flex-1 overflow-y-auto p-4 space-y-1">
+                  <a href="#" className="block py-3 text-foreground hover:text-primary border-b border-border/50">Home</a>
+                  
+                  {/* Mobile Shop by Bike */}
+                  <MobileDropdown 
+                    title="Shop by Bike" 
+                    data={navigationData.bikes}
+                    type="brands"
+                  />
+                  
+                  {/* Mobile Shop by Accessories */}
+                  <MobileDropdown 
+                    title="Shop by Accessories" 
+                    data={navigationData.accessories}
+                    type="categories"
+                  />
+                  
+                  {/* Mobile Scooters */}
+                  <MobileDropdown 
+                    title="Scooters" 
+                    data={navigationData.scooters}
+                    type="list"
+                  />
+                  
+                  {/* Mobile EV Bikes */}
+                  <MobileDropdown 
+                    title="EV Bikes" 
+                    data={navigationData.evBikes}
+                    type="brands"
+                  />
+                  
+                  <a href="#" className="block py-3 text-foreground hover:text-primary border-b border-border/50">Combo</a>
+                  <a href="#" className="block py-3 text-foreground hover:text-primary border-b border-border/50">Contact</a>
+                  <a href="#" className="block py-3 text-foreground hover:text-primary border-b border-border/50">About us</a>
+                </nav>
+                
+                {/* Account Button at Bottom */}
+                <div className="p-4 border-t border-border">
+                  <Button variant="ghost" className="w-full justify-start">
+                    <User className="h-4 w-4 mr-2" />
+                    My Account
+                  </Button>
+                </div>
               </div>
             </div>
-
-            {/* Mobile Navigation */}
-            <nav className="space-y-1">
-              <a href="#" className="block py-3 text-foreground hover:text-primary border-b border-border/50">Home</a>
-              
-              {/* Mobile Shop by Bike */}
-              <MobileDropdown 
-                title="Shop by Bike" 
-                data={navigationData.bikes}
-                type="brands"
-              />
-              
-              {/* Mobile Shop by Accessories */}
-              <MobileDropdown 
-                title="Shop by Accessories" 
-                data={navigationData.accessories}
-                type="categories"
-              />
-              
-              {/* Mobile Scooters */}
-              <MobileDropdown 
-                title="Scooters" 
-                data={navigationData.scooters}
-                type="list"
-              />
-              
-              {/* Mobile EV Bikes */}
-              <MobileDropdown 
-                title="EV Bikes" 
-                data={navigationData.evBikes}
-                type="brands"
-              />
-              
-              <a href="#" className="block py-3 text-foreground hover:text-primary border-b border-border/50">Combo</a>
-              <a href="#" className="block py-3 text-foreground hover:text-primary border-b border-border/50">Contact</a>
-              <a href="#" className="block py-3 text-foreground hover:text-primary border-b border-border/50">About us</a>
-              
-              <Button variant="ghost" className="w-full justify-start mt-4">
-                <User className="h-4 w-4 mr-2" />
-                My Account
-              </Button>
-            </nav>
-          </div>
+          </>
         )}
       </div>
     </header>
