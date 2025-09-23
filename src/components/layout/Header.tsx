@@ -158,23 +158,25 @@ const Header = () => {
                   Shop by Bike
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div className="grid grid-cols-4 gap-6 p-6 w-[800px]">
-                    {Object.entries(navigationData.bikes).map(([brand, models]) => (
-                      <div key={brand} className="space-y-2">
-                        <h4 className="font-semibold text-sm text-primary">{brand}</h4>
-                        <div className="space-y-1">
-                          {models.map((model) => (
-                            <a
-                              key={model}
-                              href="#"
-                              className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
-                            >
-                              {model}
-                            </a>
-                          ))}
+                  <div className="max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+                    <div className="grid grid-cols-4 gap-6 p-6 w-[800px]">
+                      {Object.entries(navigationData.bikes).map(([brand, models]) => (
+                        <div key={brand} className="space-y-2">
+                          <h4 className="font-semibold text-sm text-primary">{brand}</h4>
+                          <div className="space-y-1">
+                            {models.map((model) => (
+                              <a
+                                key={model}
+                                href="#"
+                                className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
+                              >
+                                {model}
+                              </a>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </NavigationMenuContent>
               </NavigationMenuItem>
@@ -185,23 +187,25 @@ const Header = () => {
                   Shop by Accessories
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div className="grid grid-cols-2 gap-6 p-6 w-[600px]">
-                    {Object.entries(navigationData.accessories).map(([category, items]) => (
-                      <div key={category} className="space-y-2">
-                        <h4 className="font-semibold text-sm text-primary">{category}</h4>
-                        <div className="space-y-1">
-                          {items.map((item) => (
-                            <a
-                              key={item}
-                              href="#"
-                              className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
-                            >
-                              {item}
-                            </a>
-                          ))}
+                  <div className="max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+                    <div className="grid grid-cols-2 gap-6 p-6 w-[600px]">
+                      {Object.entries(navigationData.accessories).map(([category, items]) => (
+                        <div key={category} className="space-y-2">
+                          <h4 className="font-semibold text-sm text-primary">{category}</h4>
+                          <div className="space-y-1">
+                            {items.map((item) => (
+                              <a
+                                key={item}
+                                href="#"
+                                className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
+                              >
+                                {item}
+                              </a>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </NavigationMenuContent>
               </NavigationMenuItem>
@@ -212,16 +216,18 @@ const Header = () => {
                   Scooters
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div className="grid grid-cols-2 gap-4 p-6 w-[400px]">
-                    {navigationData.scooters.map((scooter) => (
-                      <a
-                        key={scooter}
-                        href="#"
-                        className="block text-sm text-muted-foreground hover:text-foreground transition-colors p-2 rounded hover:bg-accent"
-                      >
-                        {scooter}
-                      </a>
-                    ))}
+                  <div className="max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+                    <div className="grid grid-cols-2 gap-4 p-6 w-[400px]">
+                      {navigationData.scooters.map((scooter) => (
+                        <a
+                          key={scooter}
+                          href="#"
+                          className="block text-sm text-muted-foreground hover:text-foreground transition-colors p-2 rounded hover:bg-accent"
+                        >
+                          {scooter}
+                        </a>
+                      ))}
+                    </div>
                   </div>
                 </NavigationMenuContent>
               </NavigationMenuItem>
@@ -232,23 +238,25 @@ const Header = () => {
                   EV Bikes
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div className="grid grid-cols-1 gap-4 p-6 w-[300px]">
-                    {Object.entries(navigationData.evBikes).map(([brand, models]) => (
-                      <div key={brand} className="space-y-2">
-                        <h4 className="font-semibold text-sm text-primary">{brand}</h4>
-                        <div className="space-y-1">
-                          {models.map((model) => (
-                            <a
-                              key={model}
-                              href="#"
-                              className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
-                            >
-                              {model}
-                            </a>
-                          ))}
+                  <div className="max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+                    <div className="grid grid-cols-1 gap-4 p-6 w-[300px]">
+                      {Object.entries(navigationData.evBikes).map(([brand, models]) => (
+                        <div key={brand} className="space-y-2">
+                          <h4 className="font-semibold text-sm text-primary">{brand}</h4>
+                          <div className="space-y-1">
+                            {models.map((model) => (
+                              <a
+                                key={model}
+                                href="#"
+                                className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
+                              >
+                                {model}
+                              </a>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </NavigationMenuContent>
               </NavigationMenuItem>

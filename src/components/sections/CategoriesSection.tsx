@@ -74,9 +74,9 @@ const CategoriesSection = () => {
                 <p className="text-primary text-sm font-medium mb-4">{category.count}</p>
                 
                 <Button 
-                  variant="outline" 
+                  variant="secondary" 
                   size="sm" 
-                  className="border-white text-white hover:bg-white hover:text-black group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors"
+                  className="bg-white/90 text-black border-white/20 hover:bg-white hover:text-black transition-colors"
                 >
                   Shop Now
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -88,7 +88,7 @@ const CategoriesSection = () => {
 
         {/* View All Button */}
         <div className="text-center mt-12">
-          <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white">
+          <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
             View All Categories
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
