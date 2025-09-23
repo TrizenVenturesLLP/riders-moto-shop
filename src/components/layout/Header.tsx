@@ -19,10 +19,10 @@ const MobileDropdown = ({ title, data, type }: {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="border-b border-border/50">
+    <div className="border-b border-gray-200 dark:border-gray-700">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between py-3 text-foreground hover:text-primary"
+        className="w-full flex items-center justify-between py-3 text-gray-900 dark:text-white hover:text-red-600"
       >
         {title}
         <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
@@ -36,7 +36,7 @@ const MobileDropdown = ({ title, data, type }: {
                 <a
                   key={item}
                   href="#"
-                  className="block py-2 text-sm text-muted-foreground hover:text-foreground"
+                  className="block py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
                 >
                   {item}
                 </a>
@@ -46,13 +46,13 @@ const MobileDropdown = ({ title, data, type }: {
             <div className="space-y-3">
               {Object.entries(data).map(([key, items]: [string, any]) => (
                 <div key={key} className="space-y-1">
-                  <h4 className="font-semibold text-sm text-primary">{key}</h4>
+                  <h4 className="font-semibold text-sm text-red-600">{key}</h4>
                   <div className="space-y-1 pl-2">
                     {items.map((item: string) => (
                       <a
                         key={item}
                         href="#"
-                        className="block py-1 text-sm text-muted-foreground hover:text-foreground"
+                        className="block py-1 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
                       >
                         {item}
                       </a>
@@ -364,31 +364,31 @@ const Header = () => {
             />
             
             {/* Side Drawer */}
-            <div className="fixed top-0 left-0 h-full w-4/5 max-w-sm bg-background border-r border-border z-50 md:hidden">
+            <div className="fixed top-0 left-0 h-full w-4/5 max-w-sm bg-white dark:bg-gray-900 border-r border-border shadow-lg z-50 md:hidden">
               {/* Drawer Header */}
-              <div className="flex items-center justify-between p-4 border-b border-border">
-                <h2 className="text-lg font-semibold text-foreground">Menu</h2>
+              <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Menu</h2>
                 <button onClick={() => setIsMenuOpen(false)}>
-                  <X className="h-6 w-6 text-muted-foreground" />
+                  <X className="h-6 w-6 text-gray-600 dark:text-gray-300" />
                 </button>
               </div>
               
               {/* Scrollable Content */}
               <div className="flex flex-col h-full">
                 {/* Mobile Search */}
-                <div className="p-4 border-b border-border">
+                <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <Input
                       placeholder="Search bike parts..."
-                      className="pl-10 bg-surface border-border"
+                      className="pl-10 bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500"
                     />
                   </div>
                 </div>
 
                 {/* Scrollable Navigation */}
                 <nav className="flex-1 overflow-y-auto p-4 space-y-1">
-                  <a href="#" className="block py-3 text-foreground hover:text-primary border-b border-border/50">Home</a>
+                  <a href="#" className="block py-3 text-gray-900 dark:text-white hover:text-red-600 border-b border-gray-200 dark:border-gray-700">Home</a>
                   
                   {/* Mobile Shop by Bike */}
                   <MobileDropdown 
@@ -418,14 +418,14 @@ const Header = () => {
                     type="brands"
                   />
                   
-                  <a href="#" className="block py-3 text-foreground hover:text-primary border-b border-border/50">Combo</a>
-                  <a href="#" className="block py-3 text-foreground hover:text-primary border-b border-border/50">Contact</a>
-                  <a href="#" className="block py-3 text-foreground hover:text-primary border-b border-border/50">About us</a>
+                  <a href="#" className="block py-3 text-gray-900 dark:text-white hover:text-red-600 border-b border-gray-200 dark:border-gray-700">Combo</a>
+                  <a href="#" className="block py-3 text-gray-900 dark:text-white hover:text-red-600 border-b border-gray-200 dark:border-gray-700">Contact</a>
+                  <a href="#" className="block py-3 text-gray-900 dark:text-white hover:text-red-600 border-b border-gray-200 dark:border-gray-700">About us</a>
                 </nav>
                 
                 {/* Account Button at Bottom */}
-                <div className="p-4 border-t border-border">
-                  <Button variant="ghost" className="w-full justify-start">
+                <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+                  <Button variant="ghost" className="w-full justify-start text-gray-900 dark:text-white hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800">
                     <User className="h-4 w-4 mr-2" />
                     My Account
                   </Button>
