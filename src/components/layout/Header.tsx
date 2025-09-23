@@ -20,40 +20,59 @@ const MobileDropdown = ({ title, data, type }: {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="py-4 border-b border-gray-100">
+    <div className="py-2">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between text-left"
+        className="w-full flex items-center justify-between text-left py-3 px-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
       >
-        <span className="text-lg font-medium text-gray-900">{title}</span>
-        <ChevronDown className={`h-5 w-5 text-gray-600 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <span className="text-base font-medium text-gray-900">{title}</span>
+        <ChevronDown className={`h-4 w-4 text-gray-600 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
       
       {isOpen && (
-        <div className="mt-4 space-y-1">
+        <div className="mt-2 bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
           {type === 'list' ? (
-            <div className="grid grid-cols-1 gap-1">
-              {data.map((item: string) => (
+            <div className="grid grid-cols-1 gap-2">
+              {Array.isArray(data) && data.map((item: string) => (
                 <a
                   key={item}
                   href="#"
-                  className="block py-2 px-4 text-gray-700 hover:text-red-600 hover:bg-gray-50 rounded transition-colors"
+                  className="block py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                 >
                   {item}
                 </a>
               ))}
             </div>
-          ) : (
-            <div className="space-y-4">
+          ) : type === 'brands' ? (
+            <div className="space-y-3">
               {Object.entries(data).map(([key, items]: [string, any]) => (
                 <div key={key}>
                   <h4 className="font-semibold text-red-600 mb-2">{key}</h4>
-                  <div className="grid grid-cols-1 gap-1 pl-4">
-                    {items.map((item: string) => (
+                  <div className="grid grid-cols-1 gap-1 pl-3">
+                    {Array.isArray(items) && items.map((item: string) => (
                       <a
                         key={item}
                         href="#"
-                        className="block py-1 text-gray-600 hover:text-gray-900 transition-colors"
+                        className="block py-1 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                      >
+                        {item}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {Object.entries(data).map(([key, items]: [string, any]) => (
+                <div key={key}>
+                  <h4 className="font-semibold text-red-600 mb-2">{key}</h4>
+                  <div className="grid grid-cols-1 gap-1 pl-3">
+                    {Array.isArray(items) && items.map((item: string) => (
+                      <a
+                        key={item}
+                        href="#"
+                        className="block py-1 text-sm text-gray-600 hover:text-gray-900 transition-colors"
                       >
                         {item}
                       </a>
@@ -357,9 +376,9 @@ const Header = () => {
 
         {/* Mobile Menu Overlay */}
         {isMenuOpen && (
-          <div className="fixed inset-0 bg-white z-[9999] md:hidden overflow-y-auto">
+          <div className="fixed inset-0 bg-white z-[9999] md:hidden flex flex-col">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 bg-white relative z-10">
+            <div className="flex items-center justify-between p-4 bg-white border-b border-gray-200 flex-shrink-0">
               <button 
                 onClick={() => setIsMenuOpen(false)}
                 className="flex items-center text-gray-900 text-base font-medium"
@@ -371,6 +390,9 @@ const Header = () => {
                 <X className="h-6 w-6 text-gray-900" />
               </button>
             </div>
+
+            {/* Content Container - Scrollable */}
+            <div className="flex-1 overflow-y-auto">
 
             {/* Search */}
             <div className="relative px-6 py-4 bg-white border-b border-gray-100">
@@ -395,12 +417,12 @@ const Header = () => {
                 <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                   🏍️ Shop by Bike
                 </h2>
-                <div className="space-y-2">
-                  {Object.keys(navigationData.bikes).map((brand) => (
+                <div className="space-y-1">
+                  {Object.entries(navigationData.bikes).map(([brand, models]) => (
                     <MobileDropdown 
                       key={brand}
                       title={brand} 
-                      data={navigationData.bikes[brand]}
+                      data={models}
                       type="list"
                     />
                   ))}
@@ -454,6 +476,7 @@ const Header = () => {
                   My Account
                 </Button>
               </div>
+            </div>
             </div>
           </div>
         )}
