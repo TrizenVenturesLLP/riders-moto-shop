@@ -372,103 +372,83 @@ const Header = () => {
               </button>
             </div>
 
-            {/* Hero Section */}
-            <div 
-              className="relative h-[400px] bg-cover bg-center bg-no-repeat flex flex-col justify-center items-center text-center px-6"
-              style={{ backgroundImage: `url(${mobileMenuBg})` }}
-            >
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-black/60"></div>
-              
-              {/* Content */}
-              <div className="relative z-10 space-y-4">
-                {/* Premium Bike Parts with Lightning Icon */}
-                <div className="flex items-center justify-center space-x-2 mb-4">
-                  <Zap className="h-6 w-6 text-red-500" />
-                  <span className="text-red-500 font-semibold text-lg">Premium Bike Parts</span>
-                </div>
-                
-                {/* Main Heading */}
-                <h1 className="text-4xl font-bold leading-tight">
-                  <span className="text-white">Ride Better.</span>
-                  <br />
-                  <span className="text-red-500">Shop Smarter.</span>
-                </h1>
-                
-                {/* Description */}
-                <p className="text-white text-base leading-relaxed max-w-sm mx-auto">
-                  Discover premium motorcycle parts and accessories. From performance upgrades to essential maintenance, we've got everything to keep you riding at your best.
-                </p>
-                
-                {/* Buttons */}
-                <div className="space-y-3 mt-6">
-                  <Button className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold h-12 rounded-lg">
-                    Shop Now
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                  <Button variant="outline" className="w-full bg-white text-gray-900 border-white hover:bg-gray-100 font-semibold h-12 rounded-lg">
-                    Browse Categories
-                  </Button>
-                </div>
-              </div>
+            {/* Search */}
+            <div className="relative px-6 py-4 bg-white border-b border-gray-100">
+              <Search className="absolute left-9 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                placeholder="What are you looking for?"
+                className="pl-10 h-12 bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-500 rounded-lg"
+              />
             </div>
 
-            {/* Navigation Menu */}
-            <div className="bg-white px-6 py-8 space-y-6">
-              {/* Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  placeholder="What are you looking for?"
-                  className="pl-10 h-12 bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-500 rounded-lg"
-                />
+            {/* Main Menu Items */}
+            <div className="bg-white px-6 py-4">
+              {/* Home */}
+              <div className="py-4 border-b border-gray-100">
+                <a href="#" className="block text-lg font-semibold text-gray-900 hover:text-red-600 transition-colors">
+                  🏠 Home
+                </a>
               </div>
 
               {/* Shop by Bike Section */}
-              <div className="space-y-4">
-                <h2 className="text-xl font-bold text-gray-900">Shop by Bike</h2>
-                <div className="space-y-0 divide-y divide-gray-100">
-                  {Object.entries(navigationData.bikes).map(([brand, models]) => (
+              <div className="py-4 border-b border-gray-100">
+                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  🏍️ Shop by Bike
+                </h2>
+                <div className="space-y-2">
+                  {Object.keys(navigationData.bikes).map((brand) => (
                     <MobileDropdown 
                       key={brand}
                       title={brand} 
-                      data={models}
+                      data={navigationData.bikes[brand]}
                       type="list"
                     />
                   ))}
                 </div>
               </div>
 
-              {/* Other Categories */}
-              <div className="space-y-4">
+              {/* Shop by Accessories */}
+              <div className="py-4 border-b border-gray-100">
                 <MobileDropdown 
-                  title="Shop by Accessories" 
+                  title="🔧 Shop by Accessories" 
                   data={navigationData.accessories}
                   type="categories"
                 />
-                
+              </div>
+              
+              {/* Scooters */}
+              <div className="py-4 border-b border-gray-100">
                 <MobileDropdown 
-                  title="Scooters" 
+                  title="🛴 Scooters" 
                   data={navigationData.scooters}
                   type="list"
                 />
-                
+              </div>
+              
+              {/* EV Bikes */}
+              <div className="py-4 border-b border-gray-100">
                 <MobileDropdown 
-                  title="EV Bikes" 
+                  title="⚡ EV Bikes" 
                   data={navigationData.evBikes}
                   type="brands"
                 />
               </div>
 
               {/* Direct Links */}
-              <div className="space-y-2 border-t border-gray-100 pt-6">
-                <a href="#" className="block py-3 text-gray-900 font-medium text-lg">Combo</a>
-                <a href="#" className="block py-3 text-gray-900 font-medium text-lg">Contact</a>
-                <a href="#" className="block py-3 text-gray-900 font-medium text-lg">About us</a>
+              <div className="py-4 space-y-3">
+                <a href="#" className="flex items-center py-3 text-gray-900 font-semibold text-lg hover:text-red-600 transition-colors">
+                  🎁 Combo Deals
+                </a>
+                <a href="#" className="flex items-center py-3 text-gray-900 font-semibold text-lg hover:text-red-600 transition-colors">
+                  📞 Contact Us
+                </a>
+                <a href="#" className="flex items-center py-3 text-gray-900 font-semibold text-lg hover:text-red-600 transition-colors">
+                  ℹ️ About Us
+                </a>
               </div>
 
               {/* Account Section */}
-              <div className="border-t border-gray-100 pt-6">
+              <div className="border-t border-gray-100 pt-6 pb-4">
                 <Button variant="outline" className="w-full justify-start h-12 text-gray-900 border-gray-300 hover:bg-gray-50">
                   <User className="h-5 w-5 mr-3" />
                   My Account
