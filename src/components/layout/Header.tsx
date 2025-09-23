@@ -10,6 +10,64 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
 
+// Mobile Dropdown Component
+const MobileDropdown = ({ title, data, type }: { 
+  title: string; 
+  data: any; 
+  type: 'brands' | 'categories' | 'list';
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="border-b border-border/50">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between py-3 text-foreground hover:text-primary"
+      >
+        {title}
+        <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+      
+      {isOpen && (
+        <div className="pb-3 pl-4 max-h-60 overflow-y-auto">
+          {type === 'list' ? (
+            <div className="space-y-1">
+              {data.map((item: string) => (
+                <a
+                  key={item}
+                  href="#"
+                  className="block py-2 text-sm text-muted-foreground hover:text-foreground"
+                >
+                  {item}
+                </a>
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {Object.entries(data).map(([key, items]: [string, any]) => (
+                <div key={key} className="space-y-1">
+                  <h4 className="font-semibold text-sm text-primary">{key}</h4>
+                  <div className="space-y-1 pl-2">
+                    {items.map((item: string) => (
+                      <a
+                        key={item}
+                        href="#"
+                        className="block py-1 text-sm text-muted-foreground hover:text-foreground"
+                      >
+                        {item}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const navigationData = {
   bikes: {
     "YAMAHA": [
@@ -297,13 +355,41 @@ const Header = () => {
             </div>
 
             {/* Mobile Navigation */}
-            <nav className="space-y-2">
-              <a href="#" className="block py-2 text-foreground hover:text-primary">Home</a>
-              <a href="#" className="block py-2 text-foreground hover:text-primary">Brakes</a>
-              <a href="#" className="block py-2 text-foreground hover:text-primary">Tires</a>
-              <a href="#" className="block py-2 text-foreground hover:text-primary">Engine Parts</a>
-              <a href="#" className="block py-2 text-foreground hover:text-primary">Accessories</a>
-              <a href="#" className="block py-2 text-foreground hover:text-primary">Deals</a>
+            <nav className="space-y-1">
+              <a href="#" className="block py-3 text-foreground hover:text-primary border-b border-border/50">Home</a>
+              
+              {/* Mobile Shop by Bike */}
+              <MobileDropdown 
+                title="Shop by Bike" 
+                data={navigationData.bikes}
+                type="brands"
+              />
+              
+              {/* Mobile Shop by Accessories */}
+              <MobileDropdown 
+                title="Shop by Accessories" 
+                data={navigationData.accessories}
+                type="categories"
+              />
+              
+              {/* Mobile Scooters */}
+              <MobileDropdown 
+                title="Scooters" 
+                data={navigationData.scooters}
+                type="list"
+              />
+              
+              {/* Mobile EV Bikes */}
+              <MobileDropdown 
+                title="EV Bikes" 
+                data={navigationData.evBikes}
+                type="brands"
+              />
+              
+              <a href="#" className="block py-3 text-foreground hover:text-primary border-b border-border/50">Combo</a>
+              <a href="#" className="block py-3 text-foreground hover:text-primary border-b border-border/50">Contact</a>
+              <a href="#" className="block py-3 text-foreground hover:text-primary border-b border-border/50">About us</a>
+              
               <Button variant="ghost" className="w-full justify-start mt-4">
                 <User className="h-4 w-4 mr-2" />
                 My Account
