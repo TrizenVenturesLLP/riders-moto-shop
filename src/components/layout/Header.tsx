@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ShoppingCart, User, Menu, X, ChevronDown, Zap, ArrowRight } from 'lucide-react';
+import { Search, ShoppingCart, User, Menu, X, ChevronDown, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -14,7 +14,7 @@ import mobileMenuBg from '@/assets/mobile-menu-bg.jpg';
 // Mobile Dropdown Component
 const MobileDropdown = ({ title, data, type }: { 
   title: string; 
-  data: any; 
+  data: string[] | Record<string, string[]>; 
   type: 'brands' | 'categories' | 'list';
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,7 +45,7 @@ const MobileDropdown = ({ title, data, type }: {
             </div>
           ) : type === 'brands' ? (
             <div className="space-y-3">
-              {Object.entries(data).map(([key, items]: [string, any]) => (
+              {Object.entries(data as Record<string, string[]>).map(([key, items]) => (
                 <div key={key}>
                   <h4 className="font-semibold text-red-600 mb-2">{key}</h4>
                   <div className="grid grid-cols-1 gap-1 pl-3">
@@ -64,7 +64,7 @@ const MobileDropdown = ({ title, data, type }: {
             </div>
           ) : (
             <div className="space-y-3">
-              {Object.entries(data).map(([key, items]: [string, any]) => (
+              {Object.entries(data as Record<string, string[]>).map(([key, items]) => (
                 <div key={key}>
                   <h4 className="font-semibold text-red-600 mb-2">{key}</h4>
                   <div className="grid grid-cols-1 gap-1 pl-3">
@@ -175,6 +175,10 @@ const navigationData = {
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isShopByBikeOpen, setIsShopByBikeOpen] = useState(false);
+  const [isShopByAccessoriesOpen, setIsShopByAccessoriesOpen] = useState(false);
+  const [isScootersOpen, setIsScootersOpen] = useState(false);
+  const [isEvBikesOpen, setIsEvBikesOpen] = useState(false);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -191,43 +195,60 @@ const Header = () => {
   }, [isMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+    <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
       <div className="container mx-auto px-4">
         {/* Main Header */}
         <div className="flex items-center justify-between h-16">
+          {/* Mobile Menu Button */}
+          <button 
+            className="md:hidden"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+
           {/* Logo */}
-          <div className="flex items-center space-x-4">
-            <button 
-              className="md:hidden"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-            <h1 className="text-xl font-bold text-glow">
+          <div className="flex items-center">
+            <h1 className="text-xl font-bold text-red-600 text-glow">
               Riders Moto Shop
             </h1>
           </div>
 
           {/* Search Bar - Desktop */}
           <div className="hidden md:flex flex-1 max-w-md mx-8">
-            <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search bike parts..."
-                className="pl-10 bg-surface border-border focus:border-primary"
-              />
+            <div className="flex w-full">
+              {/* Category Filter */}
+              <select className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-l-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20">
+                <option>All</option>
+                <option>Bikes</option>
+                <option>Accessories</option>
+                <option>Scooters</option>
+                <option>EV Bikes</option>
+              </select>
+              
+              {/* Search Input */}
+              <div className="relative flex-1">
+                <Input
+                  placeholder="What are you looking for?"
+                  className="rounded-none border-l-0 border-r-0 bg-white border-gray-200 focus:border-primary focus:ring-0"
+                />
+              </div>
+              
+              {/* Search Button */}
+              <Button className="bg-red-600 hover:bg-red-700 rounded-l-none px-4">
+                <Search className="h-4 w-4" />
+              </Button>
             </div>
           </div>
 
           {/* Actions */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3">
             <Button variant="ghost" size="sm" className="hidden md:flex">
-              <User className="h-4 w-4 mr-2" />
-              Account
+              <MessageCircle className="h-5 w-5" />
             </Button>
             <Button variant="ghost" size="sm" className="relative">
-              <ShoppingCart className="h-4 w-4" />
-              <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full text-xs h-5 w-5 flex items-center justify-center">
+              <ShoppingCart className="h-5 w-5" />
+              <span className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full text-xs h-5 w-5 flex items-center justify-center">
                 3
               </span>
             </Button>
@@ -235,18 +256,18 @@ const Header = () => {
         </div>
 
         {/* Navigation - Desktop */}
-        <div className="hidden md:flex items-center py-4 border-t border-border">
+        <div className="hidden md:flex items-center py-4 border-t border-gray-200">
           <NavigationMenu>
             <NavigationMenuList className="flex space-x-6">
               <NavigationMenuItem>
-                <a href="#" className="text-foreground hover:text-primary transition-colors px-4 py-2">
+                <a href="#" className="text-gray-900 hover:text-red-600 transition-colors px-4 py-2 font-medium">
                   Home
                 </a>
               </NavigationMenuItem>
 
               {/* Shop by Bike */}
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-foreground hover:text-primary">
+                <NavigationMenuTrigger className="text-gray-900 hover:text-red-600 font-medium">
                   Shop by Bike
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
@@ -254,13 +275,13 @@ const Header = () => {
                     <div className="grid grid-cols-4 gap-6 p-6 w-[800px]">
                       {Object.entries(navigationData.bikes).map(([brand, models]) => (
                         <div key={brand} className="space-y-2">
-                          <h4 className="font-semibold text-sm text-primary">{brand}</h4>
+                          <h4 className="font-semibold text-sm text-red-600">{brand}</h4>
                           <div className="space-y-1">
                             {models.map((model) => (
                               <a
                                 key={model}
                                 href="#"
-                                className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
+                                className="block text-sm text-gray-600 hover:text-gray-900 transition-colors"
                               >
                                 {model}
                               </a>
@@ -275,7 +296,7 @@ const Header = () => {
 
               {/* Shop by Accessories */}
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-foreground hover:text-primary">
+                <NavigationMenuTrigger className="text-gray-900 hover:text-red-600 font-medium">
                   Shop by Accessories
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
@@ -283,13 +304,13 @@ const Header = () => {
                     <div className="grid grid-cols-2 gap-6 p-6 w-[600px]">
                       {Object.entries(navigationData.accessories).map(([category, items]) => (
                         <div key={category} className="space-y-2">
-                          <h4 className="font-semibold text-sm text-primary">{category}</h4>
+                          <h4 className="font-semibold text-sm text-red-600">{category}</h4>
                           <div className="space-y-1">
                             {items.map((item) => (
                               <a
                                 key={item}
                                 href="#"
-                                className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
+                                className="block text-sm text-gray-600 hover:text-gray-900 transition-colors"
                               >
                                 {item}
                               </a>
@@ -304,7 +325,7 @@ const Header = () => {
 
               {/* Scooters */}
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-foreground hover:text-primary">
+                <NavigationMenuTrigger className="text-gray-900 hover:text-red-600 font-medium">
                   Scooters
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
@@ -314,7 +335,7 @@ const Header = () => {
                         <a
                           key={scooter}
                           href="#"
-                          className="block text-sm text-muted-foreground hover:text-foreground transition-colors p-2 rounded hover:bg-accent"
+                          className="block text-sm text-gray-600 hover:text-gray-900 transition-colors p-2 rounded hover:bg-gray-50"
                         >
                           {scooter}
                         </a>
@@ -326,7 +347,7 @@ const Header = () => {
 
               {/* EV Bikes */}
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-foreground hover:text-primary">
+                <NavigationMenuTrigger className="text-gray-900 hover:text-red-600 font-medium">
                   EV Bikes
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
@@ -334,13 +355,13 @@ const Header = () => {
                     <div className="grid grid-cols-1 gap-4 p-6 w-[300px]">
                       {Object.entries(navigationData.evBikes).map(([brand, models]) => (
                         <div key={brand} className="space-y-2">
-                          <h4 className="font-semibold text-sm text-primary">{brand}</h4>
+                          <h4 className="font-semibold text-sm text-red-600">{brand}</h4>
                           <div className="space-y-1">
                             {models.map((model) => (
                               <a
                                 key={model}
                                 href="#"
-                                className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
+                                className="block text-sm text-gray-600 hover:text-gray-900 transition-colors"
                               >
                                 {model}
                               </a>
@@ -354,19 +375,19 @@ const Header = () => {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <a href="#" className="text-foreground hover:text-primary transition-colors px-4 py-2">
+                <a href="#" className="text-gray-900 hover:text-red-600 transition-colors px-4 py-2 font-medium">
                   Combo
                 </a>
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <a href="#" className="text-foreground hover:text-primary transition-colors px-4 py-2">
+                <a href="#" className="text-gray-900 hover:text-red-600 transition-colors px-4 py-2 font-medium">
                   Contact
                 </a>
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <a href="#" className="text-foreground hover:text-primary transition-colors px-4 py-2">
+                <a href="#" className="text-gray-900 hover:text-red-600 transition-colors px-4 py-2 font-medium">
                   About us
                 </a>
               </NavigationMenuItem>
@@ -376,106 +397,186 @@ const Header = () => {
 
         {/* Mobile Menu Overlay */}
         {isMenuOpen && (
-          <div className="fixed inset-0 bg-white z-[9999] md:hidden flex flex-col">
+          <div 
+            className="fixed inset-0 bg-black/50 z-[9999] md:hidden flex justify-start"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            <div 
+              className="w-4/5 bg-white flex flex-col h-full"
+              onClick={(e) => e.stopPropagation()}
+            >
             {/* Header */}
             <div className="flex items-center justify-between p-4 bg-white border-b border-gray-200 flex-shrink-0">
-              <button 
-                onClick={() => setIsMenuOpen(false)}
-                className="flex items-center text-gray-900 text-base font-medium"
-              >
-                <ChevronDown className="h-5 w-5 mr-1 rotate-90" />
-                Back
-              </button>
               <button onClick={() => setIsMenuOpen(false)}>
                 <X className="h-6 w-6 text-gray-900" />
               </button>
+              <h1 className="text-xl font-bold text-red-600 text-glow">
+                Riders Moto Shop
+              </h1>
+              <div className="w-6"></div>
             </div>
 
             {/* Content Container - Scrollable */}
             <div className="flex-1 overflow-y-auto">
 
             {/* Search */}
-            <div className="relative px-6 py-4 bg-white border-b border-gray-100">
-              <Search className="absolute left-9 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                placeholder="What are you looking for?"
-                className="pl-10 h-12 bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-500 rounded-lg"
-              />
+            <div className="px-4 py-4 bg-white border-b border-gray-100">
+              <div className="flex w-full">
+                {/* Category Filter */}
+                <select className="px-3 py-3 bg-gray-50 border border-gray-200 rounded-l-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20">
+                  <option>All</option>
+                  <option>Bikes</option>
+                  <option>Accessories</option>
+                  <option>Scooters</option>
+                  <option>EV Bikes</option>
+                </select>
+                
+                {/* Search Input */}
+                <div className="relative flex-1">
+                  <Input
+                    placeholder="What are you looking for?"
+                    className="rounded-none border-l-0 border-r-0 bg-white border-gray-200 focus:border-primary focus:ring-0 h-12"
+                  />
+                </div>
+                
+                {/* Search Button */}
+                <Button className="bg-red-600 hover:bg-red-700 rounded-l-none px-4 h-12">
+                  <Search className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
 
             {/* Main Menu Items */}
-            <div className="bg-white px-6 py-4">
-              {/* Home */}
-              <div className="py-4 border-b border-gray-100">
-                <a href="#" className="block text-lg font-semibold text-gray-900 hover:text-red-600 transition-colors">
-                  🏠 Home
-                </a>
-              </div>
-
+            <div className="bg-white px-4 py-4">
               {/* Shop by Bike Section */}
-              <div className="py-4 border-b border-gray-100">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                  🏍️ Shop by Bike
-                </h2>
-                <div className="space-y-1">
-                  {Object.entries(navigationData.bikes).map(([brand, models]) => (
-                    <MobileDropdown 
-                      key={brand}
-                      title={brand} 
-                      data={models}
-                      type="list"
-                    />
-                  ))}
-                </div>
+              <div className="py-4">
+                <button
+                  onClick={() => setIsShopByBikeOpen(!isShopByBikeOpen)}
+                  className="w-full flex items-center justify-between text-left py-3 px-2 text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+                >
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Shop by Bike
+                  </h2>
+                  <ChevronDown className={`h-5 w-5 text-gray-600 transition-transform ${isShopByBikeOpen ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {isShopByBikeOpen && (
+                  <div className="mt-4 space-y-1">
+                    {Object.entries(navigationData.bikes).map(([brand, models]) => (
+                      <MobileDropdown 
+                        key={brand}
+                        title={brand} 
+                        data={models}
+                        type="list"
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {/* Shop by Accessories */}
-              <div className="py-4 border-b border-gray-100">
-                <MobileDropdown 
-                  title="🔧 Shop by Accessories" 
-                  data={navigationData.accessories}
-                  type="categories"
-                />
+              {/* Shop by Accessories Section */}
+              <div className="py-4 border-t border-gray-100">
+                <button
+                  onClick={() => setIsShopByAccessoriesOpen(!isShopByAccessoriesOpen)}
+                  className="w-full flex items-center justify-between text-left py-3 px-2 text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+                >
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Shop by Accessories
+                  </h2>
+                  <ChevronDown className={`h-5 w-5 text-gray-600 transition-transform ${isShopByAccessoriesOpen ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {isShopByAccessoriesOpen && (
+                  <div className="mt-4 space-y-1">
+                    {Object.entries(navigationData.accessories).map(([category, items]) => (
+                      <MobileDropdown 
+                        key={category}
+                        title={category} 
+                        data={items}
+                        type="list"
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
-              
-              {/* Scooters */}
-              <div className="py-4 border-b border-gray-100">
-                <MobileDropdown 
-                  title="🛴 Scooters" 
-                  data={navigationData.scooters}
-                  type="list"
-                />
+
+              {/* Scooters Section */}
+              <div className="py-4 border-t border-gray-100">
+                <button
+                  onClick={() => setIsScootersOpen(!isScootersOpen)}
+                  className="w-full flex items-center justify-between text-left py-3 px-2 text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+                >
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Scooters
+                  </h2>
+                  <ChevronDown className={`h-5 w-5 text-gray-600 transition-transform ${isScootersOpen ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {isScootersOpen && (
+                  <div className="mt-4 space-y-1">
+                    {navigationData.scooters.map((scooter) => (
+                      <a
+                        key={scooter}
+                        href="#"
+                        className="block py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                      >
+                        {scooter}
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
-              
-              {/* EV Bikes */}
-              <div className="py-4 border-b border-gray-100">
-                <MobileDropdown 
-                  title="⚡ EV Bikes" 
-                  data={navigationData.evBikes}
-                  type="brands"
-                />
+
+              {/* EV Bikes Section */}
+              <div className="py-4 border-t border-gray-100">
+                <button
+                  onClick={() => setIsEvBikesOpen(!isEvBikesOpen)}
+                  className="w-full flex items-center justify-between text-left py-3 px-2 text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+                >
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    EV Bikes
+                  </h2>
+                  <ChevronDown className={`h-5 w-5 text-gray-600 transition-transform ${isEvBikesOpen ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {isEvBikesOpen && (
+                  <div className="mt-4 space-y-1">
+                    {Object.entries(navigationData.evBikes).map(([brand, models]) => (
+                      <MobileDropdown 
+                        key={brand}
+                        title={brand} 
+                        data={models}
+                        type="list"
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Direct Links */}
-              <div className="py-4 space-y-3">
+              <div className="py-4 border-t border-gray-100 space-y-3">
                 <a href="#" className="flex items-center py-3 text-gray-900 font-semibold text-lg hover:text-red-600 transition-colors">
-                  🎁 Combo Deals
+                  Combo Deals
                 </a>
                 <a href="#" className="flex items-center py-3 text-gray-900 font-semibold text-lg hover:text-red-600 transition-colors">
-                  📞 Contact Us
+                  Contact Us
                 </a>
                 <a href="#" className="flex items-center py-3 text-gray-900 font-semibold text-lg hover:text-red-600 transition-colors">
-                  ℹ️ About Us
+                  About Us
                 </a>
               </div>
-
-              {/* Account Section */}
-              <div className="border-t border-gray-100 pt-6 pb-4">
-                <Button variant="outline" className="w-full justify-start h-12 text-gray-900 border-gray-300 hover:bg-gray-50">
-                  <User className="h-5 w-5 mr-3" />
-                  My Account
-                </Button>
-              </div>
+            </div>
+            
+            {/* Scroll to Top Button */}
+            <div className="fixed bottom-4 right-4 z-50">
+              <Button 
+                size="sm" 
+                className="rounded-full w-12 h-12 bg-gray-900 hover:bg-gray-800 text-white shadow-lg"
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              >
+                <ChevronDown className="h-4 w-4 rotate-180" />
+              </Button>
+            </div>
             </div>
             </div>
           </div>
