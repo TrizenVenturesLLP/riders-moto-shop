@@ -38,7 +38,7 @@ const HeroSection = () => {
             Shop Now
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
-          <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-black">
+          <Button variant="outline" size="lg" className="border-white hover:bg-white hover:text-black">
             Browse Categories
           </Button>
         </div>
