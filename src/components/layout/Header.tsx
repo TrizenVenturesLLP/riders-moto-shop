@@ -19,40 +19,40 @@ const MobileDropdown = ({ title, data, type }: {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="border-b border-gray-200 dark:border-gray-700">
+    <div className="border-b border-gray-100 dark:border-gray-800">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between py-3 text-gray-900 dark:text-white hover:text-red-600"
+        className="w-full flex items-center justify-between py-4 text-lg font-medium text-gray-900 dark:text-white hover:text-red-600"
       >
         {title}
-        <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`h-5 w-5 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
       
       {isOpen && (
-        <div className="pb-3 pl-4 max-h-60 overflow-y-auto">
+        <div className="pb-4 pl-0">
           {type === 'list' ? (
-            <div className="space-y-1">
+            <div className="space-y-0">
               {data.map((item: string) => (
                 <a
                   key={item}
                   href="#"
-                  className="block py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                  className="block py-3 pl-4 text-base text-gray-700 dark:text-gray-300 hover:text-red-600 border-b border-gray-50 dark:border-gray-800"
                 >
                   {item}
                 </a>
               ))}
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-4 pl-4">
               {Object.entries(data).map(([key, items]: [string, any]) => (
                 <div key={key} className="space-y-1">
-                  <h4 className="font-semibold text-sm text-red-600">{key}</h4>
-                  <div className="space-y-1 pl-2">
+                  <h4 className="font-semibold text-base text-red-600 mb-2">{key}</h4>
+                  <div className="space-y-0 pl-2">
                     {items.map((item: string) => (
                       <a
                         key={item}
                         href="#"
-                        className="block py-1 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                        className="block py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                       >
                         {item}
                       </a>
@@ -357,76 +357,92 @@ const Header = () => {
         {/* Mobile Menu Overlay */}
         {isMenuOpen && (
           <>
-            {/* Backdrop */}
-            <div 
-              className="fixed inset-0 bg-black/50 z-40 md:hidden"
-              onClick={() => setIsMenuOpen(false)}
-            />
-            
-            {/* Side Drawer */}
-            <div className="fixed top-0 left-0 h-full w-4/5 max-w-sm bg-white dark:bg-gray-900 border-r border-border shadow-lg z-50 md:hidden">
-              {/* Drawer Header */}
+            {/* Full Screen Menu */}
+            <div className="fixed inset-0 bg-white dark:bg-gray-900 z-50 md:hidden overflow-hidden">
+              {/* Header with Back Button */}
               <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Menu</h2>
+                <button 
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex items-center text-gray-900 dark:text-white"
+                >
+                  <ChevronDown className="h-5 w-5 mr-2 rotate-90" />
+                  Back
+                </button>
                 <button onClick={() => setIsMenuOpen(false)}>
                   <X className="h-6 w-6 text-gray-600 dark:text-gray-300" />
                 </button>
               </div>
-              
-              {/* Scrollable Content */}
-              <div className="flex flex-col h-full">
-                {/* Mobile Search */}
-                <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                    <Input
-                      placeholder="Search bike parts..."
-                      className="pl-10 bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500"
-                    />
-                  </div>
-                </div>
 
-                {/* Scrollable Navigation */}
-                <nav className="flex-1 overflow-y-auto p-4 space-y-1">
-                  <a href="#" className="block py-3 text-gray-900 dark:text-white hover:text-red-600 border-b border-gray-200 dark:border-gray-700">Home</a>
-                  
-                  {/* Mobile Shop by Bike */}
-                  <MobileDropdown 
-                    title="Shop by Bike" 
-                    data={navigationData.bikes}
-                    type="brands"
+              {/* Search Bar */}
+              <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="What are you looking for?"
+                    className="pl-10 bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 h-12 rounded-lg"
                   />
+                </div>
+              </div>
+
+              {/* Navigation Content */}
+              <div className="flex-1 overflow-y-auto">
+                {/* Main Menu Items */}
+                <nav className="p-4 space-y-2">
+                  <a href="#" className="block py-4 text-lg font-medium text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800">
+                    Home
+                  </a>
                   
-                  {/* Mobile Shop by Accessories */}
+                  {/* Shop by Bike Section */}
+                  <div className="py-4 border-b border-gray-100 dark:border-gray-800">
+                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Shop by Bike</h2>
+                    <div className="space-y-0">
+                      {Object.entries(navigationData.bikes).map(([brand, models]) => (
+                        <MobileDropdown 
+                          key={brand}
+                          title={brand} 
+                          data={models}
+                          type="list"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Shop by Accessories */}
                   <MobileDropdown 
                     title="Shop by Accessories" 
                     data={navigationData.accessories}
                     type="categories"
                   />
                   
-                  {/* Mobile Scooters */}
+                  {/* Scooters */}
                   <MobileDropdown 
                     title="Scooters" 
                     data={navigationData.scooters}
                     type="list"
                   />
                   
-                  {/* Mobile EV Bikes */}
+                  {/* EV Bikes */}
                   <MobileDropdown 
                     title="EV Bikes" 
                     data={navigationData.evBikes}
                     type="brands"
                   />
                   
-                  <a href="#" className="block py-3 text-gray-900 dark:text-white hover:text-red-600 border-b border-gray-200 dark:border-gray-700">Combo</a>
-                  <a href="#" className="block py-3 text-gray-900 dark:text-white hover:text-red-600 border-b border-gray-200 dark:border-gray-700">Contact</a>
-                  <a href="#" className="block py-3 text-gray-900 dark:text-white hover:text-red-600 border-b border-gray-200 dark:border-gray-700">About us</a>
+                  <a href="#" className="block py-4 text-lg font-medium text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800">
+                    Combo
+                  </a>
+                  <a href="#" className="block py-4 text-lg font-medium text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800">
+                    Contact
+                  </a>
+                  <a href="#" className="block py-4 text-lg font-medium text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800">
+                    About us
+                  </a>
                 </nav>
                 
-                {/* Account Button at Bottom */}
-                <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-                  <Button variant="ghost" className="w-full justify-start text-gray-900 dark:text-white hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800">
-                    <User className="h-4 w-4 mr-2" />
+                {/* Account Section at Bottom */}
+                <div className="p-4 border-t border-gray-200 dark:border-gray-700 mt-8">
+                  <Button variant="outline" className="w-full justify-start h-12 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <User className="h-5 w-5 mr-3" />
                     My Account
                   </Button>
                 </div>
