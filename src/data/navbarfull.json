@@ -1,0 +1,372 @@
+{
+  "navbar": [
+    {
+      "title": "Home",
+      "link": "/"
+    },
+    {
+      "title": "Shop by Bike",
+      "submenu": [
+        {
+          "title": "YAMAHA",
+          "link": "/collections/yamaha",
+          "submenu": [
+            { "title": "AEROX 155", "link": "/collections/aerox-155" },
+            { "title": "MT 15", "link": "/collections/mt-15" },
+            { "title": "R15 V4 / M", "link": "/collections/r15-v4-m" },
+            { "title": "R15 V3", "link": "/collections/r15-v3" },
+            { "title": "R3 - BS4", "link": "/collections/r3-bs4" },
+            { "title": "FZ V2.0", "link": "/collections/fz-v2-0" },
+            { "title": "FZ V3.0", "link": "/collections/fz-v3-0" },
+            { "title": "FZ V4.0", "link": "/collections/fz-v4-0" },
+            { "title": "FZ 25", "link": "/collections/fz-25" },
+            { "title": "FZ X", "link": "/collections/fz-x" },
+            { "title": "MT 03", "link": "/collections/mt-03" },
+            { "title": "R15 V1", "link": "/collections/r15-v1" },
+            { "title": "CRUX", "link": "/collections/crux" },
+            { "title": "RAY ZR", "link": "/collections/ray-zr" },
+            { "title": "FASCINO 125", "link": "/collections/fascino-125" }
+          ]
+        },
+        {
+          "title": "ROYAL ENFIELD",
+          "link": "/collections/royal-enfield",
+          "submenu": [
+            { "title": "Super Meteor 650", "link": "/collections/super-meteor-650" },
+            { "title": "Himalayan 450", "link": "/collections/himalayan-450" },
+            { "title": "HIMALAYAN 411", "link": "/collections/himalayan-411" },
+            { "title": "GUERRILLA 450", "link": "/collections/guerrilla-450" },
+            { "title": "SCRAM 411", "link": "/collections/scram-411" },
+            { "title": "HUNTER 350", "link": "/collections/hunter-350" },
+            { "title": "METEOR 350", "link": "/collections/meteor-350" },
+            { "title": "CLASSIC 350 UPTO 2021", "link": "/collections/classic-350-up-to-2021" },
+            { "title": "REBORN CLASSIC 350", "link": "/collections/reborn-classic-350" },
+            { "title": "THUNDERBIRD X", "link": "/collections/thunderbird-x" },
+            { "title": "THUNDERBIRD 350", "link": "/collections/thunderbird-350" },
+            { "title": "BULLET 350", "link": "/collections/bullet-350" },
+            { "title": "ELECTRA 350", "link": "/collections/electra-350" },
+            { "title": "INTERCEPTOR/GT 650", "link": "/collections/interceptor-gt-650" }
+          ]
+        },
+        {
+          "title": "BAJAJ",
+          "link": "/collections/bajaj",
+          "submenu": [
+            { "title": "NS 125", "link": "/collections/ns-125" },
+            { "title": "NS 160", "link": "/collections/ns-160" },
+            { "title": "NS 200", "link": "/collections/ns-200" },
+            { "title": "NS 400 Z", "link": "/collections/ns-400-z" },
+            { "title": "RS 200", "link": "/collections/rs-200" },
+            { "title": "DOMINAR 250", "link": "/collections/dominar-250" },
+            { "title": "DOMINAR 400", "link": "/collections/dominar-400" },
+            { "title": "AVENGER STREET", "link": "/collections/avenger-street" },
+            { "title": "PULSAR N 150", "link": "/collections/pulsar-n-150" },
+            { "title": "PULSAR N 160", "link": "/collections/pulsar-n-160" },
+            { "title": "PULSAR N 250", "link": "/collections/pulsar-n-250" },
+            { "title": "PULSAR 150", "link": "/collections/pulsar-150" },
+            { "title": "PULSAR 180", "link": "/collections/pulsar-180" },
+            { "title": "PULSAR 220 F", "link": "/collections/pulsar-220-f" }
+          ]
+        },
+        {
+          "title": "HONDA",
+          "link": "/collections/honda",
+          "submenu": [
+            { "title": "HNESS CB 350", "link": "/collections/hness-cb-350" },
+            { "title": "CB 350 2024", "link": "/collections/cb-350-2024" },
+            { "title": "RS CB 350", "link": "/collections/rs-cb-350" },
+            { "title": "CB 200 X", "link": "/collections/cb-200-x" },
+            { "title": "CB 300 F", "link": "/collections/cb-300-f" },
+            { "title": "CB 300 R", "link": "/collections/cb-300-r" },
+            { "title": "CBR 250 R", "link": "/collections/cbr-250-r" },
+            { "title": "HORNET 2.0", "link": "/collections/hornet-2-0" },
+            { "title": "SHINE BS6", "link": "/collections/shine-bs6" },
+            { "title": "CB UNICORN", "link": "/collections/cb-unicorn" },
+            { "title": "UNICORN BS6", "link": "/collections/unicorn-bs6" },
+            { "title": "X BLADE", "link": "/collections/x-blade" },
+            { "title": "DIO BS4", "link": "/collections/dio-bs4" },
+            { "title": "DIO BS6", "link": "/collections/dio-bs6" },
+            { "title": "TRANSALP 750", "link": "/collections/transalp-750" }
+          ]
+        },
+        {
+          "title": "TVS",
+          "link": "/collections/tvs",
+          "submenu": [
+            { "title": "APACHE RR 310", "link": "/collections/apache-rr-310" },
+            { "title": "APACHE RTR 310", "link": "/collections/apache-rtr-310" },
+            { "title": "APACHE 160 2V", "link": "/collections/apache-160-2v" },
+            { "title": "APACHE 180 2V", "link": "/collections/apache-180-2v" },
+            { "title": "APACHE 160 4V", "link": "/collections/apache-160-4v" },
+            { "title": "APACHE 200 4V", "link": "/collections/apache-200-4v" },
+            { "title": "RONIN 225", "link": "/collections/ronin-225" },
+            { "title": "RAIDER 125", "link": "/collections/raider-125" },
+            { "title": "NTORQ", "link": "/collections/ntorq" },
+            { "title": "JUPITER 125 BS4", "link": "/collections/jupiter-125-bs4" },
+            { "title": "JUPITER 110 BS6", "link": "/collections/jupiter-110-bs6" },
+            { "title": "JUPITER 125 BS6", "link": "/collections/jupiter-125-bs6" }
+          ]
+        },
+        {
+          "title": "KTM",
+          "link": "/collections/ktm",
+          "submenu": [
+            { "title": "ADVENTURE 250", "link": "/collections/adventure-250" },
+            { "title": "ADVENTURE 390", "link": "/collections/adventure-390" },
+            { "title": "DUKE 200 BS6", "link": "/collections/duke-200-bs6" },
+            { "title": "DUKE 250/390 BS6", "link": "/collections/duke-250-390-bs6" },
+            { "title": "DUKE 200 OLD", "link": "/collections/duke-200-old" },
+            { "title": "DUKE 250 GEN 3", "link": "/collections/duke-250-gen-3" },
+            { "title": "DUKE 390 GEN 3", "link": "/collections/duke-390-gen-3" },
+            { "title": "KTM RC 200 – 2022", "link": "/collections/ktm-rc-200-2022" },
+            { "title": "KTM RC 200 BS6", "link": "/collections/ktm-rc-200-bs6" },
+            { "title": "KTM RC 390 BS6", "link": "/collections/ktm-rc-390-bs6" }
+          ]
+        },
+        {
+          "title": "SUZUKI",
+          "link": "/collections/suzuki",
+          "submenu": [
+            { "title": "V STROM 250", "link": "/collections/v-strom-250" },
+            { "title": "V STROM 650", "link": "/collections/v-strom-650" },
+            { "title": "GIXXER 150 SF", "link": "/collections/gixxer-150-sf" },
+            { "title": "GIXXER 250 SF", "link": "/collections/gixxer-250-sf" },
+            { "title": "GIXXER NAKED 150cc BS3", "link": "/collections/gixxer-naked-150cc-bs3" },
+            { "title": "GIXXER NAKED 150cc BS6", "link": "/collections/gixxer-naked-150cc-bs6" },
+            { "title": "GIXXER NAKED 250", "link": "/collections/gixxer-naked-250" },
+            { "title": "ACCESS 125", "link": "/collections/access-125" },
+            { "title": "BURGMAN", "link": "/collections/burgman" },
+            { "title": "AVENIS 125", "link": "/collections/avenis-125" }
+          ]
+        },
+        {
+          "title": "KAWASAKI",
+          "link": "/collections/kawasaki",
+          "submenu": [
+            { "title": "Z 900 – 2020", "link": "/collections/z-900-2020" },
+            { "title": "ZX 10 R", "link": "/collections/zx-10-r" },
+            { "title": "NINJA 1000 SX", "link": "/collections/ninja-1000-sx" },
+            { "title": "VERSYS 650", "link": "/collections/versys-650" },
+            { "title": "VERSYS 1000", "link": "/collections/versys-1000" },
+            { "title": "NINJA 250", "link": "/collections/ninja-250" },
+            { "title": "NINJA 300", "link": "/collections/ninja-300" },
+            { "title": "KAWASAKI W175", "link": "/collections/w175" },
+            { "title": "ER – 6N", "link": "/collections/er-6n" }
+          ]
+        },
+        {
+          "title": "BMW",
+          "link": "/collections/bmw",
+          "submenu": [
+            { "title": "BMW G 310 GS", "link": "/collections/bmw-g-310-gs" },
+            { "title": "BMW G 310 R", "link": "/collections/bmw-g-310-r" },
+            { "title": "BMW G 310 RR", "link": "/collections/bmw-g-310-rr" }
+          ]
+        },
+        {
+          "title": "BENELLI",
+          "link": "/collections/benelli",
+          "submenu": [
+            { "title": "TRK 251", "link": "/collections/trk-251" },
+            { "title": "TRK 502 X", "link": "/collections/trk-502-x" },
+            { "title": "TNT 300", "link": "/collections/tnt-300" },
+            { "title": "IMPERIALE 400", "link": "/collections/imperiale-400" }
+          ]
+        },
+        {
+          "title": "JAWA - YEZDI",
+          "link": "/collections/jawa-yezdi",
+          "submenu": [
+            { "title": "JAWA 42", "link": "/collections/jawa-42" },
+            { "title": "BOBBER 42", "link": "/collections/bobber-42" },
+            { "title": "YEZDI ADVENTURE", "link": "/collections/yezdi-adventure" },
+            { "title": "YEZDI ROADSTER", "link": "/collections/yezdi-roadster" },
+            { "title": "YEZDI SCRAMBLER", "link": "/collections/yezdi-scrambler" },
+            { "title": "YEZDI ADVENTURE 2025", "link": "/collections/yezdi-adventure-2025" }
+          ]
+        },
+        {
+          "title": "TRIUMPH",
+          "link": "/collections/triumph",
+          "submenu": [
+            { "title": "SPEED 400", "link": "/collections/speed-400" },
+            { "title": "TIGER SPORT 660", "link": "/collections/tiger-sport-660" }
+          ]
+        },
+        {
+          "title": "HERO",
+          "link": "/collections/hero",
+          "submenu": [
+            { "title": "XPULSE 200", "link": "/collections/xpulse-200" },
+            { "title": "XTREME 125 R", "link": "/collections/xtreme-125-r" },
+            { "title": "XPULSE 210", "link": "/collections/xpulse-210" },
+            { "title": "XTREME 250R", "link": "/collections/xtreme-250r" }
+          ]
+        },
+        {
+          "title": "HARLEY DAVIDSON",
+          "link": "/collections/harley-davidson",
+          "submenu": [
+            { "title": "X 440", "link": "/collections/x-440" },
+            { "title": "STREET 750", "link": "/collections/street-750" }
+          ]
+        },
+        {
+          "title": "DUCATI",
+          "link": "/collections/ducati",
+          "submenu": [
+            { "title": "SCRAMBLER 800", "link": "/collections/scrambler-800" }
+          ]
+        },
+        {
+          "title": "MAHINDRA",
+          "link": "/collections/mahindra",
+          "submenu": [
+            { "title": "MOJO BS3", "link": "/collections/mojo-bs3" }
+          ]
+        },
+        {
+          "title": "OLA",
+          "link": "/collections/ola",
+          "submenu": [
+            { "title": "OLA S1 GEN 2", "link": "/collections/ola-s1-gen-2" }
+          ]
+        },
+        {
+          "title": "ATHER",
+          "link": "/collections/ather",
+          "submenu": [
+            { "title": "ATHER 450 X", "link": "/collections/ather-450-x" }
+          ]
+        },
+        {
+          "title": "VIDA",
+          "link": "/collections/vida",
+          "submenu": [
+            { "title": "VIDA VX 2", "link": "/collections/vida-vx-2" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Shop by Accessories",
+      "submenu": [
+        {
+          "title": "TOURING ACCESSORIES",
+          "link": "/collections/touring-accessories",
+          "submenu": [
+            { "title": "BACK REST", "link": "/collections/back-rest" },
+            { "title": "TOPRACK SADDLE STAY", "link": "/collections/toprack-saddle-stay" },
+            { "title": "TOP RACK", "link": "/collections/top-rack" },
+            { "title": "LUGGAGE CARRIER", "link": "/collections/luggage-carrier" },
+            { "title": "TOP PLATE", "link": "/collections/top-plate" },
+            { "title": "SADDLE STAY", "link": "/collections/saddle-stay" },
+            { "title": "FOG LIGHT CLAMP", "link": "/collections/fog-light-clamp" },
+            { "title": "GPS MOUNT", "link": "/collections/gps-mount" }
+          ]
+        },
+        {
+          "title": "PROTECTION ACCESSORIES",
+          "link": "/collections/protection-accessories",
+          "submenu": [
+            { "title": "CRASH GUARD", "link": "/collections/crash-guard" },
+            { "title": "FRAME SLIDER", "link": "/collections/frame-slider" },
+            { "title": "SUMP GUARD", "link": "/collections/sump-guard" },
+            { "title": "RADIATOR GUARD", "link": "/collections/radiator-guard" },
+            { "title": "HEAD LIGHT GRILL", "link": "/collections/head-light-grill" },
+            { "title": "CHAIN PROTECTOR", "link": "/collections/chain-protector" },
+            { "title": "SILENCER GUARD", "link": "/collections/silencer-guard" }
+          ]
+        },
+        {
+          "title": "PERFORMANCE ACCESSORIES",
+          "link": "/collections/performance-accessories",
+          "submenu": [
+            { "title": "EXHAUST BEND PIPE", "link": "/collections/exhaust-bend-pipe" },
+            { "title": "SILENCER - SILVER", "link": "/collections/silencer-silver" },
+            { "title": "SILENCER - BLACK", "link": "/collections/silencer-black" }
+          ]
+        },
+        {
+          "title": "AUXILLARY ACCESSORIES",
+          "link": "/collections/auxillary-accessories",
+          "submenu": [
+            { "title": "FOOT REST", "link": "/collections/foot-rest" },
+            { "title": "MASTER CYLINDER CAP", "link": "/collections/master-cylinder-cap" },
+            { "title": "PADDOCK STAND", "link": "/collections/paddock-stand" },
+            { "title": "HANDLE BAR", "link": "/collections/handle-bar" },
+            { "title": "VISOR", "link": "/collections/visor" },
+            { "title": "SIDE STAND BASE", "link": "/collections/side-stand-base" },
+            { "title": "TAIL TIDY", "link": "/collections/tail-tidy" }
+          ]
+        },
+        {
+          "title": "BOXES AND PANNIERS",
+          "link": "/collections/boxes-and-panniers",
+          "submenu": [
+            { "title": "SIDE METAL BOX", "link": "/collections/side-metal-box" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Scooters",
+      "link": "/collections/scooters",
+      "submenu": [
+        { "title": "AEROX 155", "link": "/collections/aerox-155" },
+        { "title": "RAY ZR", "link": "/collections/ray-zr" },
+        { "title": "NTORQ", "link": "/collections/ntorq" },
+        { "title": "JUPITER 125 BS4", "link": "/collections/jupiter-125-bs4" },
+        { "title": "JUPITER 110 BS6", "link": "/collections/jupiter-110-bs6" },
+        { "title": "ACCESS 125", "link": "/collections/access-125" },
+        { "title": "BURGMAN", "link": "/collections/burgman" },
+        { "title": "AVENIS 125", "link": "/collections/avenis-125" },
+        { "title": "DIO BS6", "link": "/collections/dio-bs6" },
+        { "title": "DIO BS4", "link": "/collections/dio-bs4" }
+      ]
+    },
+    {
+      "title": "EV Bikes",
+      "link": "/collections/ev-bikes",
+      "submenu": [
+        {
+          "title": "VIDA",
+          "link": "/collections/vida",
+          "submenu": [
+            { "title": "VIDA VX 2", "link": "/collections/vida-vx-2" }
+          ]
+        },
+        {
+          "title": "OLA",
+          "link": "/collections/ola",
+          "submenu": [
+            { "title": "OLA S1", "link": "/collections/ola-s1" }
+          ]
+        },
+        {
+          "title": "ATHER",
+          "link": "/collections/ather",
+          "submenu": [
+            { "title": "ATHER 450 X", "link": "/collections/ather-450-x" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Combo",
+      "link": "/combo"
+    },
+    {
+      "title": "Contact",
+      "link": "/contact"
+    },
+    {
+      "title": "About us",
+      "link": "/about-us"
+    },
+    {
+      "title": "My Account",
+      "link": "/account"
+    }
+  ]
+}

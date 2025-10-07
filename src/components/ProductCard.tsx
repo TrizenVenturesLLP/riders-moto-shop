@@ -51,9 +51,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     }
   }, [isHovered]);
 
-  // Fix MinIO URLs to be publicly accessible
+  // Get image URL - show actual product images only
   const getImageUrl = (url: string | undefined) => {
-    if (!url) return '/placeholder.svg';
+    if (!url) return '';
     
     console.log('Original image URL:', url);
     
@@ -62,7 +62,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       // Extract the file path from the MinIO URL
       const filePath = url.split('/riders-moto-media-prod/')[1];
       if (filePath) {
-        const publicUrl = `https://rmsadminbackend.llp.trizenventures.com/api/v1/public/media/${filePath}`;
+        const publicUrl = `${import.meta.env.VITE_API_URL || 'https://rmsadminbackend.llp.trizenventures.com'}/api/v1/public/media/${filePath}`;
         console.log('Converted to public URL:', publicUrl);
         return publicUrl;
       }
@@ -74,9 +74,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       return url;
     }
     
-    // Fallback to placeholder
-    console.log('Using placeholder for URL:', url);
-    return '/placeholder.svg';
+    // Return empty string if no valid URL
+    return '';
   };
 
   // Get current image to display
@@ -95,18 +94,24 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     >
       {/* Product Image */}
       <div className="relative aspect-square bg-gray-100 overflow-hidden">
-        <img
-          src={getImageUrl(getCurrentImage()?.url)}
-          alt={product.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
-          onLoad={() => {
-            console.log('✅ Image loaded successfully:', getImageUrl(getCurrentImage()?.url));
-          }}
-          onError={(e) => {
-            console.error('❌ Image failed to load:', getImageUrl(getCurrentImage()?.url));
-            e.currentTarget.src = '/placeholder.svg';
-          }}
-        />
+        {getImageUrl(getCurrentImage()?.url) ? (
+          <img
+            src={getImageUrl(getCurrentImage()?.url)}
+            alt={product.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
+            onLoad={() => {
+              console.log('✅ Image loaded successfully:', getImageUrl(getCurrentImage()?.url));
+            }}
+            onError={(e) => {
+              console.error('❌ Image failed to load:', getImageUrl(getCurrentImage()?.url));
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gray-200">
+            <span className="text-gray-400 text-sm">No Image</span>
+          </div>
+        )}
         
         {/* Discount Badge */}
         {hasDiscount && (

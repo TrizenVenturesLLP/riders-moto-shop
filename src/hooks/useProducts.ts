@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { API_BASE_URL } from '@/config/api';
 
 export interface Product {
   id: string;
@@ -55,7 +56,7 @@ export interface ProductsResponse {
 }
 
 const fetchProducts = async (): Promise<ProductsResponse> => {
-  const response = await fetch('https://rmsadminbackend.llp.trizenventures.com/api/v1/products');
+  const response = await fetch(`${API_BASE_URL}/products`);
   
   if (!response.ok) {
     throw new Error('Failed to fetch products');

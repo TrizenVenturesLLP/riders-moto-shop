@@ -9,12 +9,13 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
+import navbarData from '@/data/navbar.json';
 import mobileMenuBg from '@/assets/mobile-menu-bg.jpg';
 
 // Mobile Dropdown Component
-const MobileDropdown = ({ title, data, type }: { 
-  title: string; 
-  data: string[] | Record<string, string[]>; 
+const MobileDropdown = ({ title, data, type }: {
+  title: string;
+  data: string[] | Record<string, string[]> | Array<{title: string, submenu: string[]}>;
   type: 'brands' | 'categories' | 'list';
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,15 +33,33 @@ const MobileDropdown = ({ title, data, type }: {
       {isOpen && (
         <div className="mt-2 bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
           {type === 'list' ? (
-            <div className="grid grid-cols-1 gap-2">
-              {Array.isArray(data) && data.map((item: string) => (
-                <a
-                  key={item}
-                  href="#"
-                  className="block py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
-                >
-                  {item}
-                </a>
+            <div className="space-y-3">
+              {Array.isArray(data) && data.map((item: string | {title: string, submenu: string[]}, index: number) => (
+                <div key={index}>
+                  {typeof item === 'string' ? (
+                    <a
+                      href="#"
+                      className="block py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                    >
+                      {item}
+                    </a>
+                  ) : (
+                    <div>
+                      <h4 className="font-semibold text-red-600 mb-2">{item.title}</h4>
+                      <div className="pl-3 space-y-1">
+                        {item.submenu.map((accessory: string, accIndex: number) => (
+                          <a
+                            key={accIndex}
+                            href="#"
+                            className="block py-1 text-sm text-gray-600 hover:text-red-600 transition-colors"
+                          >
+                            {accessory}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           ) : type === 'brands' ? (
@@ -88,90 +107,8 @@ const MobileDropdown = ({ title, data, type }: {
   );
 };
 
-const navigationData = {
-  bikes: {
-    "YAMAHA": [
-      "AEROX 155", "MT 15", "R15 V4 / M", "R15 V3", "R3 - BS4",
-      "FZ V2.0", "FZ V3.0", "FZ V4.0", "FZ 25", "FZ X"
-    ],
-    "ROYAL ENFIELD": [
-      "Super Meteor 650", "Himalayan 450", "HIMALAYAN 411",
-      "GUERRILLA 450", "SCRAM 411", "HUNTER 350", "METEOR 350",
-      "CLASSIC 350 UPTO 2021", "REBORN CLASSIC 350", "THUNDERBIRD X"
-    ],
-    "BAJAJ": [
-      "NS 125", "NS 160", "NS 200", "NS 400 Z", "RS 200",
-      "DOMINAR 250", "DOMINAR 400", "AVENGER STREET",
-      "PULSAR N 150", "PULSAR N 160"
-    ],
-    "HONDA": [
-      "HNESS CB 350", "CB 350 2024", "RS CB 350", "CB 200 X",
-      "CB 300 F", "CB 300 R", "CBR 250 R", "HORNET 2.0",
-      "SHINE BS6", "CB UNICORN"
-    ],
-    "TVS": [
-      "APACHE RR 310", "APACH RTR 310", "APACHE 160 2V",
-      "APACHE 180 2V", "APACHE 160 4V", "APACHE 200 4V",
-      "RONIN 225", "RAIDER 125", "NTORQ", "JUPITER 125 BS4"
-    ],
-    "KTM": [
-      "ADVENTURE 250", "ADVENTURE 390", "DUKE 200 BS6",
-      "DUKE 250/390 BS6", "DUKE 200 OLD", "DUKE 250 GEN 3",
-      "DUKE 390 GEN 3", "KTM RC 200 - 2022", "KTM RC 200 BS6",
-      "KTM RC 390 BS6"
-    ],
-    "SUZUKI": [
-      "V STROM 250", "V STROM 650", "GIXXER 150 SF", "GIXXER 250 SF",
-      "GIXXER NAKED 150cc BS3", "GIXXER NAKED 150cc BS6",
-      "GIXXER NAKED 250", "ACCESS 125", "BURGMAN", "AVENIS 125"
-    ],
-    "KAWASAKI": [
-      "Z 900 - 2020", "ZX 10 R", "NINJA 1000 SX", "VERSYS 650",
-      "VERSYS 1000", "NINJA 250", "NINJA 300", "KAWASAKI W175", "ER - 6N"
-    ],
-    "BMW": ["BMW G 310 GS", "BMW G 310 R", "BMW G 310 RR"],
-    "BENELLI": ["TRK 251", "TRK 502 X", "TNT 300", "IMPERIALE 400"],
-    "JAWA - YEZDI": [
-      "JAWA 42", "BOBBER 42", "YEZDI ADVENTURE",
-      "YEZDI ROADSTER", "YEZDI SCRAMBLER", "YEZDI ADVENTURE 2025"
-    ],
-    "TRIUMPH": ["SPEED 400", "TIGER SPORT 660"],
-    "HERO": ["XPULSE 200", "XTREME 125 R", "XPULSE 210", "XTREME 250R"],
-    "HARLEY DAVIDSON": ["X 440", "STREET 750"],
-    "DUCATI": ["SCRAMBLER 800"],
-    "MAHINDRA": ["MOJO BS3"],
-    "OLA": ["OLA S1 GEN 2"],
-    "ATHER": ["ATHER 450 X"],
-    "VIDA": ["VIDA VX 2"]
-  },
-  scooters: [
-    "AEROX 155", "RAY ZR", "NTORQ", "JUPITER 125 BS4",
-    "JUPITER 110 BS6", "ACCESS 125", "BURGMAN",
-    "AVENIS 125", "DIO BS6", "DIO BS4"
-  ],
-  accessories: {
-    "TOURING ACCESSORIES": [
-      "BACK REST", "TOPRACK SADDLE STAY", "TOP RACK", "LUGGAGE CARRIER",
-      "TOP PLATE, SADDLE STAY", "FOG LIGHT CLAMP", "GPS MOUNT"
-    ],
-    "PROTECTION ACCESSORIES": [
-      "CRASH GUARD", "FRAME SLIDER", "SUMP GUARD", "RADIATOR GUARD",
-      "HEAD LIGHT GRILL", "CHAIN PROTECTOR", "SILENCER GUARD"
-    ],
-    "PERFORMANCE ACCESSORIES": [
-      "EXHAUST BEND PIPE", "SILENCER - SILVER", "SILENCER - BLACK"
-    ],
-    "AUXILLARY ACCESSORIES": [
-      "FOOT REST", "MASTER CYLINDER CAP", "PADDOCK STAND", "HANDLE BAR",
-      "VISOR", "SIDE STAND BASE", "TAIL TIDY"
-    ]
-  },
-  evBikes: {
-    "VIDA": ["VIDA VX 2", "Other VIDA models"],
-    "OLA": ["OLA S1", "Other OLA models"],
-    "ATHER": ["ATHER 450 X", "Other ATHER models"]
-  }
-};
+// Navigation data from JSON
+const navigationData = navbarData.navbar;
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -179,6 +116,8 @@ const Header = () => {
   const [isShopByAccessoriesOpen, setIsShopByAccessoriesOpen] = useState(false);
   const [isScootersOpen, setIsScootersOpen] = useState(false);
   const [isEvBikesOpen, setIsEvBikesOpen] = useState(false);
+
+  // Using static navigation data from JSON
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -259,138 +198,128 @@ const Header = () => {
         <div className="hidden md:flex items-center py-4 border-t border-gray-200">
           <NavigationMenu>
             <NavigationMenuList className="flex space-x-6">
-              <NavigationMenuItem>
-                <a href="#" className="text-gray-900 hover:text-red-600 transition-colors px-4 py-2 font-medium">
-                  Home
-                </a>
-              </NavigationMenuItem>
-
-              {/* Shop by Bike */}
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-gray-900 hover:text-red-600 font-medium">
-                  Shop by Bike
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <div className="max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
-                    <div className="grid grid-cols-4 gap-6 p-6 w-[800px]">
-                      {Object.entries(navigationData.bikes).map(([brand, models]) => (
-                        <div key={brand} className="space-y-2">
-                          <h4 className="font-semibold text-sm text-red-600">{brand}</h4>
-                          <div className="space-y-1">
-                            {models.map((model) => (
+              {navigationData.map((item, index) => (
+                <NavigationMenuItem key={index}>
+                  {item.submenu ? (
+                    <NavigationMenuTrigger className="text-gray-900 hover:text-red-600 font-medium">
+                      {item.title}
+                    </NavigationMenuTrigger>
+                  ) : (
+                    <a 
+                      href={item.link}
+                      className="text-gray-900 hover:text-red-600 transition-colors px-4 py-2 font-medium"
+                    >
+                      {item.title}
+                    </a>
+                  )}
+                  
+                  {item.submenu && (
+                    <NavigationMenuContent>
+                      <div className="max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+                        {item.title === "Shop by Bike" ? (
+                          <div className="grid grid-cols-4 gap-6 p-6 w-[1000px]">
+                            {item.submenu.map((brand) => (
+                              <div key={brand.title} className="space-y-2">
+                                <h4 className="font-semibold text-sm text-red-600">{brand.title}</h4>
+                                <div className="space-y-1">
+                                  {brand.submenu?.map((model) => (
+                                    <div key={model.title} className="group relative w-fit">
+                                      <a
+                                        href={model.link}
+                                        className="block text-sm text-gray-600 hover:text-gray-900 transition-colors font-medium"
+                                      >
+                                        {model.title}
+                                      </a>
+                                      {/* Show accessories submenu on hover */}
+                                      {model.submenu && (
+                                        <div className="hidden group-hover:block absolute left-full top-0 ml-2 bg-white border border-gray-200 rounded-lg shadow-lg p-3 min-w-[200px] z-50">
+                                          <div className="space-y-1">
+                                            {model.submenu.map((accessory) => (
+                                              <a
+                                                key={accessory.title}
+                                                href={accessory.link}
+                                                className="block text-xs text-gray-600 hover:text-red-600 transition-colors py-1"
+                                              >
+                                                {accessory.title}
+                                              </a>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : item.title === "Shop by Accessories" ? (
+                          <div className="grid grid-cols-2 gap-6 p-6 w-[600px]">
+                            {item.submenu.map((category) => (
+                              <div key={category.title} className="space-y-2">
+                                <h4 className="font-semibold text-sm text-red-600">{category.title}</h4>
+                                <div className="space-y-1">
+                                  {category.submenu?.map((item) => (
+                                    <a
+                                      key={item.title}
+                                      href={item.link}
+                                      className="block text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                                    >
+                                      {item.title}
+                                    </a>
+                                  ))}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : item.title === "Scooters" ? (
+                          <div className="grid grid-cols-2 gap-4 p-6 w-[400px]">
+                            {item.submenu.map((scooter) => (
                               <a
-                                key={model}
-                                href="#"
-                                className="block text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                                key={scooter.title}
+                                href={scooter.link}
+                                className="block text-sm text-gray-600 hover:text-gray-900 transition-colors p-2 rounded hover:bg-gray-50"
                               >
-                                {model}
+                                {scooter.title}
                               </a>
                             ))}
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              {/* Shop by Accessories */}
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-gray-900 hover:text-red-600 font-medium">
-                  Shop by Accessories
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <div className="max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
-                    <div className="grid grid-cols-2 gap-6 p-6 w-[600px]">
-                      {Object.entries(navigationData.accessories).map(([category, items]) => (
-                        <div key={category} className="space-y-2">
-                          <h4 className="font-semibold text-sm text-red-600">{category}</h4>
-                          <div className="space-y-1">
-                            {items.map((item) => (
+                        ) : item.title === "EV Bikes" ? (
+                          <div className="grid grid-cols-1 gap-4 p-6 w-[300px]">
+                            {item.submenu.map((brand) => (
+                              <div key={brand.title} className="space-y-2">
+                                <h4 className="font-semibold text-sm text-red-600">{brand.title}</h4>
+                                <div className="space-y-1">
+                                  {brand.submenu?.map((model) => (
+                                    <a
+                                      key={model.title}
+                                      href={model.link}
+                                      className="block text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                                    >
+                                      {model.title}
+                                    </a>
+                                  ))}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="grid grid-cols-1 gap-2 p-6 w-[300px]">
+                            {item.submenu.map((subItem) => (
                               <a
-                                key={item}
-                                href="#"
-                                className="block text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                                key={subItem.title}
+                                href={subItem.link}
+                                className="block text-sm text-gray-600 hover:text-gray-900 transition-colors p-2 rounded hover:bg-gray-50"
                               >
-                                {item}
+                                {subItem.title}
                               </a>
                             ))}
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              {/* Scooters */}
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-gray-900 hover:text-red-600 font-medium">
-                  Scooters
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <div className="max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
-                    <div className="grid grid-cols-2 gap-4 p-6 w-[400px]">
-                      {navigationData.scooters.map((scooter) => (
-                        <a
-                          key={scooter}
-                          href="#"
-                          className="block text-sm text-gray-600 hover:text-gray-900 transition-colors p-2 rounded hover:bg-gray-50"
-                        >
-                          {scooter}
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              {/* EV Bikes */}
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-gray-900 hover:text-red-600 font-medium">
-                  EV Bikes
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <div className="max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
-                    <div className="grid grid-cols-1 gap-4 p-6 w-[300px]">
-                      {Object.entries(navigationData.evBikes).map(([brand, models]) => (
-                        <div key={brand} className="space-y-2">
-                          <h4 className="font-semibold text-sm text-red-600">{brand}</h4>
-                          <div className="space-y-1">
-                            {models.map((model) => (
-                              <a
-                                key={model}
-                                href="#"
-                                className="block text-sm text-gray-600 hover:text-gray-900 transition-colors"
-                              >
-                                {model}
-                              </a>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <a href="#" className="text-gray-900 hover:text-red-600 transition-colors px-4 py-2 font-medium">
-                  Combo
-                </a>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <a href="#" className="text-gray-900 hover:text-red-600 transition-colors px-4 py-2 font-medium">
-                  Contact
-                </a>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <a href="#" className="text-gray-900 hover:text-red-600 transition-colors px-4 py-2 font-medium">
-                  About us
-                </a>
-              </NavigationMenuItem>
+                        )}
+                      </div>
+                    </NavigationMenuContent>
+                  )}
+                </NavigationMenuItem>
+              ))}
             </NavigationMenuList>
           </NavigationMenu>
         </div>
@@ -448,123 +377,101 @@ const Header = () => {
 
             {/* Main Menu Items */}
             <div className="bg-white px-4 py-4">
-              {/* Shop by Bike Section */}
-              <div className="py-4">
-                <button
-                  onClick={() => setIsShopByBikeOpen(!isShopByBikeOpen)}
-                  className="w-full flex items-center justify-between text-left py-3 px-2 text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
-                >
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    Shop by Bike
-                  </h2>
-                  <ChevronDown className={`h-5 w-5 text-gray-600 transition-transform ${isShopByBikeOpen ? 'rotate-180' : ''}`} />
-                </button>
-                
-                {isShopByBikeOpen && (
-                  <div className="mt-4 space-y-1">
-                    {Object.entries(navigationData.bikes).map(([brand, models]) => (
-                      <MobileDropdown 
-                        key={brand}
-                        title={brand} 
-                        data={models}
-                        type="list"
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
 
-              {/* Shop by Accessories Section */}
-              <div className="py-4 border-t border-gray-100">
-                <button
-                  onClick={() => setIsShopByAccessoriesOpen(!isShopByAccessoriesOpen)}
-                  className="w-full flex items-center justify-between text-left py-3 px-2 text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
-                >
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    Shop by Accessories
-                  </h2>
-                  <ChevronDown className={`h-5 w-5 text-gray-600 transition-transform ${isShopByAccessoriesOpen ? 'rotate-180' : ''}`} />
-                </button>
-                
-                {isShopByAccessoriesOpen && (
-                  <div className="mt-4 space-y-1">
-                    {Object.entries(navigationData.accessories).map(([category, items]) => (
-                      <MobileDropdown 
-                        key={category}
-                        title={category} 
-                        data={items}
-                        type="list"
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Scooters Section */}
-              <div className="py-4 border-t border-gray-100">
-                <button
-                  onClick={() => setIsScootersOpen(!isScootersOpen)}
-                  className="w-full flex items-center justify-between text-left py-3 px-2 text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
-                >
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    Scooters
-                  </h2>
-                  <ChevronDown className={`h-5 w-5 text-gray-600 transition-transform ${isScootersOpen ? 'rotate-180' : ''}`} />
-                </button>
-                
-                {isScootersOpen && (
-                  <div className="mt-4 space-y-1">
-                    {navigationData.scooters.map((scooter) => (
-                      <a
-                        key={scooter}
-                        href="#"
-                        className="block py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
-                      >
-                        {scooter}
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* EV Bikes Section */}
-              <div className="py-4 border-t border-gray-100">
-                <button
-                  onClick={() => setIsEvBikesOpen(!isEvBikesOpen)}
-                  className="w-full flex items-center justify-between text-left py-3 px-2 text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
-                >
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    EV Bikes
-                  </h2>
-                  <ChevronDown className={`h-5 w-5 text-gray-600 transition-transform ${isEvBikesOpen ? 'rotate-180' : ''}`} />
-                </button>
-                
-                {isEvBikesOpen && (
-                  <div className="mt-4 space-y-1">
-                    {Object.entries(navigationData.evBikes).map(([brand, models]) => (
-                      <MobileDropdown 
-                        key={brand}
-                        title={brand} 
-                        data={models}
-                        type="list"
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Direct Links */}
-              <div className="py-4 border-t border-gray-100 space-y-3">
-                <a href="#" className="flex items-center py-3 text-gray-900 font-semibold text-lg hover:text-red-600 transition-colors">
-                  Combo Deals
-                </a>
-                <a href="#" className="flex items-center py-3 text-gray-900 font-semibold text-lg hover:text-red-600 transition-colors">
-                  Contact Us
-                </a>
-                <a href="#" className="flex items-center py-3 text-gray-900 font-semibold text-lg hover:text-red-600 transition-colors">
-                  About Us
-                </a>
-              </div>
+              {navigationData.map((item, index) => (
+                <div key={index} className={`py-4 ${index > 0 ? 'border-t border-gray-100' : ''}`}>
+                  {item.submenu ? (
+                    <button
+                      onClick={() => {
+                        if (item.title === "Shop by Bike") setIsShopByBikeOpen(!isShopByBikeOpen);
+                        else if (item.title === "Shop by Accessories") setIsShopByAccessoriesOpen(!isShopByAccessoriesOpen);
+                        else if (item.title === "Scooters") setIsScootersOpen(!isScootersOpen);
+                        else if (item.title === "EV Bikes") setIsEvBikesOpen(!isEvBikesOpen);
+                      }}
+                      className="w-full flex items-center justify-between text-left py-3 px-2 text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+                    >
+                      <h2 className="text-lg font-semibold text-gray-900">
+                        {item.title}
+                      </h2>
+                      <ChevronDown className={`h-5 w-5 text-gray-600 transition-transform ${
+                        (item.title === "Shop by Bike" && isShopByBikeOpen) ||
+                        (item.title === "Shop by Accessories" && isShopByAccessoriesOpen) ||
+                        (item.title === "Scooters" && isScootersOpen) ||
+                        (item.title === "EV Bikes" && isEvBikesOpen) ? 'rotate-180' : ''
+                      }`} />
+                    </button>
+                  ) : (
+                    <a 
+                      href={item.link} 
+                      className="block py-3 px-2 text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+                    >
+                      <h3 className="text-lg font-semibold">{item.title}</h3>
+                    </a>
+                  )}
+                  
+                  {item.submenu && (
+                    <div className={`mt-4 space-y-1 ${
+                      (item.title === "Shop by Bike" && !isShopByBikeOpen) ||
+                      (item.title === "Shop by Accessories" && !isShopByAccessoriesOpen) ||
+                      (item.title === "Scooters" && !isScootersOpen) ||
+                      (item.title === "EV Bikes" && !isEvBikesOpen) ? 'hidden' : ''
+                    }`}>
+                      {item.title === "Shop by Bike" ? (
+                        item.submenu.map((brand) => (
+                          <div key={brand.title} className="py-2">
+                            <MobileDropdown 
+                              title={brand.title} 
+                              data={brand.submenu?.map(model => ({
+                                title: model.title,
+                                submenu: model.submenu?.map(accessory => accessory.title) || []
+                              })) || []}
+                              type="list"
+                            />
+                          </div>
+                        ))
+                      ) : item.title === "Shop by Accessories" ? (
+                        item.submenu.map((category) => (
+                          <MobileDropdown 
+                            key={category.title}
+                            title={category.title} 
+                            data={category.submenu?.map(item => item.title) || []}
+                            type="list"
+                          />
+                        ))
+                      ) : item.title === "Scooters" ? (
+                        item.submenu.map((scooter) => (
+                          <a
+                            key={scooter.title}
+                            href={scooter.link}
+                            className="block py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                          >
+                            {scooter.title}
+                          </a>
+                        ))
+                      ) : item.title === "EV Bikes" ? (
+                        item.submenu.map((brand) => (
+                          <MobileDropdown 
+                            key={brand.title}
+                            title={brand.title} 
+                            data={brand.submenu?.map(model => model.title) || []}
+                            type="list"
+                          />
+                        ))
+                      ) : (
+                        item.submenu.map((subItem) => (
+                          <a
+                            key={subItem.title}
+                            href={subItem.link}
+                            className="block py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                          >
+                            {subItem.title}
+                          </a>
+                        ))
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
             
             {/* Scroll to Top Button */}

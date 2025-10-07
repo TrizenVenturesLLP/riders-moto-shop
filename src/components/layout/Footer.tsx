@@ -21,8 +21,8 @@ const Footer = () => {
           <div className="flex items-center gap-4">
             <Clock className="text-primary" size={32} />
             <div>
-              <h4 className="font-semibold text-surface-foreground">SUPPORT (MON TO SAT)</h4>
-              <p className="text-muted-foreground text-sm">Contact us 9:00AM to 7:00PM</p>
+              <h4 className="font-semibold text-surface-foreground">24/7 SUPPORT</h4>
+              <p className="text-muted-foreground text-sm">Contact us anytime, anywhere</p>
             </div>
           </div>
           
