@@ -1,0 +1,377 @@
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { useProductWithFallback } from '@/hooks/useProductWithFallback';
+import {
+  ShoppingCart,
+  Heart,
+  Share2,
+  Truck,
+  Shield,
+  CreditCard,
+  Star,
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  Minus,
+  Check,
+  X,
+  Loader2
+} from 'lucide-react';
+
+interface Product {
+  id: string;
+  name: string;
+  sku: string;
+  price: number;
+  originalPrice?: number;
+  description: string;
+  images: string[];
+  features: string[];
+  specifications: {
+    material: string;
+    color: string;
+    weight: string;
+    dimensions: string;
+    compatibility: string;
+  };
+  category: string;
+  brand: string;
+  bikeModel: string;
+  inStock: boolean;
+  rating: number;
+  reviewCount: number;
+}
+
+const ProductPage = () => {
+  const { id } = useParams<{ id: string }>();
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const [selectedColor, setSelectedColor] = useState('black');
+  const [isWishlisted, setIsWishlisted] = useState(false);
+
+  // Fetch product data from API with fallback
+  const { data: productData, isLoading, error, source } = useProductWithFallback(id || '');
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p className="text-gray-600">Loading product...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !productData?.data?.product) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Product Not Found</h1>
+          <p className="text-gray-600 mb-2">The product you're looking for doesn't exist.</p>
+          <p className="text-sm text-gray-500 mb-6">Product ID: {id}</p>
+          <div className="flex gap-4 justify-center">
+            <Button onClick={() => window.history.back()}>
+              Go Back
+            </Button>
+            <Button variant="outline" onClick={() => window.location.href = '/'}>
+              Go to Homepage
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const product = productData.data.product;
+  
+  // Debug info
+  console.log('🎯 Product loaded from:', source);
+  console.log('📦 Product data:', product);
+
+  const colors = ['black', 'red', 'white', 'blue'];
+  const relatedProducts = [
+    { id: '1', name: 'BMW G 310 R CRASH GUARD', price: 2500, image: '/api/placeholder/200/200' },
+    { id: '2', name: 'BMW G 310 R RADIATOR GUARD', price: 1800, image: '/api/placeholder/200/200' },
+    { id: '3', name: 'BMW G 310 R TOP RACK', price: 3200, image: '/api/placeholder/200/200' }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Breadcrumb */}
+      <div className="bg-white border-b">
+        <div className="container mx-auto px-4 py-3">
+          <nav className="flex items-center space-x-2 text-sm text-gray-600">
+            <a href="/" className="hover:text-red-600">Home</a>
+            <ChevronRight className="h-4 w-4" />
+            <a href="/collections/bmw" className="hover:text-red-600">BMW</a>
+            <ChevronRight className="h-4 w-4" />
+            <a href="/collections/bmw-g-310-r" className="hover:text-red-600">G 310 R</a>
+            <ChevronRight className="h-4 w-4" />
+            <span className="text-gray-900">{product.name}</span>
+          </nav>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Product Images */}
+          <div className="space-y-4">
+            {/* Main Image */}
+            <div className="aspect-square bg-white rounded-lg border overflow-hidden">
+              {product.images && product.images.length > 0 ? (
+                <img
+                  src={product.images[selectedImage]?.url || product.images[selectedImage]}
+                  alt={product.images[selectedImage]?.altText || product.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                  <span className="text-gray-400">No Image Available</span>
+                </div>
+              )}
+            </div>
+
+            {/* Thumbnail Images */}
+            {product.images && product.images.length > 1 && (
+              <div className="flex space-x-2">
+                {product.images.map((image, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedImage(index)}
+                    className={`w-20 h-20 rounded-lg border-2 overflow-hidden ${
+                      selectedImage === index ? 'border-red-600' : 'border-gray-200'
+                    }`}
+                  >
+                    <img 
+                      src={image.url || image} 
+                      alt={image.altText || `${product.name} ${index + 1}`} 
+                      className="w-full h-full object-cover" 
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Product Info */}
+          <div className="space-y-6">
+            {/* Product Title & SKU */}
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
+              <p className="text-gray-600">SKU: {product.sku}</p>
+            </div>
+
+            {/* Rating */}
+            <div className="flex items-center space-x-2">
+              <div className="flex items-center">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`h-5 w-5 ${
+                      i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                    }`}
+                  />
+                ))}
+              </div>
+              <span className="text-sm text-gray-600">({product.reviewCount} reviews)</span>
+            </div>
+
+            {/* Price */}
+            <div className="flex items-center space-x-4">
+              <span className="text-3xl font-bold text-red-600">Rs. {product.price.toLocaleString()}</span>
+              {product.comparePrice && product.comparePrice > product.price && (
+                <span className="text-xl text-gray-500 line-through">Rs. {product.comparePrice.toLocaleString()}</span>
+              )}
+              {product.comparePrice && product.comparePrice > product.price && (
+                <Badge variant="destructive" className="text-sm">
+                  {Math.round(((product.comparePrice - product.price) / product.comparePrice) * 100)}% OFF
+                </Badge>
+              )}
+            </div>
+
+            {/* Description */}
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Description</h3>
+              <p className="text-gray-700">{product.description}</p>
+            </div>
+
+            {/* Features */}
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Key Features</h3>
+              <ul className="space-y-1">
+                {product.features.map((feature, index) => (
+                  <li key={index} className="flex items-start space-x-2">
+                    <span className="text-red-600 mt-1">•</span>
+                    <span className="text-gray-700">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Color Selection */}
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Color</h3>
+              <div className="flex space-x-2">
+                {colors.map((color) => (
+                  <button
+                    key={color}
+                    onClick={() => setSelectedColor(color)}
+                    className={`w-8 h-8 rounded-full border-2 ${
+                      selectedColor === color ? 'border-red-600' : 'border-gray-300'
+                    }`}
+                    style={{ backgroundColor: color }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Quantity */}
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Quantity</h3>
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50"
+                >
+                  <Minus className="h-4 w-4" />
+                </button>
+                <span className="text-lg font-medium w-8 text-center">{quantity}</span>
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50"
+                >
+                  <Plus className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="space-y-3">
+              <Button className="w-full bg-red-600 hover:bg-red-700 text-white py-3 text-lg">
+                <ShoppingCart className="h-5 w-5 mr-2" />
+                Add to Cart
+              </Button>
+
+              <div className="flex space-x-3">
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => setIsWishlisted(!isWishlisted)}
+                >
+                  <Heart className={`h-4 w-4 mr-2 ${isWishlisted ? 'text-red-600 fill-current' : ''}`} />
+                  {isWishlisted ? 'Wishlisted' : 'Add to Wishlist'}
+                </Button>
+                <Button variant="outline" className="flex-1">
+                  <Share2 className="h-4 w-4 mr-2" />
+                  Share
+                </Button>
+              </div>
+            </div>
+
+            {/* Stock Status */}
+            <div className="flex items-center space-x-2">
+              {product.stockQuantity > 0 ? (
+                <>
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <span className="text-green-600 font-medium">In Stock ({product.stockQuantity} available)</span>
+                </>
+              ) : (
+                <>
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <span className="text-red-600 font-medium">Out of Stock</span>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Product Specifications */}
+        <div className="mt-12">
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-2xl font-bold mb-6">Specifications</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="font-semibold text-gray-900">Material</h4>
+                  <p className="text-gray-600">{product.specifications.material}</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900">Color</h4>
+                  <p className="text-gray-600">{product.specifications.color}</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900">Weight</h4>
+                  <p className="text-gray-600">{product.specifications.weight}</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900">Dimensions</h4>
+                  <p className="text-gray-600">{product.specifications.dimensions}</p>
+                </div>
+                <div className="md:col-span-2">
+                  <h4 className="font-semibold text-gray-900">Compatibility</h4>
+                  <p className="text-gray-600">{product.specifications.compatibility}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Related Products */}
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold mb-6">Related Products</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {relatedProducts.map((relatedProduct) => (
+              <Card key={relatedProduct.id} className="hover:shadow-lg transition-shadow">
+                <CardContent className="p-4">
+                  <div className="aspect-square bg-gray-100 rounded-lg mb-4 overflow-hidden">
+                    <img
+                      src={relatedProduct.image}
+                      alt={relatedProduct.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">{relatedProduct.name}</h3>
+                  <p className="text-red-600 font-bold">Rs. {relatedProduct.price.toLocaleString()}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Features Section */}
+      <div className="bg-white mt-12">
+        <div className="container mx-auto px-4 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="text-center">
+              <Truck className="h-8 w-8 text-red-600 mx-auto mb-3" />
+              <h3 className="font-semibold mb-2">FREE SHIPPING</h3>
+              <p className="text-sm text-gray-600">Free shipping on all orders</p>
+            </div>
+            <div className="text-center">
+              <Shield className="h-8 w-8 text-red-600 mx-auto mb-3" />
+              <h3 className="font-semibold mb-2">24/7 SUPPORT</h3>
+              <p className="text-sm text-gray-600">Contact us anytime, anywhere</p>
+            </div>
+            <div className="text-center">
+              <Shield className="h-8 w-8 text-red-600 mx-auto mb-3" />
+              <h3 className="font-semibold mb-2">100% AUTHENTIC</h3>
+              <p className="text-sm text-gray-600">Genuine parts with warranty</p>
+            </div>
+            <div className="text-center">
+              <CreditCard className="h-8 w-8 text-red-600 mx-auto mb-3" />
+              <h3 className="font-semibold mb-2">PAYMENT SECURE</h3>
+              <p className="text-sm text-gray-600">We ensure secure payment</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ProductPage;

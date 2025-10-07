@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart, Eye, Heart } from 'lucide-react';
 import { Product } from '@/hooks/useProducts';
@@ -51,9 +52,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     }
   }, [isHovered]);
 
-  // Get image URL - show actual product images only
+  // Get image URL with proper fallback handling
   const getImageUrl = (url: string | undefined) => {
-    if (!url) return '';
+    if (!url) return 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=300&fit=crop';
     
     console.log('Original image URL:', url);
     
@@ -68,14 +69,31 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       }
     }
     
-    // If it's already a public URL, return as is
-    if (url.startsWith('http') && !url.includes('srv-captain--rms-minio')) {
-      console.log('Using existing public URL:', url);
+    // Handle rms-minio-api URLs (convert to public API URL)
+    if (url.includes('rms-minio-api.llp.trizenventures.com')) {
+      // Extract the file path from the MinIO URL
+      const filePath = url.split('/riders-moto-media-prod/')[1];
+      if (filePath) {
+        const publicUrl = `https://rmsadminbackend.llp.trizenventures.com/api/v1/public/media/${filePath}`;
+        console.log('Converted MinIO API URL to public URL:', publicUrl);
+        return publicUrl;
+      }
+    }
+    
+    // If it's already a public API URL, return as is
+    if (url.includes('rmsadminbackend.llp.trizenventures.com/api/v1/public/media/')) {
+      console.log('Using existing public API URL:', url);
       return url;
     }
     
-    // Return empty string if no valid URL
-    return '';
+    // If it's any other valid HTTP URL, return as is
+    if (url.startsWith('http')) {
+      console.log('Using existing HTTP URL:', url);
+      return url;
+    }
+    
+    // Return placeholder if no valid URL
+    return 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=300&fit=crop';
   };
 
   // Get current image to display
@@ -87,31 +105,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   return (
-    <div 
-      className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:border-red-500/30"
+    <Link 
+      to={`/products/${product.id}`}
+      className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:border-red-500/30 block"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Product Image */}
       <div className="relative aspect-square bg-gray-100 overflow-hidden">
-        {getImageUrl(getCurrentImage()?.url) ? (
-          <img
-            src={getImageUrl(getCurrentImage()?.url)}
-            alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
-            onLoad={() => {
-              console.log('✅ Image loaded successfully:', getImageUrl(getCurrentImage()?.url));
-            }}
-            onError={(e) => {
-              console.error('❌ Image failed to load:', getImageUrl(getCurrentImage()?.url));
-              e.currentTarget.style.display = 'none';
-            }}
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gray-200">
-            <span className="text-gray-400 text-sm">No Image</span>
-          </div>
-        )}
+        <img
+          src={getImageUrl(getCurrentImage()?.url)}
+          alt={product.name}
+          className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
+          onLoad={() => {
+            console.log('✅ Image loaded successfully:', getImageUrl(getCurrentImage()?.url));
+          }}
+          onError={(e) => {
+            console.error('❌ Image failed to load:', getImageUrl(getCurrentImage()?.url));
+            // Set fallback image
+            e.currentTarget.src = 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=300&fit=crop';
+          }}
+        />
         
         {/* Discount Badge */}
         {hasDiscount && (
@@ -145,10 +159,20 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
         {/* Quick Actions - HT Exhaust Style */}
         <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-          <Button size="sm" variant="secondary" className="h-8 w-8 p-0 bg-white/90 hover:bg-white">
+          <Button 
+            size="sm" 
+            variant="secondary" 
+            className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
+            onClick={(e) => e.preventDefault()}
+          >
             <Heart className="h-4 w-4" />
           </Button>
-          <Button size="sm" variant="secondary" className="h-8 w-8 p-0 bg-white/90 hover:bg-white">
+          <Button 
+            size="sm" 
+            variant="secondary" 
+            className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
+            onClick={(e) => e.preventDefault()}
+          >
             <Eye className="h-4 w-4" />
           </Button>
         </div>
@@ -193,12 +217,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition-colors" 
           size="sm" 
           disabled={product.stockQuantity === 0}
+          onClick={(e) => e.preventDefault()}
         >
           <ShoppingCart className="h-4 w-4 mr-2" />
           {product.stockQuantity === 0 ? 'Out of Stock' : 'Add to Cart'}
         </Button>
       </div>
-    </div>
+    </Link>
   );
 };
 

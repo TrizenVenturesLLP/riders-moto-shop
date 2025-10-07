@@ -12,10 +12,44 @@ import {
 import navbarData from '@/data/navbar.json';
 import mobileMenuBg from '@/assets/mobile-menu-bg.jpg';
 
+// Collapsible Accessory Category Component
+const CollapsibleAccessoryCategory = ({ title, accessories }: {
+  title: string;
+  accessories: string[];
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between text-left py-2 px-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+      >
+        <h5 className="font-medium text-gray-800">{title}</h5>
+        <ChevronDown className={`h-4 w-4 text-gray-600 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+      
+      {isOpen && (
+        <div className="mt-2 pl-3 space-y-1">
+          {accessories.map((accessory: string, accIndex: number) => (
+            <a
+              key={accIndex}
+              href="#"
+              className="block py-1 text-xs text-gray-500 hover:text-red-600 transition-colors"
+            >
+              {accessory}
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 // Mobile Dropdown Component
 const MobileDropdown = ({ title, data, type }: {
   title: string;
-  data: string[] | Record<string, string[]> | Array<{title: string, submenu: string[]}>;
+  data: string[] | Record<string, string[]> | Array<{title: string, submenu: string[] | Array<{title: string, submenu: string[]}>}>;
   type: 'brands' | 'categories' | 'list';
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,7 +68,7 @@ const MobileDropdown = ({ title, data, type }: {
         <div className="mt-2 bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
           {type === 'list' ? (
             <div className="space-y-3">
-              {Array.isArray(data) && data.map((item: string | {title: string, submenu: string[]}, index: number) => (
+              {Array.isArray(data) && data.map((item: string | {title: string, submenu: string[] | Array<{title: string, submenu: string[]}>}, index: number) => (
                 <div key={index}>
                   {typeof item === 'string' ? (
                     <a
@@ -46,15 +80,23 @@ const MobileDropdown = ({ title, data, type }: {
                   ) : (
                     <div>
                       <h4 className="font-semibold text-red-600 mb-2">{item.title}</h4>
-                      <div className="pl-3 space-y-1">
-                        {item.submenu.map((accessory: string, accIndex: number) => (
-                          <a
-                            key={accIndex}
-                            href="#"
-                            className="block py-1 text-sm text-gray-600 hover:text-red-600 transition-colors"
-                          >
-                            {accessory}
-                          </a>
+                      <div className="pl-3 space-y-2">
+                        {Array.isArray(item.submenu) && item.submenu.map((subItem: string | {title: string, submenu: string[]}, subIndex: number) => (
+                          <div key={subIndex}>
+                            {typeof subItem === 'string' ? (
+                              <a
+                                href="#"
+                                className="block py-1 text-sm text-gray-600 hover:text-red-600 transition-colors"
+                              >
+                                {subItem}
+                              </a>
+                            ) : (
+                              <CollapsibleAccessoryCategory 
+                                title={subItem.title}
+                                accessories={subItem.submenu}
+                              />
+                            )}
+                          </div>
                         ))}
                       </div>
                     </div>
@@ -232,16 +274,33 @@ const Header = () => {
                                       </a>
                                       {/* Show accessories submenu on hover */}
                                       {model.submenu && (
-                                        <div className="hidden group-hover:block absolute left-full top-0 ml-2 bg-white border border-gray-200 rounded-lg shadow-lg p-3 min-w-[200px] z-50">
-                                          <div className="space-y-1">
-                                            {model.submenu.map((accessory) => (
-                                              <a
-                                                key={accessory.title}
-                                                href={accessory.link}
-                                                className="block text-xs text-gray-600 hover:text-red-600 transition-colors py-1"
-                                              >
-                                                {accessory.title}
-                                              </a>
+                                        <div className="hidden group-hover:block absolute left-full top-0 ml-2 bg-white border border-gray-200 rounded-lg shadow-lg p-3 min-w-[300px] z-50">
+                                          <div className="space-y-3">
+                                            {model.submenu.map((accessoryCategory) => (
+                                              <div key={accessoryCategory.title} className="group/accessory relative">
+                                                <a
+                                                  href={accessoryCategory.link}
+                                                  className="block text-sm font-semibold text-red-600 hover:text-red-700 transition-colors py-1"
+                                                >
+                                                  {accessoryCategory.title}
+                                                </a>
+                                                {/* Show individual accessories on hover */}
+                                                {accessoryCategory.submenu && (
+                                                  <div className="hidden group-hover/accessory:block absolute left-full top-0 ml-2 bg-white border border-gray-200 rounded-lg shadow-lg p-3 min-w-[250px] z-50">
+                                                    <div className="space-y-1">
+                                                      {accessoryCategory.submenu.map((individualAccessory) => (
+                                                        <a
+                                                          key={individualAccessory.title}
+                                                          href={individualAccessory.link}
+                                                          className="block text-xs text-gray-600 hover:text-red-600 transition-colors py-1"
+                                                        >
+                                                          {individualAccessory.title}
+                                                        </a>
+                                                      ))}
+                                                    </div>
+                                                  </div>
+                                                )}
+                                              </div>
                                             ))}
                                           </div>
                                         </div>
@@ -423,7 +482,10 @@ const Header = () => {
                               title={brand.title} 
                               data={brand.submenu?.map(model => ({
                                 title: model.title,
-                                submenu: model.submenu?.map(accessory => accessory.title) || []
+                                submenu: model.submenu?.map(accessoryCategory => ({
+                                  title: accessoryCategory.title,
+                                  submenu: accessoryCategory.submenu?.map(individualAccessory => individualAccessory.title) || []
+                                })) || []
                               })) || []}
                               type="list"
                             />
