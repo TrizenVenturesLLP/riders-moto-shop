@@ -63,7 +63,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       // Extract the file path from the MinIO URL
       const filePath = url.split('/riders-moto-media-prod/')[1];
       if (filePath) {
-        const publicUrl = `${import.meta.env.VITE_API_URL || 'https://rmsadminbackend.llp.trizenventures.com'}/api/v1/public/media/${filePath}`;
+        const publicUrl = `${import.meta.env.VITE_API_URL || 'https://rmsadminbackend.llp.trizenventures.com/api/v1'}/public/media/${filePath}`;
         console.log('Converted to public URL:', publicUrl);
         return publicUrl;
       }
@@ -74,14 +74,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       // Extract the file path from the MinIO URL
       const filePath = url.split('/riders-moto-media-prod/')[1];
       if (filePath) {
-        const publicUrl = `https://rmsadminbackend.llp.trizenventures.com/api/v1/public/media/${filePath}`;
+        const publicUrl = `${import.meta.env.VITE_API_URL || 'https://rmsadminbackend.llp.trizenventures.com/api/v1'}/public/media/${filePath}`;
         console.log('Converted MinIO API URL to public URL:', publicUrl);
         return publicUrl;
       }
     }
     
     // If it's already a public API URL, return as is
-    if (url.includes('rmsadminbackend.llp.trizenventures.com/api/v1/public/media/')) {
+    if (url.includes('/api/v1/public/media/')) {
       console.log('Using existing public API URL:', url);
       return url;
     }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { Search, ShoppingCart, User, Menu, X, ChevronDown, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,13 +12,21 @@ import {
 } from '@/components/ui/navigation-menu';
 import navbarData from '@/data/navbar.json';
 import mobileMenuBg from '@/assets/mobile-menu-bg.jpg';
+import { NavbarItem } from '@/types/navbar';
 
 // Collapsible Accessory Category Component
 const CollapsibleAccessoryCategory = ({ title, accessories }: {
   title: string;
-  accessories: string[];
+  accessories: NavbarItem[];
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleAccessoryClick = (accessory: NavbarItem) => {
+    if (accessory.link) {
+      navigate(accessory.link);
+    }
+  };
 
   return (
     <div>
@@ -31,14 +40,14 @@ const CollapsibleAccessoryCategory = ({ title, accessories }: {
       
       {isOpen && (
         <div className="mt-2 pl-3 space-y-1">
-          {accessories.map((accessory: string, accIndex: number) => (
-            <a
+          {accessories.map((accessory, accIndex: number) => (
+            <button
               key={accIndex}
-              href="#"
-              className="block py-1 text-xs text-gray-500 hover:text-red-600 transition-colors"
+              onClick={() => handleAccessoryClick(accessory)}
+              className="block w-full text-left py-1 text-xs text-gray-500 hover:text-red-600 transition-colors"
             >
-              {accessory}
-            </a>
+              {accessory.title}
+            </button>
           ))}
         </div>
       )}
@@ -47,12 +56,12 @@ const CollapsibleAccessoryCategory = ({ title, accessories }: {
 };
 
 // Mobile Dropdown Component
-const MobileDropdown = ({ title, data, type }: {
+const MobileDropdown = ({ title, data }: {
   title: string;
-  data: string[] | Record<string, string[]> | Array<{title: string, submenu: string[] | Array<{title: string, submenu: string[]}>}>;
-  type: 'brands' | 'categories' | 'list';
+  data: NavbarItem[];
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="py-2">
@@ -66,83 +75,43 @@ const MobileDropdown = ({ title, data, type }: {
       
       {isOpen && (
         <div className="mt-2 bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
-          {type === 'list' ? (
-            <div className="space-y-3">
-              {Array.isArray(data) && data.map((item: string | {title: string, submenu: string[] | Array<{title: string, submenu: string[]}>}, index: number) => (
-                <div key={index}>
-                  {typeof item === 'string' ? (
-                    <a
-                      href="#"
-                      className="block py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
-                    >
-                      {item}
-                    </a>
-                  ) : (
-                    <div>
-                      <h4 className="font-semibold text-red-600 mb-2">{item.title}</h4>
-                      <div className="pl-3 space-y-2">
-                        {Array.isArray(item.submenu) && item.submenu.map((subItem: string | {title: string, submenu: string[]}, subIndex: number) => (
-                          <div key={subIndex}>
-                            {typeof subItem === 'string' ? (
-                              <a
-                                href="#"
-                                className="block py-1 text-sm text-gray-600 hover:text-red-600 transition-colors"
-                              >
-                                {subItem}
-                              </a>
-                            ) : (
-                              <CollapsibleAccessoryCategory 
-                                title={subItem.title}
-                                accessories={subItem.submenu}
-                              />
-                            )}
-                          </div>
-                        ))}
-                      </div>
+          <div className="space-y-3">
+            {data.map((item: NavbarItem, index: number) => (
+              <div key={index}>
+                {item.link ? (
+                  <Link
+                    to={item.link}
+                    className="block py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                  >
+                    {item.title}
+                  </Link>
+                ) : (
+                  <div>
+                    <h4 className="font-semibold text-red-600 mb-2">{item.title}</h4>
+                    <div className="pl-3 space-y-2">
+                      {item.submenu && item.submenu.map((subItem: NavbarItem, subIndex: number) => (
+                        <div key={subIndex}>
+                          {subItem.link ? (
+                            <button
+                              onClick={() => navigate(subItem.link!)}
+                              className="block py-1 text-sm text-gray-600 hover:text-red-600 transition-colors"
+                            >
+                              {subItem.title}
+                            </button>
+                          ) : (
+                            <CollapsibleAccessoryCategory 
+                              title={subItem.title}
+                              accessories={subItem.submenu || []}
+                            />
+                          )}
+                        </div>
+                      ))}
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : type === 'brands' ? (
-            <div className="space-y-3">
-              {Object.entries(data as Record<string, string[]>).map(([key, items]) => (
-                <div key={key}>
-                  <h4 className="font-semibold text-red-600 mb-2">{key}</h4>
-                  <div className="grid grid-cols-1 gap-1 pl-3">
-                    {Array.isArray(items) && items.map((item: string) => (
-                      <a
-                        key={item}
-                        href="#"
-                        className="block py-1 text-sm text-gray-600 hover:text-gray-900 transition-colors"
-                      >
-                        {item}
-                      </a>
-                    ))}
                   </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {Object.entries(data as Record<string, string[]>).map(([key, items]) => (
-                <div key={key}>
-                  <h4 className="font-semibold text-red-600 mb-2">{key}</h4>
-                  <div className="grid grid-cols-1 gap-1 pl-3">
-                    {Array.isArray(items) && items.map((item: string) => (
-                      <a
-                        key={item}
-                        href="#"
-                        className="block py-1 text-sm text-gray-600 hover:text-gray-900 transition-colors"
-                      >
-                        {item}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -247,12 +216,12 @@ const Header = () => {
                       {item.title}
                     </NavigationMenuTrigger>
                   ) : (
-                    <a 
-                      href={item.link}
+                    <Link 
+                      to={item.link}
                       className="text-gray-900 hover:text-red-600 transition-colors px-4 py-2 font-medium"
                     >
                       {item.title}
-                    </a>
+                    </Link>
                   )}
                   
                   {item.submenu && (
@@ -266,36 +235,36 @@ const Header = () => {
                                 <div className="space-y-1">
                                   {brand.submenu?.map((model) => (
                                     <div key={model.title} className="group relative w-fit">
-                                      <a
-                                        href={model.link}
+                                      <Link
+                                        to={model.link}
                                         className="block text-sm text-gray-600 hover:text-gray-900 transition-colors font-medium"
                                       >
                                         {model.title}
-                                      </a>
+                                      </Link>
                                       {/* Show accessories submenu on hover */}
                                       {model.submenu && (
                                         <div className="hidden group-hover:block absolute left-full top-0 ml-2 bg-white border border-gray-200 rounded-lg shadow-lg p-3 min-w-[300px] z-50">
                                           <div className="space-y-3">
                                             {model.submenu.map((accessoryCategory) => (
                                               <div key={accessoryCategory.title} className="group/accessory relative">
-                                                <a
-                                                  href={accessoryCategory.link}
+                                                <Link
+                                                  to={accessoryCategory.link}
                                                   className="block text-sm font-semibold text-red-600 hover:text-red-700 transition-colors py-1"
                                                 >
                                                   {accessoryCategory.title}
-                                                </a>
+                                                </Link>
                                                 {/* Show individual accessories on hover */}
                                                 {accessoryCategory.submenu && (
                                                   <div className="hidden group-hover/accessory:block absolute left-full top-0 ml-2 bg-white border border-gray-200 rounded-lg shadow-lg p-3 min-w-[250px] z-50">
                                                     <div className="space-y-1">
                                                       {accessoryCategory.submenu.map((individualAccessory) => (
-                                                        <a
+                                                        <Link
                                                           key={individualAccessory.title}
-                                                          href={individualAccessory.link}
+                                                          to={individualAccessory.link}
                                                           className="block text-xs text-gray-600 hover:text-red-600 transition-colors py-1"
                                                         >
                                                           {individualAccessory.title}
-                                                        </a>
+                                                        </Link>
                                                       ))}
                                                     </div>
                                                   </div>
@@ -318,13 +287,13 @@ const Header = () => {
                                 <h4 className="font-semibold text-sm text-red-600">{category.title}</h4>
                                 <div className="space-y-1">
                                   {category.submenu?.map((item) => (
-                                    <a
+                                    <Link
                                       key={item.title}
-                                      href={item.link}
+                                      to={item.link}
                                       className="block text-sm text-gray-600 hover:text-gray-900 transition-colors"
                                     >
                                       {item.title}
-                                    </a>
+                                    </Link>
                                   ))}
                                 </div>
                               </div>
@@ -460,12 +429,12 @@ const Header = () => {
                       }`} />
                     </button>
                   ) : (
-                    <a 
-                      href={item.link} 
+                    <Link 
+                      to={item.link} 
                       className="block py-3 px-2 text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
                     >
                       <h3 className="text-lg font-semibold">{item.title}</h3>
-                    </a>
+                    </Link>
                   )}
                   
                   {item.submenu && (
@@ -480,14 +449,7 @@ const Header = () => {
                           <div key={brand.title} className="py-2">
                             <MobileDropdown 
                               title={brand.title} 
-                              data={brand.submenu?.map(model => ({
-                                title: model.title,
-                                submenu: model.submenu?.map(accessoryCategory => ({
-                                  title: accessoryCategory.title,
-                                  submenu: accessoryCategory.submenu?.map(individualAccessory => individualAccessory.title) || []
-                                })) || []
-                              })) || []}
-                              type="list"
+                              data={brand.submenu || []}
                             />
                           </div>
                         ))
@@ -496,8 +458,7 @@ const Header = () => {
                           <MobileDropdown 
                             key={category.title}
                             title={category.title} 
-                            data={category.submenu?.map(item => item.title) || []}
-                            type="list"
+                            data={category.submenu || []}
                           />
                         ))
                       ) : item.title === "Scooters" ? (
@@ -515,8 +476,7 @@ const Header = () => {
                           <MobileDropdown 
                             key={brand.title}
                             title={brand.title} 
-                            data={brand.submenu?.map(model => model.title) || []}
-                            type="list"
+                            data={brand.submenu || []}
                           />
                         ))
                       ) : (

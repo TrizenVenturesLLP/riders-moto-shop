@@ -21,28 +21,50 @@ import {
   Loader2
 } from 'lucide-react';
 
+interface ProductImage {
+  id: string;
+  url: string;
+  altText?: string;
+  isPrimary: boolean;
+  sortOrder: number;
+}
+
 interface Product {
   id: string;
   name: string;
   sku: string;
   price: number;
-  originalPrice?: number;
-  description: string;
-  images: string[];
-  features: string[];
-  specifications: {
-    material: string;
-    color: string;
-    weight: string;
-    dimensions: string;
-    compatibility: string;
+  comparePrice?: number;
+  description?: string;
+  shortDescription?: string;
+  stockQuantity: number;
+  lowStockThreshold: number;
+  weight?: number;
+  dimensions?: {
+    length?: number;
+    width?: number;
+    height?: number;
   };
-  category: string;
-  brand: string;
-  bikeModel: string;
-  inStock: boolean;
-  rating: number;
-  reviewCount: number;
+  category?: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+  brand?: {
+    id: string;
+    name: string;
+    slug: string;
+    logo?: string;
+  };
+  images: ProductImage[];
+  isActive: boolean;
+  isDigital: boolean;
+  isFeatured: boolean;
+  metaTitle?: string;
+  metaDescription?: string;
+  tags?: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 const ProductPage = () => {
@@ -203,12 +225,16 @@ const ProductPage = () => {
             <div>
               <h3 className="text-lg font-semibold mb-2">Key Features</h3>
               <ul className="space-y-1">
-                {product.features.map((feature, index) => (
-                  <li key={index} className="flex items-start space-x-2">
-                    <span className="text-red-600 mt-1">•</span>
-                    <span className="text-gray-700">{feature}</span>
-                  </li>
-                ))}
+                {product.tags && product.tags.length > 0 ? (
+                  product.tags.map((tag, index) => (
+                    <li key={index} className="flex items-start space-x-2">
+                      <span className="text-red-600 mt-1">•</span>
+                      <span className="text-gray-700">{tag}</span>
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-gray-500">No features listed</li>
+                )}
               </ul>
             </div>
 
@@ -296,24 +322,33 @@ const ProductPage = () => {
               <h2 className="text-2xl font-bold mb-6">Specifications</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <h4 className="font-semibold text-gray-900">Material</h4>
-                  <p className="text-gray-600">{product.specifications.material}</p>
+                  <h4 className="font-semibold text-gray-900">SKU</h4>
+                  <p className="text-gray-600">{product.sku}</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900">Color</h4>
-                  <p className="text-gray-600">{product.specifications.color}</p>
+                  <h4 className="font-semibold text-gray-900">Brand</h4>
+                  <p className="text-gray-600">{product.brand?.name || 'N/A'}</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900">Category</h4>
+                  <p className="text-gray-600">{product.category?.name || 'N/A'}</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900">Stock Quantity</h4>
+                  <p className="text-gray-600">{product.stockQuantity}</p>
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-900">Weight</h4>
-                  <p className="text-gray-600">{product.specifications.weight}</p>
+                  <p className="text-gray-600">{product.weight ? `${product.weight} kg` : 'N/A'}</p>
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-900">Dimensions</h4>
-                  <p className="text-gray-600">{product.specifications.dimensions}</p>
-                </div>
-                <div className="md:col-span-2">
-                  <h4 className="font-semibold text-gray-900">Compatibility</h4>
-                  <p className="text-gray-600">{product.specifications.compatibility}</p>
+                  <p className="text-gray-600">
+                    {product.dimensions ? 
+                      `${product.dimensions.length || 'N/A'} x ${product.dimensions.width || 'N/A'} x ${product.dimensions.height || 'N/A'} cm` : 
+                      'N/A'
+                    }
+                  </p>
                 </div>
               </div>
             </CardContent>
