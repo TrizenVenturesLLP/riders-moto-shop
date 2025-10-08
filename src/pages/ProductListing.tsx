@@ -7,11 +7,11 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useFilteredProducts } from '@/hooks/useFilteredProducts';
 import ProductCard from '@/components/ProductCard';
-import { 
-  Grid3X3, 
-  List, 
-  Filter, 
-  SlidersHorizontal, 
+import {
+  Grid3X3,
+  List,
+  Filter,
+  SlidersHorizontal,
   Search,
   Loader2,
   ArrowLeft,
