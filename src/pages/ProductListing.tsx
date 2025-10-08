@@ -18,6 +18,8 @@ import {
   Home
 } from 'lucide-react';
 
+// Note: Brand filtering is handled by the useFilteredProducts hook with fallback mechanism
+
 const ProductListing = () => {
   const { brand, model, category } = useParams<{ brand?: string; model?: string; category?: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
