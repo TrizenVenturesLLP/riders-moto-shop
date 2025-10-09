@@ -8,16 +8,9 @@ import {
   ShoppingCart,
   Heart,
   Share2,
-  Truck,
-  Shield,
-  CreditCard,
-  Star,
-  ChevronLeft,
   ChevronRight,
   Plus,
   Minus,
-  Check,
-  X,
   Loader2
 } from 'lucide-react';
 
@@ -115,11 +108,6 @@ const ProductPage = () => {
   console.log('📦 Product data:', product);
 
   const colors = ['black', 'red', 'white', 'blue'];
-  const relatedProducts = [
-    { id: '1', name: 'BMW G 310 R CRASH GUARD', price: 2500, image: '/api/placeholder/200/200' },
-    { id: '2', name: 'BMW G 310 R RADIATOR GUARD', price: 1800, image: '/api/placeholder/200/200' },
-    { id: '3', name: 'BMW G 310 R TOP RACK', price: 3200, image: '/api/placeholder/200/200' }
-  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -187,20 +175,6 @@ const ProductPage = () => {
               <p className="text-gray-600">SKU: {product.sku}</p>
             </div>
 
-            {/* Rating */}
-            <div className="flex items-center space-x-2">
-              <div className="flex items-center">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`h-5 w-5 ${
-                      i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                    }`}
-                  />
-                ))}
-              </div>
-              <span className="text-sm text-gray-600">({product.reviewCount} reviews)</span>
-            </div>
 
             {/* Price */}
             <div className="flex items-center space-x-4">
@@ -355,56 +329,8 @@ const ProductPage = () => {
           </Card>
         </div>
 
-        {/* Related Products */}
-        <div className="mt-12">
-          <h2 className="text-2xl font-bold mb-6">Related Products</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {relatedProducts.map((relatedProduct) => (
-              <Card key={relatedProduct.id} className="hover:shadow-lg transition-shadow">
-                <CardContent className="p-4">
-                  <div className="aspect-square bg-gray-100 rounded-lg mb-4 overflow-hidden">
-                    <img
-                      src={relatedProduct.image}
-                      alt={relatedProduct.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">{relatedProduct.name}</h3>
-                  <p className="text-red-600 font-bold">Rs. {relatedProduct.price.toLocaleString()}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
       </div>
 
-      {/* Features Section */}
-      <div className="bg-white mt-12">
-        <div className="container mx-auto px-4 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <Truck className="h-8 w-8 text-red-600 mx-auto mb-3" />
-              <h3 className="font-semibold mb-2">FREE SHIPPING</h3>
-              <p className="text-sm text-gray-600">Free shipping on all orders</p>
-            </div>
-            <div className="text-center">
-              <Shield className="h-8 w-8 text-red-600 mx-auto mb-3" />
-              <h3 className="font-semibold mb-2">24/7 SUPPORT</h3>
-              <p className="text-sm text-gray-600">Contact us anytime, anywhere</p>
-            </div>
-            <div className="text-center">
-              <Shield className="h-8 w-8 text-red-600 mx-auto mb-3" />
-              <h3 className="font-semibold mb-2">100% AUTHENTIC</h3>
-              <p className="text-sm text-gray-600">Genuine parts with warranty</p>
-            </div>
-            <div className="text-center">
-              <CreditCard className="h-8 w-8 text-red-600 mx-auto mb-3" />
-              <h3 className="font-semibold mb-2">PAYMENT SECURE</h3>
-              <p className="text-sm text-gray-600">We ensure secure payment</p>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

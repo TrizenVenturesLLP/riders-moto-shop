@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useFilteredProducts } from '@/hooks/useFilteredProducts';
+import { useFilteredProducts, ProductsResponse } from '@/hooks/useFilteredProducts';
 import ProductCard from '@/components/ProductCard';
 import {
   Grid3X3,
@@ -34,15 +34,15 @@ const ProductListing = () => {
     max: searchParams.get('maxPrice') || ''
   });
 
-  // Build filter parameters
+  // Build filter parameters with proper formatting
   const filterParams = {
     page: parseInt(searchParams.get('page') || '1'),
     limit: parseInt(searchParams.get('limit') || '20'),
     sort: sortBy === 'featured' ? 'createdAt' : sortBy,
-    order: sortBy === 'price-low' ? 'ASC' : 'DESC',
-    category: category,
-    brand: brand,
-    model: model,
+    order: (sortBy === 'price-low' ? 'ASC' : 'DESC') as 'ASC' | 'DESC',
+    category: category ? category.replace(/-/g, ' ') : undefined, // Convert kebab-case to space-separated
+    brand: brand ? brand.replace(/-/g, ' ') : undefined, // Convert kebab-case to space-separated
+    model: model ? model.replace(/-/g, ' ') : undefined, // Convert kebab-case to space-separated
     minPrice: priceRange.min ? parseFloat(priceRange.min) : undefined,
     maxPrice: priceRange.max ? parseFloat(priceRange.max) : undefined,
     inStock: searchParams.get('inStock') === 'true' ? true : undefined,
@@ -50,11 +50,15 @@ const ProductListing = () => {
     search: searchQuery || undefined
   };
 
+  // Debug logging
+  console.log('🔗 Route params:', { brand, model, category });
+  console.log('🔍 Filter params:', filterParams);
+
   // Fetch products
   const { data, isLoading, error } = useFilteredProducts(filterParams);
 
-  const products = data?.data?.products || [];
-  const pagination = data?.data?.pagination;
+  const products = (data as ProductsResponse)?.data?.products || [];
+  const pagination = (data as ProductsResponse)?.data?.pagination;
 
   // Handle filter changes by updating URL directly
   const updateURL = (newParams: Record<string, string>) => {

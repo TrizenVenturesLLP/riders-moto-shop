@@ -41,13 +41,20 @@ const CollapsibleAccessoryCategory = ({ title, accessories }: {
       {isOpen && (
         <div className="mt-2 pl-3 space-y-1">
           {accessories.map((accessory, accIndex: number) => (
-            <button
-              key={accIndex}
-              onClick={() => handleAccessoryClick(accessory)}
-              className="block w-full text-left py-1 text-xs text-gray-500 hover:text-red-600 transition-colors"
-            >
-              {accessory.title}
-            </button>
+            <div key={accIndex}>
+              {accessory.link ? (
+                <button
+                  onClick={() => handleAccessoryClick(accessory)}
+                  className="block w-full text-left py-1 text-xs text-gray-500 hover:text-red-600 transition-colors"
+                >
+                  {accessory.title}
+                </button>
+              ) : (
+                <div className="py-1 text-xs text-gray-400">
+                  {accessory.title}
+                </div>
+              )}
+            </div>
           ))}
         </div>
       )}
@@ -78,20 +85,30 @@ const MobileDropdown = ({ title, data }: {
           <div className="space-y-3">
             {data.map((item: NavbarItem, index: number) => (
               <div key={index}>
-                {item.link ? (
-                  <Link
-                    to={item.link}
-                    className="block py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
-                  >
-                    {item.title}
-                  </Link>
-                ) : (
+                {/* If item has submenu, show clickable title + expandable submenu */}
+                {item.submenu ? (
                   <div>
-                    <h4 className="font-semibold text-red-600 mb-2">{item.title}</h4>
+                    <div className="flex items-center justify-between mb-2">
+                      {item.link ? (
+                        <Link
+                          to={item.link}
+                          className="font-semibold text-red-600 hover:text-red-700 transition-colors"
+                        >
+                          {item.title}
+                        </Link>
+                      ) : (
+                        <h4 className="font-semibold text-red-600">{item.title}</h4>
+                      )}
+                    </div>
                     <div className="pl-3 space-y-2">
-                      {item.submenu && item.submenu.map((subItem: NavbarItem, subIndex: number) => (
+                      {item.submenu.map((subItem: NavbarItem, subIndex: number) => (
                         <div key={subIndex}>
-                          {subItem.link ? (
+                          {subItem.submenu ? (
+                            <CollapsibleAccessoryCategory 
+                              title={subItem.title}
+                              accessories={subItem.submenu}
+                            />
+                          ) : subItem.link ? (
                             <button
                               onClick={() => navigate(subItem.link!)}
                               className="block py-1 text-sm text-gray-600 hover:text-red-600 transition-colors"
@@ -99,14 +116,24 @@ const MobileDropdown = ({ title, data }: {
                               {subItem.title}
                             </button>
                           ) : (
-                            <CollapsibleAccessoryCategory 
-                              title={subItem.title}
-                              accessories={subItem.submenu || []}
-                            />
+                            <div className="py-1 text-sm text-gray-600">
+                              {subItem.title}
+                            </div>
                           )}
                         </div>
                       ))}
                     </div>
+                  </div>
+                ) : item.link ? (
+                  <Link
+                    to={item.link}
+                    className="block py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                  >
+                    {item.title}
+                  </Link>
+                ) : (
+                  <div className="py-2 px-3 text-gray-700">
+                    {item.title}
                   </div>
                 )}
               </div>
