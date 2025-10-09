@@ -104,117 +104,121 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     return primaryImage;
   };
 
+
   return (
-    <Link 
-      to={`/products/${product.id}`}
-      className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:border-red-500/30 block"
+    <div 
+      className="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-2xl hover:shadow-red-500/10 transition-all duration-500 hover:-translate-y-1"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Product Image */}
-      <div className="relative aspect-square bg-gray-100 overflow-hidden">
-        <img
-          src={getImageUrl(getCurrentImage()?.url)}
-          alt={product.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
-          onLoad={() => {
-            console.log('✅ Image loaded successfully:', getImageUrl(getCurrentImage()?.url));
-          }}
-          onError={(e) => {
-            console.error('❌ Image failed to load:', getImageUrl(getCurrentImage()?.url));
-            // Set fallback image
-            e.currentTarget.src = 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=300&fit=crop';
-          }}
-        />
-        
-        {/* Discount Badge */}
-        {hasDiscount && (
-          <span className="absolute top-3 left-3 px-2 py-1 rounded-full text-xs font-bold bg-red-600 text-white">
-            -{discountPercentage}%
-          </span>
-        )}
+      <Link to={`/products/${product.id}`} className="block">
+        {/* Product Image Container */}
+        <div className="relative aspect-square bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
+          <img
+            src={getImageUrl(getCurrentImage()?.url)}
+            alt={product.name}
+            className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700 ease-out"
+            onLoad={() => {
+              console.log('✅ Image loaded successfully:', getImageUrl(getCurrentImage()?.url));
+            }}
+            onError={(e) => {
+              console.error('❌ Image failed to load:', getImageUrl(getCurrentImage()?.url));
+              e.currentTarget.src = 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=300&fit=crop';
+            }}
+          />
+          
 
-        {/* Stock Badge */}
-        {product.stockQuantity <= product.lowStockThreshold && (
-          <span className="absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-bold bg-orange-500 text-white">
-            Low Stock
-          </span>
-        )}
+          {/* Stock Status Badge */}
+          {product.stockQuantity <= product.lowStockThreshold && (
+            <span className="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-bold bg-orange-500 text-white shadow-lg">
+              LOW STOCK
+            </span>
+          )}
 
-        {/* Image Indicators (dots) - only show if multiple images */}
-        {hasMultipleImages && allImages.length > 1 && (
-          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-            {allImages.map((_, index) => (
-              <div
-                key={index}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  index === currentImageIndex 
-                    ? 'bg-white shadow-lg' 
-                    : 'bg-white/50'
-                }`}
-              />
-            ))}
+          {/* Image Indicators */}
+          {hasMultipleImages && allImages.length > 1 && (
+            <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-2">
+              {allImages.map((_, index) => (
+                <div
+                  key={index}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    index === currentImageIndex 
+                      ? 'bg-white shadow-lg scale-125' 
+                      : 'bg-white/60 hover:bg-white/80'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Quick Actions */}
+          <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+            <Button 
+              size="sm" 
+              variant="secondary" 
+              className="h-9 w-9 p-0 bg-white/95 hover:bg-white shadow-lg hover:shadow-xl border-0 rounded-full"
+              onClick={(e) => e.preventDefault()}
+            >
+              <Heart className="h-4 w-4 text-gray-600 hover:text-red-500 transition-colors" />
+            </Button>
+            <Button 
+              size="sm" 
+              variant="secondary" 
+              className="h-9 w-9 p-0 bg-white/95 hover:bg-white shadow-lg hover:shadow-xl border-0 rounded-full"
+              onClick={(e) => e.preventDefault()}
+            >
+              <Eye className="h-4 w-4 text-gray-600 hover:text-blue-500 transition-colors" />
+            </Button>
           </div>
-        )}
-
-        {/* Quick Actions - HT Exhaust Style */}
-        <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-          <Button 
-            size="sm" 
-            variant="secondary" 
-            className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
-            onClick={(e) => e.preventDefault()}
-          >
-            <Heart className="h-4 w-4" />
-          </Button>
-          <Button 
-            size="sm" 
-            variant="secondary" 
-            className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
-            onClick={(e) => e.preventDefault()}
-          >
-            <Eye className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-
-      {/* Product Info - HT Exhaust Style */}
-      <div className="p-4">
-        {/* Category/Brand */}
-        <div className="text-xs text-gray-500 mb-1 uppercase tracking-wide">
-          {product.brand?.name || 'HITECH'}
-        </div>
-        
-        {/* Product Name */}
-        <h3 className="font-bold text-gray-900 mb-2 line-clamp-2 text-sm">
-          {product.name}
-        </h3>
-        
-        {/* Model/Compatibility */}
-        <div className="text-xs text-gray-600 mb-3">
-          {product.sku}
         </div>
 
-        {/* Price - HT Exhaust Style */}
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-lg font-bold text-gray-900">₹{product.price}</span>
-          {hasDiscount && (
-            <span className="text-sm text-gray-500 line-through">₹{product.comparePrice}</span>
-          )}
-        </div>
+        {/* Product Information */}
+        <div className="p-5">
+          {/* Brand */}
+          <div className="text-xs text-gray-500 mb-2 uppercase tracking-wider font-medium">
+            {product.brand?.name || 'HITECH'}
+          </div>
+          
+          {/* Product Name */}
+          <h3 className="font-bold text-gray-900 mb-2 line-clamp-2 text-base leading-tight group-hover:text-red-600 transition-colors">
+            {product.name}
+          </h3>
+          
+          {/* SKU */}
+          <div className="text-xs text-gray-500 mb-3 font-mono">
+            SKU: {product.sku}
+          </div>
 
-        {/* Stock Status */}
-        <div className="text-xs mb-3">
-          {product.stockQuantity > 0 ? (
-            <span className="text-green-600 font-medium">In Stock</span>
-          ) : (
-            <span className="text-red-600 font-medium">Out of Stock</span>
-          )}
-        </div>
 
-        {/* Add to Cart Button - HT Exhaust Style */}
+          {/* Price */}
+          <div className="flex items-center gap-3 mb-4">
+            <span className="text-xl font-bold text-gray-900">₹{product.price}</span>
+            {hasDiscount && (
+              <span className="text-sm text-gray-500 line-through">₹{product.comparePrice}</span>
+            )}
+          </div>
+
+          {/* Stock Status */}
+          <div className="mb-4">
+            {product.stockQuantity > 0 ? (
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                In Stock
+              </span>
+            ) : (
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
+                Out of Stock
+              </span>
+            )}
+          </div>
+        </div>
+      </Link>
+
+      {/* Add to Cart Button */}
+      <div className="px-5 pb-5">
         <Button 
-          className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition-colors" 
+          className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-red-500/25" 
           size="sm" 
           disabled={product.stockQuantity === 0}
           onClick={(e) => e.preventDefault()}
@@ -223,7 +227,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {product.stockQuantity === 0 ? 'Out of Stock' : 'Add to Cart'}
         </Button>
       </div>
-    </Link>
+    </div>
   );
 };
 

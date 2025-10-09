@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
-import { useProducts } from '@/hooks/useProducts';
+import { useProducts, Product } from '@/hooks/useProducts';
 import ProductCard from '@/components/ProductCard';
 
 const ProductGrid = () => {
@@ -32,23 +32,28 @@ const ProductGrid = () => {
     );
   }
 
-  const products = (data as any)?.data?.products || [];
+  const products = (data as { data?: { products?: Product[] } })?.data?.products || [];
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-gray-50">
       <div className="container mx-auto px-4">
-        {/* HT Exhaust Style Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Featured <span className="text-red-600">Products</span>
+        {/* Modern Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-50 text-red-600 text-sm font-medium mb-6">
+            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+            Premium Collection
+          </div>
+          <h2 className="text-5xl font-bold text-gray-900 mb-6">
+            Featured <span className="bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">Products</span>
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Premium motorcycle parts and accessories designed for performance and durability
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Discover our curated selection of premium motorcycle parts and accessories, 
+            engineered for performance, durability, and style.
           </p>
         </div>
 
-        {/* HT Exhaust Style Grid - 5 columns on large screens */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        {/* Modern Grid Layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-8">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
@@ -64,11 +69,11 @@ const ProductGrid = () => {
 
         {/* HT Exhaust Style View All Button */}
         {products.length > 0 && (
-          <div className="text-center mt-12">
+          <div className="text-center mt-16">
             <Button 
               variant="outline" 
               size="lg"
-              className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
+              className="border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-red-500/25"
             >
               View All Products
             </Button>

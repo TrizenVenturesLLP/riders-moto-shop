@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Search, ShoppingCart, User, Menu, X, ChevronDown, MessageCircle } from 'lucide-react';
+import { Search, ShoppingCart, User, Menu, X, ChevronDown, Wrench, Shield, Zap, Settings, Headphones, Camera, Lock, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -121,6 +121,19 @@ const MobileDropdown = ({ title, data }: {
 // Navigation data from JSON
 const navigationData = navbarData.navbar;
 
+// Helper function to get appropriate icon for accessory categories
+const getAccessoryIcon = (categoryTitle: string) => {
+  const title = categoryTitle.toLowerCase();
+  if (title.includes('protection') || title.includes('safety') || title.includes('guard')) return Shield;
+  if (title.includes('performance') || title.includes('exhaust') || title.includes('engine')) return Zap;
+  if (title.includes('tool') || title.includes('maintenance') || title.includes('repair')) return Wrench;
+  if (title.includes('audio') || title.includes('sound') || title.includes('speaker')) return Headphones;
+  if (title.includes('camera') || title.includes('recording') || title.includes('dash')) return Camera;
+  if (title.includes('security') || title.includes('alarm') || title.includes('lock')) return Lock;
+  if (title.includes('premium') || title.includes('luxury') || title.includes('special')) return Star;
+  return Settings; // Default icon
+};
+
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isShopByBikeOpen, setIsShopByBikeOpen] = useState(false);
@@ -194,7 +207,7 @@ const Header = () => {
           {/* Actions */}
           <div className="flex items-center space-x-3">
             <Button variant="ghost" size="sm" className="hidden md:flex">
-              <MessageCircle className="h-5 w-5" />
+              <User className="h-5 w-5" />
             </Button>
             <Button variant="ghost" size="sm" className="relative">
               <ShoppingCart className="h-5 w-5" />
@@ -281,23 +294,38 @@ const Header = () => {
                             ))}
                           </div>
                         ) : item.title === "Shop by Accessories" ? (
-                          <div className="grid grid-cols-2 gap-6 p-6 w-[600px]">
-                            {item.submenu.map((category) => (
-                              <div key={category.title} className="space-y-2">
-                                <h4 className="font-semibold text-sm text-red-600">{category.title}</h4>
-                                <div className="space-y-1">
-                                  {category.submenu?.map((item) => (
-                                    <Link
-                                      key={item.title}
-                                      to={item.link}
-                                      className="block text-sm text-gray-600 hover:text-gray-900 transition-colors"
-                                    >
-                                      {item.title}
-                                    </Link>
-                                  ))}
+                          <div className="grid grid-cols-3 gap-8 p-8 w-[900px]">
+                            {item.submenu.map((category) => {
+                              const IconComponent = getAccessoryIcon(category.title);
+                              return (
+                                <div key={category.title} className="group">
+                                  {/* Category Header */}
+                                  <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-100">
+                                    <div className="p-2 bg-red-50 rounded-lg group-hover:bg-red-100 transition-colors">
+                                      <IconComponent className="h-5 w-5 text-red-600" />
+                                    </div>
+                                    <h4 className="font-bold text-base text-gray-900 group-hover:text-red-600 transition-colors">
+                                      {category.title}
+                                    </h4>
+                                  </div>
+                                  
+                                  {/* Accessory Items */}
+                                  <div className="space-y-2">
+                                    {category.submenu?.map((accessoryItem) => (
+                                      <Link
+                                        key={accessoryItem.title}
+                                        to={accessoryItem.link}
+                                        className="block text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg transition-all duration-200 group/item"
+                                      >
+                                        <span className="group-hover/item:translate-x-1 transition-transform inline-block">
+                                          {accessoryItem.title}
+                                        </span>
+                                      </Link>
+                                    ))}
+                                  </div>
                                 </div>
-                              </div>
-                            ))}
+                              );
+                            })}
                           </div>
                         ) : item.title === "Scooters" ? (
                           <div className="grid grid-cols-2 gap-4 p-6 w-[400px]">
