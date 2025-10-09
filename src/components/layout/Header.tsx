@@ -165,10 +165,36 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isShopByBikeOpen, setIsShopByBikeOpen] = useState(false);
   const [isShopByAccessoriesOpen, setIsShopByAccessoriesOpen] = useState(false);
-  const [isScootersOpen, setIsScootersOpen] = useState(false);
-  const [isEvBikesOpen, setIsEvBikesOpen] = useState(false);
+  
+  // Search state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchCategory, setSearchCategory] = useState('All');
+  const navigate = useNavigate();
 
   // Using static navigation data from JSON
+
+  // Search functionality
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      // Navigate to search results with query and category
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}&category=${encodeURIComponent(searchCategory)}`);
+    } else {
+      // If no search query, navigate based on category
+      if (searchCategory === 'All') {
+        navigate('/collections/all');
+      } else if (searchCategory === 'Bikes') {
+        navigate('/collections/bikes');
+      } else if (searchCategory === 'Accessories') {
+        navigate('/collections/accessories');
+      }
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -208,24 +234,32 @@ const Header = () => {
           <div className="hidden md:flex flex-1 max-w-md mx-8">
             <div className="flex w-full">
               {/* Category Filter */}
-              <select className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-l-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20">
-                <option>All</option>
-                <option>Bikes</option>
-                <option>Accessories</option>
-                <option>Scooters</option>
-                <option>EV Bikes</option>
+              <select 
+                value={searchCategory}
+                onChange={(e) => setSearchCategory(e.target.value)}
+                className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-l-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20"
+              >
+                <option value="All">All</option>
+                <option value="Bikes">Bikes</option>
+                <option value="Accessories">Accessories</option>
               </select>
               
               {/* Search Input */}
               <div className="relative flex-1">
                 <Input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={handleKeyPress}
                   placeholder="What are you looking for?"
                   className="rounded-none border-l-0 border-r-0 bg-white border-gray-200 focus:border-primary focus:ring-0"
                 />
               </div>
               
               {/* Search Button */}
-              <Button className="bg-red-600 hover:bg-red-700 rounded-l-none px-4">
+              <Button 
+                onClick={handleSearch}
+                className="bg-red-600 hover:bg-red-700 rounded-l-none px-4"
+              >
                 <Search className="h-4 w-4" />
               </Button>
             </div>
@@ -435,24 +469,32 @@ const Header = () => {
             <div className="px-4 py-4 bg-white border-b border-gray-100">
               <div className="flex w-full">
                 {/* Category Filter */}
-                <select className="px-3 py-3 bg-gray-50 border border-gray-200 rounded-l-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20">
-                  <option>All</option>
-                  <option>Bikes</option>
-                  <option>Accessories</option>
-                  <option>Scooters</option>
-                  <option>EV Bikes</option>
+                <select 
+                  value={searchCategory}
+                  onChange={(e) => setSearchCategory(e.target.value)}
+                  className="px-3 py-3 bg-gray-50 border border-gray-200 rounded-l-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                >
+                  <option value="All">All</option>
+                  <option value="Bikes">Bikes</option>
+                  <option value="Accessories">Accessories</option>
                 </select>
                 
                 {/* Search Input */}
                 <div className="relative flex-1">
                   <Input
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyPress={handleKeyPress}
                     placeholder="What are you looking for?"
                     className="rounded-none border-l-0 border-r-0 bg-white border-gray-200 focus:border-primary focus:ring-0 h-12"
                   />
                 </div>
                 
                 {/* Search Button */}
-                <Button className="bg-red-600 hover:bg-red-700 rounded-l-none px-4 h-12">
+                <Button 
+                  onClick={handleSearch}
+                  className="bg-red-600 hover:bg-red-700 rounded-l-none px-4 h-12"
+                >
                   <Search className="h-4 w-4" />
                 </Button>
               </div>
@@ -468,8 +510,6 @@ const Header = () => {
                       onClick={() => {
                         if (item.title === "Shop by Bike") setIsShopByBikeOpen(!isShopByBikeOpen);
                         else if (item.title === "Shop by Accessories") setIsShopByAccessoriesOpen(!isShopByAccessoriesOpen);
-                        else if (item.title === "Scooters") setIsScootersOpen(!isScootersOpen);
-                        else if (item.title === "EV Bikes") setIsEvBikesOpen(!isEvBikesOpen);
                       }}
                       className="w-full flex items-center justify-between text-left py-3 px-2 text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
                     >
@@ -478,9 +518,7 @@ const Header = () => {
                       </h2>
                       <ChevronDown className={`h-5 w-5 text-gray-600 transition-transform ${
                         (item.title === "Shop by Bike" && isShopByBikeOpen) ||
-                        (item.title === "Shop by Accessories" && isShopByAccessoriesOpen) ||
-                        (item.title === "Scooters" && isScootersOpen) ||
-                        (item.title === "EV Bikes" && isEvBikesOpen) ? 'rotate-180' : ''
+                        (item.title === "Shop by Accessories" && isShopByAccessoriesOpen) ? 'rotate-180' : ''
                       }`} />
                     </button>
                   ) : (
@@ -495,9 +533,7 @@ const Header = () => {
                   {item.submenu && (
                     <div className={`mt-4 space-y-1 ${
                       (item.title === "Shop by Bike" && !isShopByBikeOpen) ||
-                      (item.title === "Shop by Accessories" && !isShopByAccessoriesOpen) ||
-                      (item.title === "Scooters" && !isScootersOpen) ||
-                      (item.title === "EV Bikes" && !isEvBikesOpen) ? 'hidden' : ''
+                      (item.title === "Shop by Accessories" && !isShopByAccessoriesOpen) ? 'hidden' : ''
                     }`}>
                       {item.title === "Shop by Bike" ? (
                         item.submenu.map((brand) => (

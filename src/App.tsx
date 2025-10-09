@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ProductPage from "./pages/ProductPage";
 import ProductListing from "./pages/ProductListing";
+import SearchResults from "./pages/SearchResults";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 
@@ -24,6 +25,7 @@ const App = () => (
                   <Routes>
                     <Route path="/" element={<Index />} />
                     <Route path="/products/:id" element={<ProductPage />} />
+                    <Route path="/search" element={<SearchResults />} />
                     <Route path="/collections/:category" element={<ProductListing />} />
                     <Route path="/bikes/:brand/:model" element={<ProductListing />} />
                     <Route path="/bikes/:brand/:category" element={<ProductListing />} />

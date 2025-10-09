@@ -241,13 +241,82 @@ const fetchAllProductsWithClientFiltering = async (params: FilteredProductsParam
   
   console.log(`✅ Client-side filtering complete: ${paginatedProducts.length} products found`);
   
+  // Debug: Show sample of all available products for search queries
+  if (params.search && paginatedProducts.length === 0) {
+    const allProducts = data.data.products || [];
+    console.log(`🔍 Debug: Total products available: ${allProducts.length}`);
+    console.log(`🔍 Debug: Sample products:`, allProducts.slice(0, 5).map(p => ({
+      name: p.name,
+      brand: p.brand?.name,
+      category: p.category?.name,
+      sku: p.sku
+    })));
+  }
+  
   // If no products found after filtering, let's try a more relaxed approach
-  if (paginatedProducts.length === 0 && (params.brand || params.model || params.category)) {
+  if (paginatedProducts.length === 0 && (params.brand || params.model || params.category || params.search)) {
     console.log('⚠️ No products found with strict filtering, trying relaxed approach...');
     
     // Reset products and try more relaxed filtering
     products = data.data.products || [];
     let relaxedProducts = [...products];
+    
+    // Try relaxed search first if search query exists
+    if (params.search) {
+      const searchQuery = params.search.toLowerCase();
+      const searchWords = searchQuery.split(/\s+/);
+      
+      console.log(`🔄 Trying relaxed search for: ${searchQuery} with words: [${searchWords.join(', ')}]`);
+      
+      // Try searching in product names with partial matches
+      relaxedProducts = relaxedProducts.filter((product: any) => {
+        const productName = product.name?.toLowerCase() || '';
+        const brandName = product.brand?.name?.toLowerCase() || '';
+        const categoryName = product.category?.name?.toLowerCase() || '';
+        const description = product.description?.toLowerCase() || '';
+        const sku = product.sku?.toLowerCase() || '';
+        
+        // Strategy 1: Check if any search word matches any field
+        const hasWordMatch = searchWords.some(word => 
+          productName.includes(word) ||
+          brandName.includes(word) ||
+          categoryName.includes(word) ||
+          description.includes(word) ||
+          sku.includes(word)
+        );
+        
+        // Strategy 2: Check if the full search query appears anywhere
+        const hasFullMatch = productName.includes(searchQuery) ||
+                            brandName.includes(searchQuery) ||
+                            categoryName.includes(searchQuery) ||
+                            description.includes(searchQuery) ||
+                            sku.includes(searchQuery);
+        
+        // Strategy 3: For multi-word searches, check if most words match
+        if (searchWords.length > 1) {
+          const matchingWords = searchWords.filter(word => 
+            productName.includes(word) ||
+            brandName.includes(word) ||
+            categoryName.includes(word) ||
+            description.includes(word) ||
+            sku.includes(word)
+          );
+          
+          // If at least 2/3 of the words match, include the product
+          const wordMatchThreshold = Math.max(2, Math.ceil(searchWords.length * 0.6));
+          const hasPartialMatch = matchingWords.length >= wordMatchThreshold;
+          
+          if (hasPartialMatch) {
+            console.log(`🔄 Product "${productName}" matched ${matchingWords.length}/${searchWords.length} words: [${matchingWords.join(', ')}]`);
+            return true;
+          }
+        }
+        
+        return hasWordMatch || hasFullMatch;
+      });
+      
+      console.log(`🔄 Relaxed search results: ${relaxedProducts.length} products`);
+    }
     
     if (params.brand) {
       const brandFilter = params.brand.toLowerCase();
@@ -269,14 +338,22 @@ const fetchAllProductsWithClientFiltering = async (params: FilteredProductsParam
       console.log(`🔄 Relaxed model filter: ${relaxedProducts.length} products`);
     }
     
-    if (params.category && relaxedProducts.length > 0) {
+    // Only apply category filter if we don't have a search query
+    // If we have a search query, the search already found relevant products
+    if (params.category && relaxedProducts.length > 0 && !params.search) {
       const categoryFilter = params.category.toLowerCase();
       const categorySpaced = categoryFilter.replace(/-/g, ' ');
       relaxedProducts = relaxedProducts.filter((product: any) => {
         const productName = product.name?.toLowerCase() || '';
-        return productName.includes(categorySpaced) || productName.includes(categoryFilter);
+        const categoryName = product.category?.name?.toLowerCase() || '';
+        return productName.includes(categorySpaced) || 
+               productName.includes(categoryFilter) ||
+               categoryName.includes(categorySpaced) ||
+               categoryName.includes(categoryFilter);
       });
       console.log(`🔄 Relaxed category filter: ${relaxedProducts.length} products`);
+    } else if (params.category && params.search) {
+      console.log(`🔄 Skipping category filter for search query - search already found relevant products`);
     }
     
     // Apply pagination to relaxed results
