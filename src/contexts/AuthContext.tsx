@@ -5,6 +5,8 @@ interface User {
   firstName: string;
   lastName: string;
   email: string;
+  bikeBrand?: string;
+  bikeModel?: string;
   avatar?: string;
   role: 'customer' | 'admin' | 'staff';
   createdAt: string;
@@ -19,6 +21,8 @@ interface AuthContextType {
     firstName: string;
     lastName: string;
     email: string;
+    bikeBrand: string;
+    bikeModel: string;
     password: string;
   }) => Promise<void>;
   logout: () => void;
@@ -111,6 +115,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     firstName: string;
     lastName: string;
     email: string;
+    bikeBrand: string;
+    bikeModel: string;
     password: string;
   }): Promise<void> => {
     setIsLoading(true);
@@ -146,6 +152,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         firstName: userData.firstName,
         lastName: userData.lastName,
         email: userData.email,
+        bikeBrand: userData.bikeBrand,
+        bikeModel: userData.bikeModel,
         role: 'customer',
         createdAt: new Date().toISOString(),
       };

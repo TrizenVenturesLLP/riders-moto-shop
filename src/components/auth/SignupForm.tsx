@@ -12,6 +12,8 @@ interface SignupFormData {
   firstName: string;
   lastName: string;
   email: string;
+  bikeBrand: string;
+  bikeModel: string;
   password: string;
   confirmPassword: string;
   agreeToTerms: boolean;
@@ -21,6 +23,8 @@ interface FormErrors {
   firstName?: string;
   lastName?: string;
   email?: string;
+  bikeBrand?: string;
+  bikeModel?: string;
   password?: string;
   confirmPassword?: string;
   agreeToTerms?: string;
@@ -31,6 +35,8 @@ const SignupForm = () => {
     firstName: '',
     lastName: '',
     email: '',
+    bikeBrand: '',
+    bikeModel: '',
     password: '',
     confirmPassword: '',
     agreeToTerms: false
@@ -59,6 +65,14 @@ const SignupForm = () => {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email is invalid';
+    }
+    
+    if (!formData.bikeBrand.trim()) {
+      newErrors.bikeBrand = 'Bike brand is required';
+    }
+    
+    if (!formData.bikeModel.trim()) {
+      newErrors.bikeModel = 'Bike model is required';
     }
     
     if (!formData.password) {
@@ -113,6 +127,8 @@ const SignupForm = () => {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
+        bikeBrand: formData.bikeBrand,
+        bikeModel: formData.bikeModel,
         password: formData.password
       });
       
@@ -159,33 +175,30 @@ const SignupForm = () => {
   const passwordStrength = getPasswordStrength(formData.password);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex flex-col justify-start md:items-center md:justify-center p-4 pt-8 md:pt-4 pb-8 md:pb-4">
+      <div className="w-full max-w-2xl">
         {/* Back Button */}
         <Button
           variant="ghost"
           onClick={() => navigate('/')}
-          className="mb-6 text-gray-600 hover:text-gray-900"
+          className="mb-4 md:mb-6 text-gray-600 hover:text-gray-900"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Home
         </Button>
 
-        <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-          <CardHeader className="text-center pb-6">
-            <div className="mx-auto mb-4 w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-xl">R</span>
-            </div>
-            <CardTitle className="text-2xl font-bold text-gray-900">
+        <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm mb-8 md:mb-0">
+          <CardHeader className="text-center pb-6 md:pb-8">
+            <CardTitle className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
               Create Account
             </CardTitle>
-            <CardDescription className="text-gray-600">
+            <CardDescription className="text-base md:text-lg text-gray-600">
               Join Riders Moto Shop and start your journey
             </CardDescription>
           </CardHeader>
           
-          <CardContent className="space-y-6">
-            <form onSubmit={handleSubmit} className="space-y-4">
+          <CardContent className="space-y-6 md:space-y-8 px-4 md:px-8">
+            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
               {/* Name Fields */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -245,6 +258,57 @@ const SignupForm = () => {
                 {errors.email && (
                   <p className="text-sm text-red-600">{errors.email}</p>
                 )}
+              </div>
+
+              {/* Bike Details Section */}
+              <div className="space-y-4 md:space-y-6">
+                <div className="border-t border-gray-200 pt-4 md:pt-6">
+                  <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2 md:mb-3">Your Bike Details</h3>
+                  <p className="text-sm md:text-base text-gray-600 mb-4 md:mb-6">
+                    Help us personalize your experience by telling us about your motorcycle
+                  </p>
+                </div>
+                
+                {/* Bike Brand and Model Fields */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="bikeBrand" className="text-sm font-medium text-gray-700">
+                      Bike Brand
+                    </Label>
+                    <Input
+                      id="bikeBrand"
+                      name="bikeBrand"
+                      type="text"
+                      placeholder="e.g., Honda, Yamaha, Bajaj"
+                      value={formData.bikeBrand}
+                      onChange={handleInputChange}
+                      className={`h-12 ${errors.bikeBrand ? 'border-red-500 focus:border-red-500' : ''}`}
+                      disabled={isLoading}
+                    />
+                    {errors.bikeBrand && (
+                      <p className="text-sm text-red-600">{errors.bikeBrand}</p>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="bikeModel" className="text-sm font-medium text-gray-700">
+                      Bike Model
+                    </Label>
+                    <Input
+                      id="bikeModel"
+                      name="bikeModel"
+                      type="text"
+                      placeholder="e.g., Pulsar 150, R15, Activa"
+                      value={formData.bikeModel}
+                      onChange={handleInputChange}
+                      className={`h-12 ${errors.bikeModel ? 'border-red-500 focus:border-red-500' : ''}`}
+                      disabled={isLoading}
+                    />
+                    {errors.bikeModel && (
+                      <p className="text-sm text-red-600">{errors.bikeModel}</p>
+                    )}
+                  </div>
+                </div>
               </div>
 
               {/* Password Field */}
@@ -344,23 +408,23 @@ const SignupForm = () => {
               </div>
 
               {/* Terms and Conditions */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <label className="flex items-start space-x-3">
                   <input
                     type="checkbox"
                     name="agreeToTerms"
                     checked={formData.agreeToTerms}
                     onChange={handleInputChange}
-                    className="mt-1 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                    className="mt-1 rounded border-gray-300 text-red-600 focus:ring-red-500 h-4 w-4"
                     disabled={isLoading}
                   />
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-gray-600 leading-relaxed">
                     I agree to the{' '}
-                    <Link to="/terms" className="text-red-600 hover:text-red-700">
+                    <Link to="/terms" className="text-red-600 hover:text-red-700 font-medium">
                       Terms and Conditions
                     </Link>{' '}
                     and{' '}
-                    <Link to="/privacy" className="text-red-600 hover:text-red-700">
+                    <Link to="/privacy" className="text-red-600 hover:text-red-700 font-medium">
                       Privacy Policy
                     </Link>
                   </span>
@@ -373,17 +437,17 @@ const SignupForm = () => {
               {/* Submit Button */}
               <Button
                 type="submit"
-                className="w-full h-12 bg-red-600 hover:bg-red-700 text-white font-semibold"
+                className="w-full h-12 md:h-14 bg-red-600 hover:bg-red-700 text-white font-semibold text-base md:text-lg rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
                 disabled={isLoading}
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    <Loader2 className="h-5 w-5 mr-2 animate-spin" />
                     Creating Account...
                   </>
                 ) : (
                   <>
-                    <Check className="h-4 w-4 mr-2" />
+                    <Check className="h-5 w-5 mr-2" />
                     Create Account
                   </>
                 )}
@@ -401,10 +465,10 @@ const SignupForm = () => {
             </div>
 
             {/* Social Signup Buttons */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-3 md:gap-4">
               <Button
                 variant="outline"
-                className="h-12 border-gray-200 hover:bg-gray-50"
+                className="h-10 md:h-12 border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 text-sm md:text-base"
                 disabled={isLoading}
               >
                 <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
@@ -429,7 +493,7 @@ const SignupForm = () => {
               </Button>
               <Button
                 variant="outline"
-                className="h-12 border-gray-200 hover:bg-gray-50"
+                className="h-10 md:h-12 border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 text-sm md:text-base"
                 disabled={isLoading}
               >
                 <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
@@ -440,12 +504,12 @@ const SignupForm = () => {
             </div>
 
             {/* Login Link */}
-            <div className="text-center">
-              <p className="text-sm text-gray-600">
+            <div className="text-center pt-4">
+              <p className="text-gray-600">
                 Already have an account?{' '}
                 <Link
                   to="/login"
-                  className="text-red-600 hover:text-red-700 font-medium transition-colors"
+                  className="text-red-600 hover:text-red-700 font-semibold transition-colors hover:underline"
                 >
                   Sign in here
                 </Link>
