@@ -98,33 +98,30 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="h-auto md:min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex flex-col justify-start md:items-center md:justify-center p-4 pt-4 md:pt-4 pb-1 md:pb-4">
+      <div className="w-full max-w-2xl">
         {/* Back Button */}
         <Button
           variant="ghost"
           onClick={() => navigate('/')}
-          className="mb-6 text-gray-600 hover:text-gray-900"
+          className="mb-2 md:mb-6 text-gray-600 hover:text-gray-900"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Home
         </Button>
 
-        <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-          <CardHeader className="text-center pb-6">
-            <div className="mx-auto mb-4 w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-xl">R</span>
-            </div>
-            <CardTitle className="text-2xl font-bold text-gray-900">
+        <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm mb-0 md:mb-0">
+          <CardHeader className="text-center pb-4 md:pb-8">
+            <CardTitle className="text-xl md:text-3xl font-bold text-gray-900 mb-1 md:mb-2">
               Welcome Back
             </CardTitle>
-            <CardDescription className="text-gray-600">
+            <CardDescription className="text-sm md:text-lg text-gray-600">
               Sign in to your account to continue shopping
             </CardDescription>
           </CardHeader>
           
-          <CardContent className="space-y-6">
-            <form onSubmit={handleSubmit} className="space-y-4">
+          <CardContent className="space-y-3 md:space-y-8 px-4 md:px-8">
+            <form onSubmit={handleSubmit} className="space-y-2 md:space-y-6">
               {/* Email Field */}
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium text-gray-700">
@@ -137,7 +134,7 @@ const LoginForm = () => {
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className={`h-12 ${errors.email ? 'border-red-500 focus:border-red-500' : ''}`}
+                  className={`h-10 md:h-12 ${errors.email ? 'border-red-500 focus:border-red-500' : ''}`}
                   disabled={isLoading}
                 />
                 {errors.email && (
@@ -158,14 +155,14 @@ const LoginForm = () => {
                     placeholder="Enter your password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    className={`h-12 pr-12 ${errors.password ? 'border-red-500 focus:border-red-500' : ''}`}
+                    className={`h-10 md:h-12 pr-12 ${errors.password ? 'border-red-500 focus:border-red-500' : ''}`}
                     disabled={isLoading}
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-12 px-3 py-2 hover:bg-transparent"
+                    className="absolute right-0 top-0 h-10 md:h-12 px-3 py-2 hover:bg-transparent"
                     onClick={() => setShowPassword(!showPassword)}
                     disabled={isLoading}
                   >
@@ -201,7 +198,7 @@ const LoginForm = () => {
               {/* Submit Button */}
               <Button
                 type="submit"
-                className="w-full h-12 bg-red-600 hover:bg-red-700 text-white font-semibold"
+                className="w-full h-10 md:h-14 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm md:text-lg rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -226,10 +223,10 @@ const LoginForm = () => {
             </div>
 
             {/* Social Login Buttons */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2 md:gap-4">
               <Button
                 variant="outline"
-                className="h-12 border-gray-200 hover:bg-gray-50"
+                className="h-8 md:h-12 border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 text-xs md:text-base"
                 disabled={isLoading}
               >
                 <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
@@ -254,7 +251,7 @@ const LoginForm = () => {
               </Button>
               <Button
                 variant="outline"
-                className="h-12 border-gray-200 hover:bg-gray-50"
+                className="h-8 md:h-12 border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 text-xs md:text-base"
                 disabled={isLoading}
               >
                 <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
@@ -265,12 +262,12 @@ const LoginForm = () => {
             </div>
 
             {/* Sign Up Link */}
-            <div className="text-center">
-              <p className="text-sm text-gray-600">
+            <div className="text-center pt-1 md:pt-4">
+              <p className="text-gray-600 text-sm md:text-base">
                 Don't have an account?{' '}
                 <Link
                   to="/signup"
-                  className="text-red-600 hover:text-red-700 font-medium transition-colors"
+                  className="text-red-600 hover:text-red-700 font-semibold transition-colors hover:underline"
                 >
                   Sign up for free
                 </Link>

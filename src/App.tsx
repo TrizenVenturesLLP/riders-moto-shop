@@ -15,6 +15,8 @@ import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 import Orders from "./pages/Orders";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+import OrderConfirmation from "./pages/OrderConfirmation";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -42,6 +44,8 @@ const App = () => (
                 <Route path="/bikes/:brand/:category" element={<ProductListing />} />
                 <Route path="/bikes/:brand/:model/:category" element={<ProductListing />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
                 
                 {/* Auth Routes - Only accessible when not logged in */}
                 <Route 

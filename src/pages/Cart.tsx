@@ -30,10 +30,7 @@ const Cart = () => {
   };
 
   const handleCheckout = () => {
-    // TODO: Implement checkout functionality
-    console.log('Proceeding to checkout...');
-    // For now, just show an alert
-    alert('Checkout functionality will be implemented soon!');
+    navigate('/checkout');
   };
 
   if (items.length === 0) {
@@ -205,7 +202,9 @@ const Cart = () => {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Shipping</span>
-                  <span className="font-medium text-green-600">Free</span>
+                  <span className="font-medium text-green-600">
+                    {totalPrice >= 999 ? 'Free' : 'Calculated at checkout'}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Tax</span>
