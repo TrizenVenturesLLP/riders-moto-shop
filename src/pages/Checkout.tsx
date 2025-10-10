@@ -74,6 +74,12 @@ const Checkout = () => {
     message: string;
   }>({ isValid: false, isValidating: false, message: '' });
 
+  const [pincodeValidation, setPincodeValidation] = useState<{
+    isValid: boolean;
+    isValidating: boolean;
+    message: string;
+  }>({ isValid: false, isValidating: false, message: '' });
+
   // Calculate shipping based on geocoding and distance
   const calculateShipping = async () => {
     if (!formData.address || !formData.city || !formData.state || !formData.pincode) {
@@ -117,15 +123,15 @@ const Checkout = () => {
     // Strategy 1: Try pincode validation first (most reliable for India)
     if (formData.pincode && formData.pincode.length === 6) {
       try {
-        setAddressValidation({ isValid: false, isValidating: true, message: 'Validating pincode...' });
+        setPincodeValidation({ isValid: false, isValidating: true, message: 'Validating pincode...' });
         
         const pincodeResponse = await shippingService.validatePincode(formData.pincode, totalPrice);
         
         if (pincodeResponse.data.valid) {
-          setAddressValidation({ 
+          setPincodeValidation({ 
             isValid: true, 
             isValidating: false, 
-            message: `Pincode validated - ${pincodeResponse.data.zone || 'Zone detected'}` 
+            message: 'Pincode validated' 
           });
           
           // Set shipping data from pincode response
@@ -143,9 +149,7 @@ const Checkout = () => {
               },
               fallback: false,
               orderValue: totalPrice,
-              freeShippingThreshold: 999,
-              method: 'pincode-based',
-              confidence: 'high'
+              freeShippingThreshold: 999
             }
           });
           
@@ -156,10 +160,20 @@ const Checkout = () => {
           
           return; // Success, no need to try address validation
         } else {
+          setPincodeValidation({ 
+            isValid: false, 
+            isValidating: false, 
+            message: pincodeResponse.data.error || 'Invalid pincode' 
+          });
           console.log('⚠️ Pincode validation failed:', pincodeResponse.data.error);
           // Continue to address validation
         }
       } catch (error) {
+        setPincodeValidation({ 
+          isValid: false, 
+          isValidating: false, 
+          message: 'Pincode validation failed' 
+        });
         console.log('⚠️ Pincode validation error:', error);
         // Continue to address validation
       }
@@ -256,6 +270,11 @@ const Checkout = () => {
       ...prev,
       [name]: value
     }));
+
+    // Clear pincode validation when pincode changes
+    if (name === 'pincode') {
+      setPincodeValidation({ isValid: false, isValidating: false, message: '' });
+    }
   };
 
   const validateForm = (): boolean => {
@@ -316,35 +335,30 @@ const Checkout = () => {
       // Simulate order processing
       await new Promise(resolve => setTimeout(resolve, 2000));
 
-      // Create order object
-      const order = {
-        id: `ORD-${Date.now()}`,
-        items,
-        shippingAddress: formData,
-        shippingMethod: selectedShipping,
+      // Generate order ID
+      const orderId = `ORD-${Date.now()}`;
+      
+      // Prepare payment data
+      const paymentData = {
+        orderId,
+        amount: totalPrice,
         shippingCost,
         tax,
-        subtotal: totalPrice,
         total: finalTotal,
-        status: 'confirmed',
-        createdAt: new Date().toISOString()
+        items: items.map(item => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          image: item.image
+        })),
+        shippingAddress: formData
       };
-
-      // Save order to localStorage (in real app, this would go to backend)
-      const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]');
-      existingOrders.push(order);
-      localStorage.setItem('orders', JSON.stringify(existingOrders));
-
-      // Clear cart
-      clearCart();
-
-      toast({
-        title: "Order Placed Successfully!",
-        description: `Your order ${order.id} has been confirmed. You will receive a confirmation email shortly.`,
+      
+      // Navigate to payment page with order data
+      navigate('/payment', { 
+        state: { paymentData } 
       });
-
-      // Navigate to order confirmation
-      navigate(`/order-confirmation/${order.id}`);
 
     } catch (error) {
       console.error('Order placement error:', error);
@@ -514,6 +528,24 @@ const Checkout = () => {
                       onChange={handleInputChange}
                       placeholder="Enter pincode"
                     />
+                    {pincodeValidation.isValidating && (
+                      <div className="flex items-center text-sm text-blue-600">
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        {pincodeValidation.message}
+                      </div>
+                    )}
+                    {pincodeValidation.isValid && !pincodeValidation.isValidating && (
+                      <div className="flex items-center text-sm text-green-600">
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        {pincodeValidation.message}
+                      </div>
+                    )}
+                    {!pincodeValidation.isValid && !pincodeValidation.isValidating && pincodeValidation.message && (
+                      <div className="flex items-center text-sm text-red-600">
+                        <AlertCircle className="h-4 w-4 mr-2" />
+                        {pincodeValidation.message}
+                      </div>
+                    )}
                   </div>
                 </div>
 
