@@ -35,7 +35,7 @@ const ProductGrid = () => {
   const products = (data as { data?: { products?: Product[] } })?.data?.products || [];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-gray-50">
+    <section id="featured-products" className="py-20 bg-gradient-to-br from-gray-50 via-white to-gray-50">
       <div className="container mx-auto px-4">
         {/* Modern Header */}
         <div className="text-center mb-16">

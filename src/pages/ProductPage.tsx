@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { useProductWithFallback } from '@/hooks/useProductWithFallback';
+import { useCart } from '@/hooks/useCart';
+import { useToast } from '@/hooks/use-toast';
 import {
   ShoppingCart,
   Heart,
@@ -11,7 +13,8 @@ import {
   ChevronRight,
   Plus,
   Minus,
-  Loader2
+  Loader2,
+  Check
 } from 'lucide-react';
 
 interface ProductImage {
@@ -66,9 +69,14 @@ const ProductPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState('black');
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   // Fetch product data from API with fallback
   const { data: productData, isLoading, error, source } = useProductWithFallback(id || '');
+  
+  // Cart functionality
+  const { addToCart, isInCart, getCartItem } = useCart();
+  const { toast } = useToast();
 
   if (isLoading) {
     return (
@@ -106,6 +114,48 @@ const ProductPage = () => {
   // Debug info
   console.log('🎯 Product loaded from:', source);
   console.log('📦 Product data:', product);
+
+  // Handle add to cart
+  const handleAddToCart = async () => {
+    if (!product) return;
+    
+    setIsAddingToCart(true);
+    
+    try {
+      // Add multiple items if quantity > 1
+      for (let i = 0; i < quantity; i++) {
+        addToCart({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: typeof product.images?.[0] === 'string' ? product.images[0] : product.images?.[0]?.url,
+          sku: product.sku,
+          brand: product.brand?.name,
+          inStock: product.stockQuantity > 0,
+          maxQuantity: product.stockQuantity
+        });
+      }
+      
+      toast({
+        title: "Added to Cart!",
+        description: `${quantity} × ${product.name} added to your cart.`,
+      });
+      
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      toast({
+        title: "Error",
+        description: "Failed to add item to cart. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
+
+  // Check if product is in cart
+  const cartItem = getCartItem(product.id);
+  const isProductInCart = isInCart(product.id);
 
   const colors = ['black', 'red', 'white', 'blue'];
 
@@ -251,9 +301,27 @@ const ProductPage = () => {
 
             {/* Action Buttons */}
             <div className="space-y-3">
-              <Button className="w-full bg-red-600 hover:bg-red-700 text-white py-3 text-lg">
-                <ShoppingCart className="h-5 w-5 mr-2" />
-                Add to Cart
+              <Button 
+                onClick={handleAddToCart}
+                disabled={isAddingToCart || product.stockQuantity === 0}
+                className="w-full bg-red-600 hover:bg-red-700 text-white py-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isAddingToCart ? (
+                  <>
+                    <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                    Adding...
+                  </>
+                ) : isProductInCart ? (
+                  <>
+                    <Check className="h-5 w-5 mr-2" />
+                    In Cart ({cartItem?.quantity || 0})
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="h-5 w-5 mr-2" />
+                    Add to Cart
+                  </>
+                )}
               </Button>
 
               <div className="flex space-x-3">

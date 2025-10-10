@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, Eye, Heart } from 'lucide-react';
+import { ShoppingCart, Eye, Heart, Check, Loader2 } from 'lucide-react';
 import { Product } from '@/hooks/useProducts';
+import { useCart } from '@/hooks/useCart';
+import { useToast } from '@/hooks/use-toast';
 
 interface ProductCardProps {
   product: Product;
@@ -11,7 +13,12 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Cart functionality
+  const { addToCart, isInCart, getCartItem } = useCart();
+  const { toast } = useToast();
   
   const allImages = product.images || [];
   const primaryImage = allImages.find(img => img.isPrimary) || allImages[0];
@@ -21,6 +28,48 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const discountPercentage = hasDiscount
     ? Math.round(((parseFloat(product.comparePrice) - parseFloat(product.price)) / parseFloat(product.comparePrice)) * 100)
     : 0;
+
+  // Handle add to cart
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (product.stockQuantity === 0) return;
+    
+    setIsAddingToCart(true);
+    
+    try {
+      addToCart({
+        id: product.id,
+        name: product.name,
+        price: parseFloat(product.price),
+        image: typeof product.images?.[0] === 'string' ? product.images[0] : product.images?.[0]?.url,
+        sku: product.sku,
+        brand: product.brand?.name,
+        inStock: product.stockQuantity > 0,
+        maxQuantity: product.stockQuantity
+      });
+      
+      toast({
+        title: "Added to Cart!",
+        description: `${product.name} added to your cart.`,
+      });
+      
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      toast({
+        title: "Error",
+        description: "Failed to add item to cart. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
+
+  // Check if product is in cart
+  const cartItem = getCartItem(product.id);
+  const isProductInCart = isInCart(product.id);
 
   // Auto-swipe effect for multiple images
   useEffect(() => {
@@ -218,13 +267,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       {/* Add to Cart Button */}
       <div className="px-5 pb-5">
         <Button 
-          className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-red-500/25" 
+          className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-red-500/25 disabled:opacity-50 disabled:cursor-not-allowed" 
           size="sm" 
-          disabled={product.stockQuantity === 0}
-          onClick={(e) => e.preventDefault()}
+          disabled={product.stockQuantity === 0 || isAddingToCart}
+          onClick={handleAddToCart}
         >
-          <ShoppingCart className="h-4 w-4 mr-2" />
-          {product.stockQuantity === 0 ? 'Out of Stock' : 'Add to Cart'}
+          {isAddingToCart ? (
+            <>
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              Adding...
+            </>
+          ) : isProductInCart ? (
+            <>
+              <Check className="h-4 w-4 mr-2" />
+              In Cart ({cartItem?.quantity || 0})
+            </>
+          ) : (
+            <>
+              <ShoppingCart className="h-4 w-4 mr-2" />
+              {product.stockQuantity === 0 ? 'Out of Stock' : 'Add to Cart'}
+            </>
+          )}
         </Button>
       </div>
     </div>
