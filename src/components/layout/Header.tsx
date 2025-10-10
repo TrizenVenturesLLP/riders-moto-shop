@@ -173,8 +173,11 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchCategory, setSearchCategory] = useState('All');
   const navigate = useNavigate();
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout, isLoading } = useAuth();
   const { totalItems } = useCart();
+
+  // Debug authentication state
+  console.log('Header - Auth state:', { isAuthenticated, isLoading, user: user?.email });
 
   // Using static navigation data from JSON
 
@@ -353,11 +356,25 @@ const Header = () => {
               </div>
             ) : (
               // Non-authenticated User Button
-              <Link to="/login">
-                <Button variant="ghost" size="sm" className="hidden md:flex">
-                  <User className="h-5 w-5" />
-                </Button>
-              </Link>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="hidden md:flex"
+                disabled={isLoading}
+                onClick={() => {
+                  if (isLoading) return;
+                  console.log('Account icon clicked, navigating to login');
+                  try {
+                    navigate('/login');
+                  } catch (error) {
+                    console.error('Navigation error:', error);
+                    // Fallback to window.location if navigate fails
+                    window.location.href = '/login';
+                  }
+                }}
+              >
+                <User className="h-5 w-5" />
+              </Button>
             )}
             
             <Link to="/cart">
@@ -640,20 +657,40 @@ const Header = () => {
             ) : (
               <div className="bg-white px-4 py-4 border-b border-gray-100">
                 <div className="space-y-2">
-                  <Link
-                    to="/login"
-                    className="block py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
+                  <button
+                    disabled={isLoading}
+                    onClick={() => {
+                      if (isLoading) return;
+                      console.log('Mobile Sign In clicked');
+                      setIsMenuOpen(false);
+                      try {
+                        navigate('/login');
+                      } catch (error) {
+                        console.error('Navigation error:', error);
+                        window.location.href = '/login';
+                      }
+                    }}
+                    className="block w-full text-left py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Sign In
-                  </Link>
-                  <Link
-                    to="/signup"
-                    className="block py-2 px-3 text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors font-medium"
-                    onClick={() => setIsMenuOpen(false)}
+                  </button>
+                  <button
+                    disabled={isLoading}
+                    onClick={() => {
+                      if (isLoading) return;
+                      console.log('Mobile Create Account clicked');
+                      setIsMenuOpen(false);
+                      try {
+                        navigate('/signup');
+                      } catch (error) {
+                        console.error('Navigation error:', error);
+                        window.location.href = '/signup';
+                      }
+                    }}
+                    className="block w-full text-left py-2 px-3 text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Create Account
-                  </Link>
+                  </button>
                 </div>
               </div>
             )}
