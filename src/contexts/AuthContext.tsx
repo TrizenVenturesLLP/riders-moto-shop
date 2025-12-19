@@ -16,7 +16,7 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string, rememberMe?: boolean) => Promise<void>;
   signup: (userData: {
     firstName: string;
     lastName: string;
@@ -25,8 +25,10 @@ interface AuthContextType {
     bikeModel: string;
     password: string;
   }) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   updateProfile: (userData: Partial<User>) => Promise<void>;
+  getActiveSessions: () => Promise<any[]>;
+  logoutAllSessions: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -35,27 +37,36 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://rmsadminbackend.llp.trizenventures.com/api/v1';
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check for existing session on mount
+  // Check for existing session on mount (localStorage-based for testing)
   useEffect(() => {
-    const checkAuthStatus = async () => {
+    const checkAuthStatus = () => {
       try {
-        const token = localStorage.getItem('auth_token');
-        if (token) {
-          // TODO: Verify token with backend
-          // For now, simulate checking auth status
-          const savedUser = localStorage.getItem('user_data');
-          if (savedUser) {
-            setUser(JSON.parse(savedUser));
+        const savedUser = localStorage.getItem('user_data');
+        const savedToken = localStorage.getItem('auth_token');
+        
+        if (savedUser && savedToken) {
+          try {
+            const userData = JSON.parse(savedUser);
+            setUser(userData);
+            console.log('✅ Restored user from localStorage');
+          } catch (e) {
+            console.error('Failed to parse user data:', e);
+            localStorage.removeItem('user_data');
+            localStorage.removeItem('auth_token');
+            setUser(null);
           }
+        } else {
+          setUser(null);
         }
       } catch (error) {
         console.error('Auth check failed:', error);
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('user_data');
+        setUser(null);
       } finally {
         setIsLoading(false);
       }
@@ -64,48 +75,44 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     checkAuthStatus();
   }, []);
 
-  const login = async (email: string, password: string): Promise<void> => {
+  const login = async (email: string, password: string, rememberMe: boolean = false): Promise<void> => {
     setIsLoading(true);
     try {
-      // Try to connect to backend API first
-      const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://rmsadminbackend.llp.trizenventures.com/api/v1';
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      // DISABLED: API call for testing - using localStorage instead
+      // const response = await fetch(`${API_BASE_URL}/customer/auth/login`, {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   credentials: 'include',
+      //   body: JSON.stringify({ email, password, rememberMe }),
+      // });
 
-      if (response.ok) {
-        const data = await response.json();
-        
-        // Store auth data
-        localStorage.setItem('auth_token', data.token);
-        localStorage.setItem('user_data', JSON.stringify(data.user));
-        
-        setUser(data.user);
-        console.log('✅ Login successful with backend API');
-      } else {
-        throw new Error(`Login failed: ${response.status}`);
-      }
-    } catch (error) {
-      console.error('Backend login failed, using demo mode:', error);
-      
-      // For demo purposes, create a mock user
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // For testing: Accept any email/password combination
+      // In production, this would validate against backend
       const mockUser: User = {
-        id: '1',
-        firstName: 'John',
-        lastName: 'Doe',
+        id: `user_${Date.now()}`,
+        firstName: email.split('@')[0].split('.')[0] || 'John',
+        lastName: email.split('@')[0].split('.')[1] || 'Doe',
         email: email,
         role: 'customer',
         createdAt: new Date().toISOString(),
       };
-      
-      localStorage.setItem('auth_token', 'demo_token_' + Date.now());
+
+      // Store in localStorage
+      const token = `demo_token_${Date.now()}`;
+      localStorage.setItem('auth_token', token);
+      if (rememberMe) {
+        localStorage.setItem('refresh_token', `demo_refresh_${Date.now()}`);
+      }
       localStorage.setItem('user_data', JSON.stringify(mockUser));
+      
       setUser(mockUser);
-      console.log('✅ Demo login successful');
+      console.log('✅ Login successful (localStorage mode)');
+    } catch (error) {
+      console.error('Login error:', error);
+      throw new Error('Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -121,34 +128,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }): Promise<void> => {
     setIsLoading(true);
     try {
-      // Try to connect to backend API first
-      const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://rmsadminbackend.llp.trizenventures.com/api/v1';
-      const response = await fetch(`${API_BASE_URL}/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
+      // DISABLED: API call for testing - using localStorage instead
+      // const response = await fetch(`${API_BASE_URL}/customer/auth/register`, {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   credentials: 'include',
+      //   body: JSON.stringify(userData),
+      // });
 
-      if (response.ok) {
-        const data = await response.json();
-        
-        // Store auth data
-        localStorage.setItem('auth_token', data.token);
-        localStorage.setItem('user_data', JSON.stringify(data.user));
-        
-        setUser(data.user);
-        console.log('✅ Signup successful with backend API');
-      } else {
-        throw new Error(`Signup failed: ${response.status}`);
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      // Check if user already exists (in localStorage for testing)
+      const existingUsers = JSON.parse(localStorage.getItem('demo_users') || '[]');
+      if (existingUsers.some((u: any) => u.email === userData.email)) {
+        throw new Error('User already exists with this email');
       }
-    } catch (error) {
-      console.error('Backend signup failed, using demo mode:', error);
-      
-      // For demo purposes, create a mock user
-      const mockUser: User = {
-        id: '1',
+
+      // Create new user
+      const newUser: User = {
+        id: `user_${Date.now()}`,
         firstName: userData.firstName,
         lastName: userData.lastName,
         email: userData.email,
@@ -157,49 +156,77 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         role: 'customer',
         createdAt: new Date().toISOString(),
       };
+
+      // Store in localStorage
+      const token = `demo_token_${Date.now()}`;
+      localStorage.setItem('auth_token', token);
+      localStorage.setItem('refresh_token', `demo_refresh_${Date.now()}`);
+      localStorage.setItem('user_data', JSON.stringify(newUser));
       
-      localStorage.setItem('auth_token', 'demo_token_' + Date.now());
-      localStorage.setItem('user_data', JSON.stringify(mockUser));
-      setUser(mockUser);
-      console.log('✅ Demo signup successful');
+      // Also store in demo_users list for duplicate checking
+      existingUsers.push({ email: userData.email, id: newUser.id });
+      localStorage.setItem('demo_users', JSON.stringify(existingUsers));
+      
+      setUser(newUser);
+      console.log('✅ Signup successful (localStorage mode)');
+    } catch (error: any) {
+      console.error('Signup error:', error);
+      throw new Error(error.message || 'Signup failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const logout = () => {
+  const logout = async (): Promise<void> => {
+    try {
+      // DISABLED: API call for testing
+      // await fetch(`${API_BASE_URL}/customer/auth/logout`, {
+      //   method: 'POST',
+      //   credentials: 'include',
+      // });
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+    
+    // Clear local storage
     localStorage.removeItem('auth_token');
+    localStorage.removeItem('refresh_token');
     localStorage.removeItem('user_data');
     setUser(null);
+    console.log('✅ Logout successful (localStorage mode)');
+  };
+
+  const getActiveSessions = async (): Promise<any[]> => {
+    // DISABLED: API call for testing
+    // Return empty array for now
+    return [];
+  };
+
+  const logoutAllSessions = async (): Promise<void> => {
+    // DISABLED: API call for testing
+    // Just logout current session
+    await logout();
   };
 
   const updateProfile = async (userData: Partial<User>): Promise<void> => {
     if (!user) return;
 
+    setIsLoading(true);
     try {
-      // TODO: Implement actual profile update API call
-      const response = await fetch('/api/v1/auth/profile', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
-        },
-        body: JSON.stringify(userData),
-      });
+      // DISABLED: API call for testing - using localStorage instead
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 500));
 
-      if (!response.ok) {
-        throw new Error('Profile update failed');
-      }
-
-      const data = await response.json();
-      setUser(data.user);
-      localStorage.setItem('user_data', JSON.stringify(data.user));
-    } catch (error) {
-      console.error('Profile update error:', error);
-      // For demo purposes, update local state
+      // Update user data locally
       const updatedUser = { ...user, ...userData };
       setUser(updatedUser);
       localStorage.setItem('user_data', JSON.stringify(updatedUser));
+      console.log('✅ Profile updated successfully (localStorage mode)');
+    } catch (error) {
+      console.error('Profile update error:', error);
+      throw new Error('Profile update failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -211,6 +238,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     signup,
     logout,
     updateProfile,
+    getActiveSessions,
+    logoutAllSessions,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

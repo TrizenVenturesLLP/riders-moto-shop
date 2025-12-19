@@ -82,42 +82,38 @@ const accessories = [
 
 const AccessoriesSection = () => {
   return (
-    <section id="shop-accessories" className="py-20 bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      <div className="container mx-auto px-4">
-        {/* Modern Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-50 text-red-600 text-sm font-medium mb-6">
-            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-            Premium Accessories
-          </div>
-          <h2 className="text-5xl font-bold text-gray-900 mb-6">
-            Shop by <span className="bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">Accessories</span>
+    <section id="shop-accessories" className="mt-12 pt-16 pb-8 bg-white">
+      <div className="container mx-auto px-4 max-w-7xl">
+        {/* Clean Header */}
+        <div className="text-center mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+            Shop by <span className="text-red-600">Accessories</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-sm text-gray-600 max-w-2xl mx-auto">
             Premium motorcycle accessories for protection, performance, and style. 
             Upgrade your ride with our quality parts engineered for the ultimate riding experience.
           </p>
         </div>
 
-        {/* Modern Grid Layout */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-7xl mx-auto">
+        {/* Clean Grid Layout - 5 columns on medium+ screens to show all at once */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 max-w-7xl mx-auto">
           {accessories.map((accessory) => {
             const IconComponent = getAccessoryIcon(accessory.name);
             return (
               <div 
                 key={accessory.id}
-                className="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-2xl hover:shadow-red-500/10 transition-all duration-500 hover:-translate-y-2 cursor-pointer"
+                className="group cursor-pointer"
                 onClick={() => {
                   window.location.href = accessory.link;
                 }}
               >
-                {/* Product Image Container */}
-                <div className="relative aspect-square bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-6">
+                {/* Product Image Container - Wider, no top/bottom spacing */}
+                <div className="relative aspect-[5/3] flex items-center justify-center">
                   {/* Actual product image */}
                   <img 
                     src={accessory.image} 
                     alt={accessory.name}
-                    className="w-full h-full object-contain group-hover:scale-110 transition-all duration-500 ease-out"
+                    className="w-full h-full object-contain"
                     onError={(e) => {
                       // Fallback to icon if image fails to load
                       (e.target as HTMLImageElement).style.display = 'none';
@@ -125,14 +121,14 @@ const AccessoriesSection = () => {
                     }}
                   />
                   {/* Fallback icon if image fails */}
-                  <div className="hidden w-20 h-20 bg-red-50 rounded-xl flex items-center justify-center">
-                    <IconComponent className="w-10 h-10 text-red-600" />
+                  <div className="hidden w-10 h-10 bg-red-50 rounded flex items-center justify-center">
+                    <IconComponent className="w-5 h-5 text-red-600" />
                   </div>
                 </div>
 
-                {/* Accessory Name */}
-                <div className="p-4 text-center">
-                  <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide group-hover:text-red-600 transition-colors">
+                {/* Accessory Name - Below image */}
+                <div className="text-center mt-1">
+                  <h3 className="text-[9px] font-semibold text-gray-900 uppercase tracking-wide group-hover:text-red-600 transition-colors leading-tight">
                     {accessory.name}
                   </h3>
                 </div>
@@ -141,18 +137,18 @@ const AccessoriesSection = () => {
           })}
         </div>
 
-        {/* Modern View All Button */}
-        <div className="text-center mt-16">
+        {/* Clean View All Button */}
+        <div className="text-center mt-12">
           <Button 
-            size="lg" 
+            size="default" 
             variant="outline" 
-            className="border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-red-500/25"
+            className="bg-white border border-gray-300 text-gray-900 hover:bg-gray-50 px-7 py-3.5 rounded-lg font-medium"
             onClick={() => {
               window.location.href = '/collections/accessories';
             }}
           >
             View All Accessories
-            <ArrowRight className="ml-2 h-5 w-5" />
+            <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
       </div>

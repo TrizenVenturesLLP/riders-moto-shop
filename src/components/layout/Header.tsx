@@ -242,10 +242,10 @@ const Header = () => {
   }, [isUserMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
+    <header className="sticky top-0 z-50 bg-white shadow-sm">
+      {/* Main Header - Bigger, White Background */}
       <div className="container mx-auto px-4">
-        {/* Main Header */}
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-24">
           {/* Mobile Menu Button */}
           <button 
             className="md:hidden"
@@ -256,19 +256,19 @@ const Header = () => {
 
           {/* Logo */}
           <div className="flex items-center">
-            <h1 className="text-xl font-bold text-red-600 text-glow">
+            <h1 className="text-2xl font-bold text-red-600">
               Riders Moto Shop
             </h1>
           </div>
 
           {/* Search Bar - Desktop */}
-          <div className="hidden md:flex flex-1 max-w-md mx-8">
-            <div className="flex w-full">
+          <div className="hidden md:flex flex-1 max-w-2xl mx-8">
+            <div className="flex w-full border border-gray-300 rounded-lg shadow-sm overflow-hidden bg-white">
               {/* Category Filter */}
               <select 
                 value={searchCategory}
                 onChange={(e) => setSearchCategory(e.target.value)}
-                className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-l-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="px-4 py-2.5 bg-gray-50 border-0 border-r border-gray-300 text-sm text-gray-700 focus:outline-none focus:ring-0 focus:border-r focus:border-gray-300 h-11 appearance-none cursor-pointer"
               >
                 <option value="All">All</option>
                 <option value="Bikes">Bikes</option>
@@ -282,16 +282,16 @@ const Header = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="What are you looking for?"
-                  className="rounded-none border-l-0 border-r-0 bg-white border-gray-200 focus:border-primary focus:ring-0"
+                  className="rounded-none border-0 bg-white focus:border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-11 text-sm px-4"
                 />
               </div>
               
               {/* Search Button */}
               <Button 
                 onClick={handleSearch}
-                className="bg-red-600 hover:bg-red-700 rounded-l-none px-4"
+                className="bg-red-600 hover:bg-red-700 rounded-none rounded-r-lg px-5 h-11 w-12 flex items-center justify-center border-0 focus:ring-0 focus-visible:ring-0"
               >
-                <Search className="h-4 w-4" />
+                <Search className="h-5 w-5 text-white" />
               </Button>
             </div>
           </div>
@@ -389,21 +389,23 @@ const Header = () => {
             </Link>
           </div>
         </div>
+      </div>
 
-        {/* Navigation - Desktop */}
-        <div className="hidden md:flex items-center py-4 border-t border-gray-200">
+      {/* Navigation - Desktop - Smaller, Dark Blue Background - Full Width */}
+      <div className="hidden md:flex items-center py-1.5 bg-blue-900 w-full">
+        <div className="container mx-auto px-4">
           <NavigationMenu>
             <NavigationMenuList className="flex space-x-6">
               {navigationData.map((item, index) => (
                 <NavigationMenuItem key={index}>
                   {item.submenu ? (
-                    <NavigationMenuTrigger className="text-gray-900 hover:text-red-600 font-medium">
+                    <NavigationMenuTrigger className="text-white hover:text-red-400 font-medium text-sm bg-transparent hover:bg-transparent focus:bg-transparent data-[active]:bg-transparent data-[state=open]:bg-transparent rounded-none px-3 py-1.5 h-auto">
                       {item.title}
                     </NavigationMenuTrigger>
                   ) : (
                     <Link 
                       to={item.link}
-                      className="text-gray-900 hover:text-red-600 transition-colors px-4 py-2 font-medium"
+                      className="text-white hover:text-red-400 transition-colors px-3 py-1.5 font-medium text-sm"
                     >
                       {item.title}
                     </Link>
@@ -413,23 +415,23 @@ const Header = () => {
                     <NavigationMenuContent>
                       <div className="max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
                         {item.title === "Shop by Bike" ? (
-                          <div className="grid grid-cols-4 gap-6 p-6 w-[1000px]">
+                          <div className="grid grid-cols-4 gap-8 p-6 w-[900px]">
                             {item.submenu.map((brand) => (
                               <div key={brand.title} className="space-y-2">
-                                <h4 className="font-semibold text-sm text-red-600">{brand.title}</h4>
+                                <h4 className="font-bold text-base text-red-600 uppercase">{brand.title}</h4>
                                 <div className="space-y-1">
                                   {brand.submenu?.map((model) => (
-                                    <div key={model.title} className="group relative w-fit">
+                                    <div key={model.title} className="group relative">
                                       <Link
                                         to={model.link}
-                                        className="block text-sm text-gray-600 hover:text-gray-900 transition-colors font-medium"
+                                        className="block text-sm text-gray-900 hover:text-red-600 transition-colors py-0.5"
                                       >
                                         {model.title}
                                       </Link>
-                                      {/* Show accessories submenu on hover */}
+                                      {/* Show accessories submenu on hover - with gap for mouse movement */}
                                       {model.submenu && (
-                                        <div className="hidden group-hover:block absolute left-full top-0 ml-2 bg-white border border-gray-200 rounded-lg shadow-lg p-3 min-w-[300px] z-50">
-                                          <div className="space-y-3">
+                                        <div className="hidden group-hover:block absolute left-full top-0 ml-3 bg-white border border-gray-200 rounded shadow-md p-4 min-w-[280px] z-[100]">
+                                          <div className="space-y-2">
                                             {model.submenu.map((accessoryCategory) => (
                                               <div key={accessoryCategory.title} className="group/accessory relative">
                                                 <Link
@@ -438,15 +440,17 @@ const Header = () => {
                                                 >
                                                   {accessoryCategory.title}
                                                 </Link>
-                                                {/* Show individual accessories on hover */}
+                                                {/* Show individual accessories on hover - overlapping to maintain hover */}
                                                 {accessoryCategory.submenu && (
-                                                  <div className="hidden group-hover/accessory:block absolute left-full top-0 ml-2 bg-white border border-gray-200 rounded-lg shadow-lg p-3 min-w-[250px] z-50">
-                                                    <div className="space-y-1">
+                                                  <div className="opacity-0 invisible group-hover/accessory:opacity-100 group-hover/accessory:visible absolute left-full top-0 -ml-1 bg-white border border-gray-200 rounded shadow-md p-3 min-w-[220px] z-[100] transition-opacity duration-150 pointer-events-none group-hover/accessory:pointer-events-auto">
+                                                    {/* Invisible bridge area to maintain hover */}
+                                                    <div className="absolute -left-1 top-0 w-1 h-full"></div>
+                                                    <div className="space-y-1 relative">
                                                       {accessoryCategory.submenu.map((individualAccessory) => (
                                                         <Link
                                                           key={individualAccessory.title}
                                                           to={individualAccessory.link}
-                                                          className="block text-xs text-gray-600 hover:text-red-600 transition-colors py-1"
+                                                          className="block text-sm text-gray-600 hover:text-red-600 transition-colors py-1.5 px-2 rounded hover:bg-red-50"
                                                         >
                                                           {individualAccessory.title}
                                                         </Link>
@@ -551,8 +555,9 @@ const Header = () => {
             </NavigationMenuList>
           </NavigationMenu>
         </div>
+      </div>
 
-        {/* Mobile Menu Overlay */}
+      {/* Mobile Menu Overlay */}
         {isMenuOpen && (
           <div 
             className="fixed inset-0 bg-black/50 z-[9999] md:hidden flex justify-start"
@@ -796,7 +801,6 @@ const Header = () => {
             </div>
           </div>
         )}
-      </div>
     </header>
   );
 };

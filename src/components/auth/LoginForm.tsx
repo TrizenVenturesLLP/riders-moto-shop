@@ -19,6 +19,7 @@ const LoginForm = () => {
     password: ''
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Partial<LoginFormData>>({});
   
@@ -75,7 +76,7 @@ const LoginForm = () => {
     setIsLoading(true);
     
     try {
-      await login(formData.email, formData.password);
+      await login(formData.email, formData.password, rememberMe);
       
       toast({
         title: "Login Successful!",
@@ -85,11 +86,11 @@ const LoginForm = () => {
       // Redirect to the intended page or home
       navigate(from, { replace: true });
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Login error:', error);
       toast({
         title: "Login Failed",
-        description: "Invalid email or password. Please try again.",
+        description: error.message || "Invalid email or password. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -180,12 +181,14 @@ const LoginForm = () => {
 
               {/* Remember Me & Forgot Password */}
               <div className="flex items-center justify-between">
-                <label className="flex items-center space-x-2">
+                <label className="flex items-center space-x-2 cursor-pointer">
                   <input
                     type="checkbox"
-                    className="rounded border-gray-300 text-red-600 focus:ring-red-500"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="rounded border-gray-300 text-red-600 focus:ring-red-500 cursor-pointer"
                   />
-                  <span className="text-sm text-gray-600">Remember me</span>
+                  <span className="text-sm text-gray-600">Remember me for 14 days</span>
                 </label>
                 <Link
                   to="/forgot-password"

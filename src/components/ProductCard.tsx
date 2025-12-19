@@ -154,19 +154,50 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
 
+  // Extract title and subtitle from product name
+  const getProductTitle = (name: string) => {
+    // Try to extract main product type (e.g., "SADDLE STAY", "RADIATOR GUARD")
+    const parts = name.split(' ').filter(p => p.length > 0);
+    if (parts.length >= 2) {
+      // Take first 2-3 words as title
+      return parts.slice(0, Math.min(3, parts.length)).join(' ').toUpperCase();
+    }
+    return name.toUpperCase();
+  };
+
+  const getProductSubtitle = (name: string, category?: any) => {
+    // Try to extract bike model (e.g., "NINJA 1000 SX")
+    const bikeModels = ['NINJA', 'DUKE', 'HIMALAYAN', 'CLASSIC', 'METEOR', 'HUNTER', 'SCRAM', 'SUPER METEOR'];
+    for (const model of bikeModels) {
+      if (name.toUpperCase().includes(model)) {
+        const modelIndex = name.toUpperCase().indexOf(model);
+        const afterModel = name.substring(modelIndex).split(' ').slice(0, 3).join(' ');
+        return afterModel.toUpperCase();
+      }
+    }
+    // Fallback to category name or first part of name
+    return category?.name?.toUpperCase() || name.split(' ').slice(0, 2).join(' ').toUpperCase();
+  };
+
+  const productTitle = getProductTitle(product.name);
+  const productSubtitle = getProductSubtitle(product.name, product.category);
+
   return (
     <div 
-      className="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-2xl hover:shadow-red-500/10 transition-all duration-500 hover:-translate-y-1"
+      className="group bg-white rounded-lg border border-gray-200 overflow-hidden hover:border-red-600 transition-all duration-200"
+      style={{ 
+        boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+      }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <Link to={`/products/${product.id}`} className="block">
-        {/* Product Image Container */}
-        <div className="relative aspect-square bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
+        {/* Product Image Container - Light Gray Background */}
+        <div className="relative aspect-square bg-gray-50 overflow-hidden">
           <img
             src={getImageUrl(getCurrentImage()?.url)}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700 ease-out"
+            className="w-full h-full object-cover"
             onLoad={() => {
               console.log('✅ Image loaded successfully:', getImageUrl(getCurrentImage()?.url));
             }}
@@ -175,121 +206,52 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               e.currentTarget.src = 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=300&fit=crop';
             }}
           />
-          
-
-          {/* Stock Status Badge */}
-          {product.stockQuantity <= product.lowStockThreshold && (
-            <span className="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-bold bg-orange-500 text-white shadow-lg">
-              LOW STOCK
-            </span>
-          )}
 
           {/* Image Indicators */}
           {hasMultipleImages && allImages.length > 1 && (
-            <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-2">
+            <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1.5">
               {allImages.map((_, index) => (
                 <div
                   key={index}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  className={`w-1.5 h-1.5 rounded-full transition-all ${
                     index === currentImageIndex 
-                      ? 'bg-white shadow-lg scale-125' 
-                      : 'bg-white/60 hover:bg-white/80'
+                      ? 'bg-white' 
+                      : 'bg-white/60'
                   }`}
                 />
               ))}
             </div>
           )}
-
-          {/* Quick Actions */}
-          <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
-            <Button 
-              size="sm" 
-              variant="secondary" 
-              className="h-9 w-9 p-0 bg-white/95 hover:bg-white shadow-lg hover:shadow-xl border-0 rounded-full"
-              onClick={(e) => e.preventDefault()}
-            >
-              <Heart className="h-4 w-4 text-gray-600 hover:text-red-500 transition-colors" />
-            </Button>
-            <Button 
-              size="sm" 
-              variant="secondary" 
-              className="h-9 w-9 p-0 bg-white/95 hover:bg-white shadow-lg hover:shadow-xl border-0 rounded-full"
-              onClick={(e) => e.preventDefault()}
-            >
-              <Eye className="h-4 w-4 text-gray-600 hover:text-blue-500 transition-colors" />
-            </Button>
-          </div>
         </div>
 
-        {/* Product Information */}
-        <div className="p-5">
-          {/* Brand */}
-          <div className="text-xs text-gray-500 mb-2 uppercase tracking-wider font-medium">
+        {/* Product Information - White Background */}
+        <div className="bg-white p-4">
+          {/* Title - Large, Bold, Uppercase */}
+          <h3 className="text-lg font-bold text-gray-900 mb-1 uppercase leading-tight">
+            {productTitle}
+          </h3>
+          
+          {/* Subtitle - Red, Smaller */}
+          <div className="text-xs text-red-600 font-medium mb-2 uppercase">
+            {productSubtitle}
+          </div>
+
+          {/* Brand - Uppercase */}
+          <div className="text-xs text-gray-600 mb-2 uppercase tracking-wide font-medium">
             {product.brand?.name || 'HITECH'}
           </div>
           
-          {/* Product Name */}
-          <h3 className="font-bold text-gray-900 mb-2 line-clamp-2 text-base leading-tight group-hover:text-red-600 transition-colors">
+          {/* Full Product Name - Smaller */}
+          <div className="text-xs text-gray-700 mb-3 line-clamp-2 leading-snug">
             {product.name}
-          </h3>
-          
-          {/* SKU */}
-          <div className="text-xs text-gray-500 mb-3 font-mono">
-            SKU: {product.sku}
           </div>
-
 
           {/* Price */}
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-xl font-bold text-gray-900">₹{product.price}</span>
-            {hasDiscount && (
-              <span className="text-sm text-gray-500 line-through">₹{product.comparePrice}</span>
-            )}
-          </div>
-
-          {/* Stock Status */}
-          <div className="mb-4">
-            {product.stockQuantity > 0 ? (
-              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                In Stock
-              </span>
-            ) : (
-              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
-                Out of Stock
-              </span>
-            )}
+          <div className="text-sm font-semibold text-gray-900">
+            RS. {parseFloat(product.price).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </div>
         </div>
       </Link>
-
-      {/* Add to Cart Button */}
-      <div className="px-5 pb-5">
-        <Button 
-          className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-red-500/25 disabled:opacity-50 disabled:cursor-not-allowed" 
-          size="sm" 
-          disabled={product.stockQuantity === 0 || isAddingToCart}
-          onClick={handleAddToCart}
-        >
-          {isAddingToCart ? (
-            <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              Adding...
-            </>
-          ) : isProductInCart ? (
-            <>
-              <Check className="h-4 w-4 mr-2" />
-              In Cart ({cartItem?.quantity || 0})
-            </>
-          ) : (
-            <>
-              <ShoppingCart className="h-4 w-4 mr-2" />
-              {product.stockQuantity === 0 ? 'Out of Stock' : 'Add to Cart'}
-            </>
-          )}
-        </Button>
-      </div>
     </div>
   );
 };
