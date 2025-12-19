@@ -175,33 +175,33 @@ const SignupForm = () => {
   const passwordStrength = getPasswordStrength(formData.password);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex flex-col justify-start md:items-center md:justify-center p-4 pt-8 md:pt-4 pb-8 md:pb-4">
-      <div className="w-full max-w-2xl">
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4 py-12">
+      <div className="w-full max-w-md">
         {/* Back Button */}
         <Button
           variant="ghost"
           onClick={() => navigate('/')}
-          className="mb-4 md:mb-6 text-gray-600 hover:text-gray-900"
+          className="mb-4 text-gray-600 hover:text-gray-900 text-sm"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Home
         </Button>
 
-        <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm mb-8 md:mb-0">
-          <CardHeader className="text-center pb-6 md:pb-8">
-            <CardTitle className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-              Create Account
+        <Card className="shadow-sm border border-gray-200 bg-white">
+          <CardHeader className="text-center pb-6">
+            <CardTitle className="text-2xl font-bold text-gray-900 mb-2">
+              CREATE ACCOUNT
             </CardTitle>
-            <CardDescription className="text-base md:text-lg text-gray-600">
+            <CardDescription className="text-sm text-gray-600">
               Join Riders Moto Shop and start your journey
             </CardDescription>
           </CardHeader>
           
-          <CardContent className="space-y-6 md:space-y-8 px-4 md:px-8">
-            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+          <CardContent className="space-y-5 px-6 pb-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name Fields */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
                   <Label htmlFor="firstName" className="text-sm font-medium text-gray-700">
                     First Name
                   </Label>
@@ -212,15 +212,15 @@ const SignupForm = () => {
                     placeholder="John"
                     value={formData.firstName}
                     onChange={handleInputChange}
-                    className={`h-12 ${errors.firstName ? 'border-red-500 focus:border-red-500' : ''}`}
+                    className={`h-11 ${errors.firstName ? 'border-red-500 focus:border-red-500' : ''}`}
                     disabled={isLoading}
                   />
                   {errors.firstName && (
-                    <p className="text-sm text-red-600">{errors.firstName}</p>
+                    <p className="text-xs text-red-600">{errors.firstName}</p>
                   )}
                 </div>
                 
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <Label htmlFor="lastName" className="text-sm font-medium text-gray-700">
                     Last Name
                   </Label>
@@ -231,17 +231,17 @@ const SignupForm = () => {
                     placeholder="Doe"
                     value={formData.lastName}
                     onChange={handleInputChange}
-                    className={`h-12 ${errors.lastName ? 'border-red-500 focus:border-red-500' : ''}`}
+                    className={`h-11 ${errors.lastName ? 'border-red-500 focus:border-red-500' : ''}`}
                     disabled={isLoading}
                   />
                   {errors.lastName && (
-                    <p className="text-sm text-red-600">{errors.lastName}</p>
+                    <p className="text-xs text-red-600">{errors.lastName}</p>
                   )}
                 </div>
               </div>
 
               {/* Email Field */}
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <Label htmlFor="email" className="text-sm font-medium text-gray-700">
                   Email Address
                 </Label>
@@ -252,26 +252,26 @@ const SignupForm = () => {
                   placeholder="john@example.com"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className={`h-12 ${errors.email ? 'border-red-500 focus:border-red-500' : ''}`}
+                  className={`h-11 ${errors.email ? 'border-red-500 focus:border-red-500' : ''}`}
                   disabled={isLoading}
                 />
                 {errors.email && (
-                  <p className="text-sm text-red-600">{errors.email}</p>
+                  <p className="text-xs text-red-600">{errors.email}</p>
                 )}
               </div>
 
               {/* Bike Details Section */}
-              <div className="space-y-4 md:space-y-6">
-                <div className="border-t border-gray-200 pt-4 md:pt-6">
-                  <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2 md:mb-3">Your Bike Details</h3>
-                  <p className="text-sm md:text-base text-gray-600 mb-4 md:mb-6">
-                    Help us personalize your experience by telling us about your motorcycle
+              <div className="space-y-3 pt-2">
+                <div className="border-t border-gray-200 pt-4">
+                  <h3 className="text-base font-semibold text-gray-900 mb-1.5">Your Bike Details</h3>
+                  <p className="text-xs text-gray-600 mb-3">
+                    Help us personalize your experience
                   </p>
                 </div>
                 
                 {/* Bike Brand and Model Fields */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
                     <Label htmlFor="bikeBrand" className="text-sm font-medium text-gray-700">
                       Bike Brand
                     </Label>
@@ -279,18 +279,18 @@ const SignupForm = () => {
                       id="bikeBrand"
                       name="bikeBrand"
                       type="text"
-                      placeholder="e.g., Honda, Yamaha, Bajaj"
+                      placeholder="Honda, Yamaha"
                       value={formData.bikeBrand}
                       onChange={handleInputChange}
-                      className={`h-12 ${errors.bikeBrand ? 'border-red-500 focus:border-red-500' : ''}`}
+                      className={`h-11 ${errors.bikeBrand ? 'border-red-500 focus:border-red-500' : ''}`}
                       disabled={isLoading}
                     />
                     {errors.bikeBrand && (
-                      <p className="text-sm text-red-600">{errors.bikeBrand}</p>
+                      <p className="text-xs text-red-600">{errors.bikeBrand}</p>
                     )}
                   </div>
                   
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     <Label htmlFor="bikeModel" className="text-sm font-medium text-gray-700">
                       Bike Model
                     </Label>
@@ -298,21 +298,21 @@ const SignupForm = () => {
                       id="bikeModel"
                       name="bikeModel"
                       type="text"
-                      placeholder="e.g., Pulsar 150, R15, Activa"
+                      placeholder="Pulsar 150, R15"
                       value={formData.bikeModel}
                       onChange={handleInputChange}
-                      className={`h-12 ${errors.bikeModel ? 'border-red-500 focus:border-red-500' : ''}`}
+                      className={`h-11 ${errors.bikeModel ? 'border-red-500 focus:border-red-500' : ''}`}
                       disabled={isLoading}
                     />
                     {errors.bikeModel && (
-                      <p className="text-sm text-red-600">{errors.bikeModel}</p>
+                      <p className="text-xs text-red-600">{errors.bikeModel}</p>
                     )}
                   </div>
                 </div>
               </div>
 
               {/* Password Field */}
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <Label htmlFor="password" className="text-sm font-medium text-gray-700">
                   Password
                 </Label>
@@ -324,14 +324,14 @@ const SignupForm = () => {
                     placeholder="Create a strong password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    className={`h-12 pr-12 ${errors.password ? 'border-red-500 focus:border-red-500' : ''}`}
+                    className={`h-11 pr-12 ${errors.password ? 'border-red-500 focus:border-red-500' : ''}`}
                     disabled={isLoading}
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-12 px-3 py-2 hover:bg-transparent"
+                    className="absolute right-0 top-0 h-11 px-3 py-2 hover:bg-transparent"
                     onClick={() => setShowPassword(!showPassword)}
                     disabled={isLoading}
                   >
@@ -367,12 +367,12 @@ const SignupForm = () => {
                 )}
                 
                 {errors.password && (
-                  <p className="text-sm text-red-600">{errors.password}</p>
+                  <p className="text-xs text-red-600">{errors.password}</p>
                 )}
               </div>
 
               {/* Confirm Password Field */}
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <Label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">
                   Confirm Password
                 </Label>
@@ -384,14 +384,14 @@ const SignupForm = () => {
                     placeholder="Confirm your password"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    className={`h-12 pr-12 ${errors.confirmPassword ? 'border-red-500 focus:border-red-500' : ''}`}
+                    className={`h-11 pr-12 ${errors.confirmPassword ? 'border-red-500 focus:border-red-500' : ''}`}
                     disabled={isLoading}
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-12 px-3 py-2 hover:bg-transparent"
+                    className="absolute right-0 top-0 h-11 px-3 py-2 hover:bg-transparent"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     disabled={isLoading}
                   >
@@ -403,22 +403,22 @@ const SignupForm = () => {
                   </Button>
                 </div>
                 {errors.confirmPassword && (
-                  <p className="text-sm text-red-600">{errors.confirmPassword}</p>
+                  <p className="text-xs text-red-600">{errors.confirmPassword}</p>
                 )}
               </div>
 
               {/* Terms and Conditions */}
-              <div className="space-y-3">
-                <label className="flex items-start space-x-3">
+              <div className="space-y-2">
+                <label className="flex items-start space-x-2">
                   <input
                     type="checkbox"
                     name="agreeToTerms"
                     checked={formData.agreeToTerms}
                     onChange={handleInputChange}
-                    className="mt-1 rounded border-gray-300 text-red-600 focus:ring-red-500 h-4 w-4"
+                    className="mt-0.5 rounded border-gray-300 text-red-600 focus:ring-red-500 h-4 w-4"
                     disabled={isLoading}
                   />
-                  <span className="text-sm text-gray-600 leading-relaxed">
+                  <span className="text-xs text-gray-600 leading-relaxed">
                     I agree to the{' '}
                     <Link to="/terms" className="text-red-600 hover:text-red-700 font-medium">
                       Terms and Conditions
@@ -430,24 +430,24 @@ const SignupForm = () => {
                   </span>
                 </label>
                 {errors.agreeToTerms && (
-                  <p className="text-sm text-red-600">{errors.agreeToTerms}</p>
+                  <p className="text-xs text-red-600">{errors.agreeToTerms}</p>
                 )}
               </div>
 
               {/* Submit Button */}
               <Button
                 type="submit"
-                className="w-full h-12 md:h-14 bg-red-600 hover:bg-red-700 text-white font-semibold text-base md:text-lg rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                className="w-full h-11 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm rounded-none"
                 disabled={isLoading}
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                     Creating Account...
                   </>
                 ) : (
                   <>
-                    <Check className="h-5 w-5 mr-2" />
+                    <Check className="h-4 w-4 mr-2" />
                     Create Account
                   </>
                 )}
@@ -455,23 +455,23 @@ const SignupForm = () => {
             </form>
 
             {/* Divider */}
-            <div className="relative">
+            <div className="relative py-2">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-200" />
               </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-gray-500">Or continue with</span>
+              <div className="relative flex justify-center text-xs">
+                <span className="px-3 bg-white text-gray-500">Or continue with</span>
               </div>
             </div>
 
             {/* Social Signup Buttons */}
-            <div className="grid grid-cols-2 gap-3 md:gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <Button
                 variant="outline"
-                className="h-10 md:h-12 border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 text-sm md:text-base"
+                className="h-10 border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all text-sm rounded-none"
                 disabled={isLoading}
               >
-                <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
+                <svg className="h-4 w-4 mr-2" viewBox="0 0 24 24">
                   <path
                     fill="currentColor"
                     d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -493,10 +493,10 @@ const SignupForm = () => {
               </Button>
               <Button
                 variant="outline"
-                className="h-10 md:h-12 border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 text-sm md:text-base"
+                className="h-10 border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all text-sm rounded-none"
                 disabled={isLoading}
               >
-                <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                 </svg>
                 Facebook
@@ -504,8 +504,8 @@ const SignupForm = () => {
             </div>
 
             {/* Login Link */}
-            <div className="text-center pt-4">
-              <p className="text-gray-600">
+            <div className="text-center pt-2">
+              <p className="text-gray-600 text-sm">
                 Already have an account?{' '}
                 <Link
                   to="/login"

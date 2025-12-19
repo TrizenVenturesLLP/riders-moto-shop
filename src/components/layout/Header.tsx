@@ -330,7 +330,7 @@ const Header = () => {
           <div className={`hidden md:flex flex-1 mx-8 transition-all duration-300 ${
             isScrolledDown ? 'max-w-xl' : 'max-w-2xl'
           }`}>
-            <div className="flex w-full border border-gray-300 rounded-lg shadow-sm overflow-hidden bg-white">
+            <div className="flex w-full border border-gray-300 rounded-none shadow-sm overflow-hidden bg-white">
               {/* Category Filter */}
               <select 
                 value={searchCategory}
@@ -360,7 +360,7 @@ const Header = () => {
               {/* Search Button */}
               <Button 
                 onClick={handleSearch}
-                className={`bg-red-600 hover:bg-red-700 rounded-none rounded-r-lg flex items-center justify-center border-0 focus:ring-0 focus-visible:ring-0 transition-all duration-300 ${
+                className={`bg-red-600 hover:bg-red-700 rounded-none flex items-center justify-center border-0 focus:ring-0 focus-visible:ring-0 transition-all duration-300 ${
                   isScrolledDown ? 'px-4 h-9 w-10' : 'px-5 h-11 w-12'
                 }`}
               >
