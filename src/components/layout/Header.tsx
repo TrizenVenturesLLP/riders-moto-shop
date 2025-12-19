@@ -246,57 +246,57 @@ const Header = () => {
 
   // Handle scroll - hide blue bar and reduce top bar size when scrolling down
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
+    let timeoutId: NodeJS.Timeout | null = null;
+    let lastKnownScrollY = 0;
     
     const handleScroll = () => {
       // Clear any pending timeout
-      clearTimeout(timeoutId);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
       
-      // Debounce scroll events
+      // Debounce scroll events to prevent rapid state changes
       timeoutId = setTimeout(() => {
         const currentScrollY = window.scrollY;
-        const lastScrollY = lastScrollYRef.current;
-        const scrollDifference = Math.abs(currentScrollY - lastScrollY);
+        const scrollDelta = currentScrollY - lastKnownScrollY;
         
-        // Only update if scroll difference is significant (at least 5px) to prevent flickering
-        if (scrollDifference < 5) {
-          return;
-        }
-        
-        // Determine new state
-        let newState: boolean;
-        
-        // Only show bars when very close to top (within 30px)
-        if (currentScrollY < 30) {
-          newState = false;
-        } else if (currentScrollY > lastScrollY + 5) {
-          // Scrolling down - hide immediately (only if scrolled at least 5px)
-          newState = true;
-        } else if (currentScrollY < lastScrollY - 5 && currentScrollY < 50) {
-          // Scrolling up and near top - show bars (only if scrolled at least 5px up)
-          newState = false;
-        } else {
-          // No significant change, keep current state
-          lastScrollYRef.current = currentScrollY;
-          return;
-        }
-        
-        // Only update state if it actually changed
+        // Only show bottom bar when at absolute top (0px or very close to 0)
         setIsScrolledDown((prev) => {
-          if (prev !== newState) {
-            return newState;
+          // Only show when at absolute top (within 5px)
+          if (currentScrollY <= 5) {
+            if (prev === false) return prev; // Already showing, no change needed
+            lastKnownScrollY = currentScrollY;
+            return false;
           }
+          
+          // Any scroll down - hide immediately
+          if (scrollDelta > 0) {
+            if (prev === true) return prev; // Already hidden, no change needed
+            lastKnownScrollY = currentScrollY;
+            return true;
+          }
+          
+          // Scrolling up but not at top - keep hidden
+          if (scrollDelta < 0 && currentScrollY > 5) {
+            if (prev === true) return prev; // Already hidden, no change needed
+            lastKnownScrollY = currentScrollY;
+            return true;
+          }
+          
+          // No change needed
           return prev;
         });
         
-        lastScrollYRef.current = currentScrollY;
-      }, 10); // 10ms debounce
+        lastKnownScrollY = currentScrollY;
+      }, 50); // 50ms debounce to prevent rapid updates
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      clearTimeout(timeoutId);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
     };
   }, []);
 
@@ -304,7 +304,7 @@ const Header = () => {
     <header className="sticky top-0 z-50 bg-white shadow-sm">
       {/* Main Header - White Background - Reduces size when scrolled */}
       <div className="container mx-auto px-4">
-        <div className={`flex items-center justify-between transition-all duration-200 ${
+        <div className={`flex items-center justify-between transition-[height] duration-300 ease-in-out ${
           isScrolledDown ? 'h-16' : 'h-24'
         }`}>
           {/* Mobile Menu Button */}
@@ -318,7 +318,7 @@ const Header = () => {
           {/* Logo */}
           <div className="flex items-center">
             <Link to="/">
-              <h1 className={`font-bold text-red-600 transition-all duration-300 cursor-pointer hover:text-red-700 ${
+              <h1 className={`font-bold text-red-600 transition-[font-size] duration-300 ease-in-out cursor-pointer hover:text-red-700 ${
                 isScrolledDown ? 'text-lg' : 'text-2xl'
               }`}>
                 Riders Moto Shop
@@ -467,7 +467,7 @@ const Header = () => {
       </div>
 
       {/* Navigation - Desktop - Smaller, White Background - Full Width - Hide when scrolled down */}
-      <div className={`hidden md:flex items-center py-1.5 bg-white w-full transition-all duration-200 ${
+      <div className={`hidden md:flex items-center py-1.5 bg-white w-full transition-[transform,opacity,height] duration-300 ease-in-out ${
         isScrolledDown ? '-translate-y-full opacity-0 h-0 overflow-hidden pointer-events-none' : 'translate-y-0 opacity-100'
       }`}>
         <div className="container mx-auto px-4">
