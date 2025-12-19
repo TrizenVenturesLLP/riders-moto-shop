@@ -507,20 +507,22 @@ const Header = () => {
                                       </Link>
                                       {/* Show accessories submenu on hover - with gap for mouse movement */}
                                       {model.submenu && (
-                                        <div className="hidden group-hover:block absolute left-full top-0 ml-3 bg-white border border-gray-200 rounded shadow-md p-4 min-w-[280px] z-[100]">
-                                          <div className="space-y-2">
+                                        <div className="hidden group-hover:block absolute left-full top-0 ml-2 bg-white border border-gray-200 rounded shadow-md p-4 min-w-[280px] z-[100]">
+                                          {/* Invisible hover bridge to maintain hover when moving to nested menu */}
+                                          <div className="absolute -left-2 top-0 w-2 h-full"></div>
+                                          <div className="space-y-2 relative">
                                             {model.submenu.map((accessoryCategory) => (
                                               <div key={accessoryCategory.title} className="group/accessory relative">
                                                 <Link
                                                   to={accessoryCategory.link}
-                                                  className="block text-sm font-semibold text-red-600 hover:text-red-700 transition-colors py-1"
+                                                  className="block text-sm font-semibold text-red-600 hover:text-red-700 transition-colors py-1 pr-3"
                                                 >
                                                   {accessoryCategory.title}
                                                 </Link>
-                                                {/* Show individual accessories on hover - overlapping to maintain hover */}
+                                                {/* Show individual accessories on hover - positioned beside category */}
                                                 {accessoryCategory.submenu && (
-                                                  <div className="opacity-0 invisible group-hover/accessory:opacity-100 group-hover/accessory:visible absolute left-full top-0 -ml-1 bg-white border border-gray-200 rounded shadow-md p-3 min-w-[220px] z-[100] transition-opacity duration-150 pointer-events-none group-hover/accessory:pointer-events-auto">
-                                                    {/* Invisible bridge area to maintain hover */}
+                                                  <div className="hidden group-hover/accessory:block absolute left-full top-0 -ml-1 bg-white border border-gray-200 rounded shadow-md p-3 min-w-[220px] z-[100]">
+                                                    {/* Invisible hover bridge */}
                                                     <div className="absolute -left-1 top-0 w-1 h-full"></div>
                                                     <div className="space-y-1 relative">
                                                       {accessoryCategory.submenu.map((individualAccessory) => (

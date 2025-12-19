@@ -82,21 +82,21 @@ const accessories = [
 
 const AccessoriesSection = () => {
   return (
-    <section id="shop-accessories" className="mt-12 pt-16 pb-8 bg-white">
+    <section id="shop-accessories" className="mt-8 sm:mt-10 md:mt-12 pt-12 sm:pt-14 md:pt-16 pb-6 sm:pb-8 bg-white">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Clean Header */}
-        <div className="text-center mb-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+        <div className="text-center mb-4 sm:mb-5 md:mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1.5 sm:mb-2">
             Shop by <span className="text-red-600">Accessories</span>
           </h2>
-          <p className="text-sm text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xs sm:text-sm text-gray-600 max-w-2xl mx-auto px-2">
             Premium motorcycle accessories for protection, performance, and style. 
             Upgrade your ride with our quality parts engineered for the ultimate riding experience.
           </p>
         </div>
 
-        {/* Clean Grid Layout - 5 columns on medium+ screens to show all at once */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 max-w-7xl mx-auto">
+        {/* Clean Grid Layout - Responsive columns */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-2.5 max-w-7xl mx-auto">
           {accessories.map((accessory) => {
             const IconComponent = getAccessoryIcon(accessory.name);
             return (
@@ -127,8 +127,8 @@ const AccessoriesSection = () => {
                 </div>
 
                 {/* Accessory Name - Below image */}
-                <div className="text-center mt-1">
-                  <h3 className="text-[9px] font-semibold text-gray-900 uppercase tracking-wide group-hover:text-red-600 transition-colors leading-tight">
+                <div className="text-center mt-0.5 sm:mt-1">
+                  <h3 className="text-[8px] sm:text-[9px] font-semibold text-gray-900 uppercase tracking-wide group-hover:text-red-600 transition-colors leading-tight">
                     {accessory.name}
                   </h3>
                 </div>
@@ -138,17 +138,17 @@ const AccessoriesSection = () => {
         </div>
 
         {/* Clean View All Button */}
-        <div className="text-center mt-12">
+        <div className="text-center mt-8 sm:mt-10 md:mt-12">
           <Button 
             size="default" 
             variant="outline" 
-            className="bg-white border border-gray-300 text-gray-900 hover:bg-gray-50 px-7 py-3.5 rounded-lg font-medium"
+            className="bg-white border border-gray-300 text-gray-900 hover:bg-gray-50 px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-none font-medium text-sm sm:text-base"
             onClick={() => {
               window.location.href = '/collections/accessories';
             }}
           >
             View All Accessories
-            <ArrowRight className="ml-2 h-4 w-4" />
+            <ArrowRight className="ml-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
           </Button>
         </div>
       </div>

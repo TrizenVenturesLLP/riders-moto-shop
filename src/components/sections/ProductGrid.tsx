@@ -38,14 +38,14 @@ const ProductGrid = () => {
   const hasMoreProducts = products.length > displayedProducts.length;
 
   return (
-    <section id="featured-products" className="py-20 bg-white">
+    <section id="featured-products" className="py-12 sm:py-16 md:py-20 bg-white">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Clean Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
+        <div className="text-center mb-8 sm:mb-10 md:mb-12">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-3">
             Featured <span className="text-red-600">Products</span>
           </h2>
-          <p className="text-sm text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xs sm:text-sm text-gray-600 max-w-2xl mx-auto px-2">
             Discover our curated selection of premium motorcycle parts and accessories, 
             engineered for performance, durability, and style.
           </p>
@@ -53,28 +53,28 @@ const ProductGrid = () => {
 
         {/* Horizontal Scroll Layout */}
         <div className="overflow-x-auto pb-4 -mx-4 px-4 scrollbar-visible">
-          <div className="flex gap-6 min-w-max">
+          <div className="flex gap-4 sm:gap-6 min-w-max">
             {displayedProducts.map((product) => (
-              <div key={product.id} className="flex-shrink-0 w-[300px] sm:w-[320px]">
+              <div key={product.id} className="flex-shrink-0 w-[240px] sm:w-[280px] md:w-[300px] lg:w-[320px]">
                 <ProductCard product={product} />
               </div>
             ))}
             
             {/* "There's plenty more" Card */}
             {hasMoreProducts && (
-              <div className="flex-shrink-0 w-[300px] sm:w-[320px]">
+              <div className="flex-shrink-0 w-[240px] sm:w-[280px] md:w-[300px] lg:w-[320px]">
                 <Link to="/products" className="block h-full">
-                  <div className="bg-gray-800 rounded-lg border border-gray-700 h-full flex flex-col items-center justify-center p-8 text-center hover:bg-gray-900 transition-colors min-h-[400px]">
-                    <h3 className="text-2xl font-bold text-white mb-4">
+                  <div className="bg-gray-800 rounded-lg border border-gray-700 h-full flex flex-col items-center justify-center p-6 sm:p-8 text-center hover:bg-gray-900 transition-colors min-h-[300px] sm:min-h-[350px] md:min-h-[400px]">
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-3 sm:mb-4">
                       There's plenty more
                     </h3>
-                    <div className="flex items-center text-white text-sm font-medium group">
+                    <div className="flex items-center text-white text-xs sm:text-sm font-medium group">
                       <span className="mr-2">View more</span>
-                      <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform" />
                     </div>
-                    <div className="mt-6">
-                      <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                        <ArrowRight className="h-6 w-6 text-white" />
+                    <div className="mt-4 sm:mt-6">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                        <ArrowRight className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                       </div>
                     </div>
                   </div>
@@ -94,11 +94,11 @@ const ProductGrid = () => {
 
         {/* Clean View All Button */}
         {products.length > 0 && (
-          <div className="text-center mt-12">
+          <div className="text-center mt-8 sm:mt-10 md:mt-12">
             <Button 
               variant="outline" 
               size="default"
-              className="bg-white border border-gray-300 text-gray-900 hover:bg-gray-50 px-7 py-3.5 rounded-lg font-medium"
+              className="bg-white border border-gray-300 text-gray-900 hover:bg-gray-50 px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-none font-medium text-sm sm:text-base"
             >
               View All Products
             </Button>
