@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Search, ShoppingCart, User, Menu, X, ChevronDown, Wrench, Shield, Zap, Settings, Headphones, Camera, Lock, Star, LogOut, UserCircle } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
@@ -168,6 +168,9 @@ const Header = () => {
   const [isShopByBikeOpen, setIsShopByBikeOpen] = useState(false);
   const [isShopByAccessoriesOpen, setIsShopByAccessoriesOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isScrolledDown, setIsScrolledDown] = useState(false);
+  const lastScrollYRef = useRef(0);
+  const tickingRef = useRef(false);
   
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
@@ -241,11 +244,69 @@ const Header = () => {
     };
   }, [isUserMenuOpen]);
 
+  // Handle scroll - hide blue bar and reduce top bar size when scrolling down
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    
+    const handleScroll = () => {
+      // Clear any pending timeout
+      clearTimeout(timeoutId);
+      
+      // Debounce scroll events
+      timeoutId = setTimeout(() => {
+        const currentScrollY = window.scrollY;
+        const lastScrollY = lastScrollYRef.current;
+        const scrollDifference = Math.abs(currentScrollY - lastScrollY);
+        
+        // Only update if scroll difference is significant (at least 5px) to prevent flickering
+        if (scrollDifference < 5) {
+          return;
+        }
+        
+        // Determine new state
+        let newState: boolean;
+        
+        // Only show bars when very close to top (within 30px)
+        if (currentScrollY < 30) {
+          newState = false;
+        } else if (currentScrollY > lastScrollY + 5) {
+          // Scrolling down - hide immediately (only if scrolled at least 5px)
+          newState = true;
+        } else if (currentScrollY < lastScrollY - 5 && currentScrollY < 50) {
+          // Scrolling up and near top - show bars (only if scrolled at least 5px up)
+          newState = false;
+        } else {
+          // No significant change, keep current state
+          lastScrollYRef.current = currentScrollY;
+          return;
+        }
+        
+        // Only update state if it actually changed
+        setIsScrolledDown((prev) => {
+          if (prev !== newState) {
+            return newState;
+          }
+          return prev;
+        });
+        
+        lastScrollYRef.current = currentScrollY;
+      }, 10); // 10ms debounce
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm">
-      {/* Main Header - Bigger, White Background */}
+      {/* Main Header - White Background - Reduces size when scrolled */}
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-24">
+        <div className={`flex items-center justify-between transition-all duration-200 ${
+          isScrolledDown ? 'h-16' : 'h-24'
+        }`}>
           {/* Mobile Menu Button */}
           <button 
             className="md:hidden"
@@ -256,19 +317,27 @@ const Header = () => {
 
           {/* Logo */}
           <div className="flex items-center">
-            <h1 className="text-2xl font-bold text-red-600">
-              Riders Moto Shop
-            </h1>
+            <Link to="/">
+              <h1 className={`font-bold text-red-600 transition-all duration-300 cursor-pointer hover:text-red-700 ${
+                isScrolledDown ? 'text-lg' : 'text-2xl'
+              }`}>
+                Riders Moto Shop
+              </h1>
+            </Link>
           </div>
 
           {/* Search Bar - Desktop */}
-          <div className="hidden md:flex flex-1 max-w-2xl mx-8">
+          <div className={`hidden md:flex flex-1 mx-8 transition-all duration-300 ${
+            isScrolledDown ? 'max-w-xl' : 'max-w-2xl'
+          }`}>
             <div className="flex w-full border border-gray-300 rounded-lg shadow-sm overflow-hidden bg-white">
               {/* Category Filter */}
               <select 
                 value={searchCategory}
                 onChange={(e) => setSearchCategory(e.target.value)}
-                className="px-4 py-2.5 bg-gray-50 border-0 border-r border-gray-300 text-sm text-gray-700 focus:outline-none focus:ring-0 focus:border-r focus:border-gray-300 h-11 appearance-none cursor-pointer"
+                className={`px-4 bg-gray-50 border-0 border-r border-gray-300 text-gray-700 focus:outline-none focus:ring-0 focus:border-r focus:border-gray-300 appearance-none cursor-pointer transition-all duration-300 ${
+                  isScrolledDown ? 'py-1.5 text-xs h-9' : 'py-2.5 text-sm h-11'
+                }`}
               >
                 <option value="All">All</option>
                 <option value="Bikes">Bikes</option>
@@ -282,16 +351,22 @@ const Header = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="What are you looking for?"
-                  className="rounded-none border-0 bg-white focus:border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-11 text-sm px-4"
+                  className={`rounded-none border-0 bg-white focus:border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-4 transition-all duration-300 ${
+                    isScrolledDown ? 'h-9 text-xs' : 'h-11 text-sm'
+                  }`}
                 />
               </div>
               
               {/* Search Button */}
               <Button 
                 onClick={handleSearch}
-                className="bg-red-600 hover:bg-red-700 rounded-none rounded-r-lg px-5 h-11 w-12 flex items-center justify-center border-0 focus:ring-0 focus-visible:ring-0"
+                className={`bg-red-600 hover:bg-red-700 rounded-none rounded-r-lg flex items-center justify-center border-0 focus:ring-0 focus-visible:ring-0 transition-all duration-300 ${
+                  isScrolledDown ? 'px-4 h-9 w-10' : 'px-5 h-11 w-12'
+                }`}
               >
-                <Search className="h-5 w-5 text-white" />
+                <Search className={`text-white transition-all duration-300 ${
+                  isScrolledDown ? 'h-4 w-4' : 'h-5 w-5'
+                }`} />
               </Button>
             </div>
           </div>
@@ -391,8 +466,10 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Navigation - Desktop - Smaller, Dark Blue Background - Full Width */}
-      <div className="hidden md:flex items-center py-1.5 bg-blue-900 w-full">
+      {/* Navigation - Desktop - Smaller, Dark Blue Background - Full Width - Hide when scrolled down */}
+      <div className={`hidden md:flex items-center py-1.5 bg-blue-900 w-full transition-all duration-200 ${
+        isScrolledDown ? '-translate-y-full opacity-0 h-0 overflow-hidden pointer-events-none' : 'translate-y-0 opacity-100'
+      }`}>
         <div className="container mx-auto px-4">
           <NavigationMenu>
             <NavigationMenuList className="flex space-x-6">
@@ -572,9 +649,11 @@ const Header = () => {
               <button onClick={() => setIsMenuOpen(false)}>
                 <X className="h-6 w-6 text-gray-900" />
               </button>
-              <h1 className="text-xl font-bold text-red-600 text-glow">
-                Riders Moto Shop
-              </h1>
+              <Link to="/" onClick={() => setIsMenuOpen(false)}>
+                <h1 className="text-xl font-bold text-red-600 text-glow cursor-pointer hover:text-red-700">
+                  Riders Moto Shop
+                </h1>
+              </Link>
               <div className="w-6"></div>
             </div>
 
