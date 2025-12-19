@@ -466,8 +466,8 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Navigation - Desktop - Smaller, Dark Blue Background - Full Width - Hide when scrolled down */}
-      <div className={`hidden md:flex items-center py-1.5 bg-blue-900 w-full transition-all duration-200 ${
+      {/* Navigation - Desktop - Smaller, White Background - Full Width - Hide when scrolled down */}
+      <div className={`hidden md:flex items-center py-1.5 bg-white w-full transition-all duration-200 ${
         isScrolledDown ? '-translate-y-full opacity-0 h-0 overflow-hidden pointer-events-none' : 'translate-y-0 opacity-100'
       }`}>
         <div className="container mx-auto px-4">
@@ -476,13 +476,13 @@ const Header = () => {
               {navigationData.map((item, index) => (
                 <NavigationMenuItem key={index}>
                   {item.submenu ? (
-                    <NavigationMenuTrigger className="text-white hover:text-red-400 font-medium text-sm bg-transparent hover:bg-transparent focus:bg-transparent data-[active]:bg-transparent data-[state=open]:bg-transparent rounded-none px-3 py-1.5 h-auto">
+                    <NavigationMenuTrigger className="text-gray-900 hover:text-red-600 font-medium text-sm bg-transparent hover:bg-transparent focus:bg-transparent data-[active]:bg-transparent data-[state=open]:bg-transparent rounded-none px-3 py-1.5 h-auto">
                       {item.title}
                     </NavigationMenuTrigger>
                   ) : (
                     <Link 
                       to={item.link}
-                      className="text-white hover:text-red-400 transition-colors px-3 py-1.5 font-medium text-sm"
+                      className="text-gray-900 hover:text-red-600 transition-colors px-3 py-1.5 font-medium text-sm"
                     >
                       {item.title}
                     </Link>
