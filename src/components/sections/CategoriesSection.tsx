@@ -100,13 +100,13 @@ const CategoriesSection = () => {
                 
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                   <h3 className="text-xl font-semibold mb-2">{category.name}</h3>
-                  <p className="text-gray-200 text-sm mb-2">{category.description}</p>
+                  <p className="text-white/80 text-sm mb-2">{category.description}</p>
                   <p className="text-primary text-sm font-medium mb-4">{category.productCount}+ products</p>
                   
                   <Button 
                     variant="secondary" 
                     size="sm" 
-                    className="bg-white/90 text-black border-white/20 hover:bg-white hover:text-black transition-colors"
+                    className="bg-background/90 text-foreground border-border/20 hover:bg-background hover:text-foreground transition-colors"
                     onClick={() => {
                       // Navigate to category page or filter products
                       window.location.href = `#category-${category.slug}`;

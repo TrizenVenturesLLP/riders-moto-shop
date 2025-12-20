@@ -56,10 +56,10 @@ const OrderConfirmation = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading order details...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading order details...</p>
         </div>
       </div>
     );
@@ -67,10 +67,10 @@ const OrderConfirmation = () => {
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-800 mb-3">Order Not Found</h2>
-          <p className="text-gray-600 mb-6">The order you're looking for doesn't exist.</p>
+          <h2 className="text-2xl font-bold text-foreground mb-3">Order Not Found</h2>
+          <p className="text-muted-foreground mb-6">The order you're looking for doesn't exist.</p>
           <Button onClick={() => navigate('/')}>
             Continue Shopping
           </Button>
@@ -80,23 +80,23 @@ const OrderConfirmation = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-background py-8">
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Header */}
         <div className="mb-8">
           <Button
             variant="ghost"
             onClick={() => navigate('/')}
-            className="mb-4 text-gray-600 hover:text-gray-900"
+            className="mb-4 text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Continue Shopping
           </Button>
           
           <div className="text-center">
-            <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Order Confirmed!</h1>
-            <p className="text-gray-600">Thank you for your purchase. Your order has been successfully placed.</p>
+            <CheckCircle className="h-16 w-16 text-green-600 dark:text-green-400 mx-auto mb-4" />
+            <h1 className="text-3xl font-bold text-foreground mb-2">Order Confirmed!</h1>
+            <p className="text-muted-foreground">Thank you for your purchase. Your order has been successfully placed.</p>
           </div>
         </div>
 
@@ -113,12 +113,12 @@ const OrderConfirmation = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Order Number</span>
-                  <span className="font-medium">{order.id}</span>
+                  <span className="text-muted-foreground">Order Number</span>
+                  <span className="font-medium text-foreground">{order.id}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Order Date</span>
-                  <span className="font-medium">
+                  <span className="text-muted-foreground">Order Date</span>
+                  <span className="font-medium text-foreground">
                     {new Date(order.createdAt).toLocaleDateString('en-IN', {
                       year: 'numeric',
                       month: 'long',
@@ -127,14 +127,14 @@ const OrderConfirmation = () => {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Status</span>
-                  <Badge className="bg-green-100 text-green-800">
+                  <span className="text-muted-foreground">Status</span>
+                  <Badge className="bg-green-500/10 text-green-600 dark:text-green-400">
                     {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                   </Badge>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Total Amount</span>
-                  <span className="font-bold text-lg">₹{order.total.toLocaleString()}</span>
+                  <span className="text-muted-foreground">Total Amount</span>
+                  <span className="font-bold text-lg text-foreground">₹{order.total.toLocaleString()}</span>
                 </div>
               </CardContent>
             </Card>
@@ -149,20 +149,20 @@ const OrderConfirmation = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <p className="font-medium">
+                  <p className="font-medium text-foreground">
                     {order.shippingAddress.firstName} {order.shippingAddress.lastName}
                   </p>
-                  <p className="text-gray-600">{order.shippingAddress.address}</p>
-                  <p className="text-gray-600">
+                  <p className="text-muted-foreground">{order.shippingAddress.address}</p>
+                  <p className="text-muted-foreground">
                     {order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.pincode}
                   </p>
-                  <p className="text-gray-600">{order.shippingAddress.country}</p>
+                  <p className="text-muted-foreground">{order.shippingAddress.country}</p>
                   <div className="flex items-center space-x-4 mt-3">
-                    <div className="flex items-center space-x-1 text-sm text-gray-600">
+                    <div className="flex items-center space-x-1 text-sm text-muted-foreground">
                       <Mail className="h-4 w-4" />
                       <span>{order.shippingAddress.email}</span>
                     </div>
-                    <div className="flex items-center space-x-1 text-sm text-gray-600">
+                    <div className="flex items-center space-x-1 text-sm text-muted-foreground">
                       <Phone className="h-4 w-4" />
                       <span>{order.shippingAddress.phone}</span>
                     </div>
@@ -182,7 +182,7 @@ const OrderConfirmation = () => {
               <CardContent className="space-y-4">
                 {order.items.map((item) => (
                   <div key={item.id} className="flex items-center space-x-4">
-                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center flex-shrink-0">
                       {item.image ? (
                         <img
                           src={item.image}
@@ -190,18 +190,18 @@ const OrderConfirmation = () => {
                           className="w-full h-full object-cover rounded-lg"
                         />
                       ) : (
-                        <ShoppingBag className="h-6 w-6 text-gray-400" />
+                        <ShoppingBag className="h-6 w-6 text-muted-foreground" />
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-gray-900 truncate">{item.name}</h4>
+                      <h4 className="font-medium text-foreground truncate">{item.name}</h4>
                       {item.brand && (
-                        <p className="text-sm text-gray-600">{item.brand}</p>
+                        <p className="text-sm text-muted-foreground">{item.brand}</p>
                       )}
-                      <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+                      <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
                     </div>
                     <div className="text-right">
-                      <span className="font-medium">₹{(item.price * item.quantity).toLocaleString()}</span>
+                      <span className="font-medium text-foreground">₹{(item.price * item.quantity).toLocaleString()}</span>
                     </div>
                   </div>
                 ))}
@@ -215,25 +215,25 @@ const OrderConfirmation = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Subtotal</span>
-                  <span className="font-medium">₹{order.subtotal.toLocaleString()}</span>
+                  <span className="text-muted-foreground">Subtotal</span>
+                  <span className="font-medium text-foreground">₹{order.subtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Shipping</span>
+                  <span className="text-muted-foreground">Shipping</span>
                   <span className="font-medium">
                     {order.shippingCost === 0 ? (
-                      <span className="text-green-600">Free</span>
+                      <span className="text-green-600 dark:text-green-400">Free</span>
                     ) : (
-                      `₹${order.shippingCost.toLocaleString()}`
+                      <span className="text-foreground">₹{order.shippingCost.toLocaleString()}</span>
                     )}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Tax (GST 18%)</span>
-                  <span className="font-medium">₹{order.tax.toLocaleString()}</span>
+                  <span className="text-muted-foreground">Tax (GST 18%)</span>
+                  <span className="font-medium text-foreground">₹{order.tax.toLocaleString()}</span>
                 </div>
                 <Separator />
-                <div className="flex justify-between text-lg font-bold">
+                <div className="flex justify-between text-lg font-bold text-foreground">
                   <span>Total</span>
                   <span>₹{order.total.toLocaleString()}</span>
                 </div>
@@ -250,39 +250,39 @@ const OrderConfirmation = () => {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-bold text-red-600">1</span>
+                  <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-xs font-bold text-primary">1</span>
                   </div>
                   <div>
-                    <p className="font-medium">Order Confirmation</p>
-                    <p className="text-sm text-gray-600">You'll receive an email confirmation shortly</p>
+                    <p className="font-medium text-foreground">Order Confirmation</p>
+                    <p className="text-sm text-muted-foreground">You'll receive an email confirmation shortly</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-bold text-gray-600">2</span>
+                  <div className="w-6 h-6 bg-muted rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-xs font-bold text-muted-foreground">2</span>
                   </div>
                   <div>
-                    <p className="font-medium">Processing</p>
-                    <p className="text-sm text-gray-600">We'll prepare your order for shipment</p>
+                    <p className="font-medium text-foreground">Processing</p>
+                    <p className="text-sm text-muted-foreground">We'll prepare your order for shipment</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-bold text-gray-600">3</span>
+                  <div className="w-6 h-6 bg-muted rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-xs font-bold text-muted-foreground">3</span>
                   </div>
                   <div>
-                    <p className="font-medium">Shipping</p>
-                    <p className="text-sm text-gray-600">Your order will be dispatched and you'll receive tracking details</p>
+                    <p className="font-medium text-foreground">Shipping</p>
+                    <p className="text-sm text-muted-foreground">Your order will be dispatched and you'll receive tracking details</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-bold text-gray-600">4</span>
+                  <div className="w-6 h-6 bg-muted rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-xs font-bold text-muted-foreground">4</span>
                   </div>
                   <div>
-                    <p className="font-medium">Delivery</p>
-                    <p className="text-sm text-gray-600">Your order will be delivered to your address</p>
+                    <p className="font-medium text-foreground">Delivery</p>
+                    <p className="text-sm text-muted-foreground">Your order will be delivered to your address</p>
                   </div>
                 </div>
               </CardContent>

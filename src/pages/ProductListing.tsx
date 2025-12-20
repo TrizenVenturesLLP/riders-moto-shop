@@ -110,10 +110,10 @@ const ProductListing = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Loading products...</p>
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
+          <p className="text-muted-foreground">Loading products...</p>
         </div>
       </div>
     );
@@ -121,10 +121,10 @@ const ProductListing = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Error Loading Products</h1>
-          <p className="text-gray-600 mb-6">{error.message}</p>
+          <h1 className="text-2xl font-bold text-foreground mb-4">Error Loading Products</h1>
+          <p className="text-muted-foreground mb-6">{error.message}</p>
           <Button onClick={() => window.location.href = '/'}>
             <Home className="h-4 w-4 mr-2" />
             Go to Homepage
@@ -135,17 +135,17 @@ const ProductListing = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         {/* Breadcrumb */}
-        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+        <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
           {getBreadcrumb().map((item, index) => (
             <React.Fragment key={index}>
               {index > 0 && <span>/</span>}
               {item.href === '#' ? (
-                <span className="text-gray-900 font-medium">{item.label}</span>
+                <span className="text-foreground font-medium">{item.label}</span>
               ) : (
-                <a href={item.href} className="hover:text-red-600">
+                <a href={item.href} className="hover:text-primary">
                   {item.label}
                 </a>
               )}
@@ -156,10 +156,10 @@ const ProductListing = () => {
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-foreground mb-2">
               {getPageTitle()} ({pagination?.totalItems || 0})
             </h1>
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               {products.length > 0 
                 ? `Showing ${products.length} of ${pagination?.totalItems || 0} products`
                 : 'No products found'
@@ -201,7 +201,7 @@ const ProductListing = () => {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 space-y-4 lg:space-y-0">
           <div className="flex-1 max-w-md">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search products..."
                 value={searchQuery}
@@ -240,7 +240,7 @@ const ProductListing = () => {
             <CardContent className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-foreground mb-2">
                     Price Range
                   </label>
                   <div className="flex space-x-2">
@@ -266,7 +266,7 @@ const ProductListing = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-foreground mb-2">
                     Availability
                   </label>
                   <Select 
@@ -293,7 +293,7 @@ const ProductListing = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-foreground mb-2">
                     Product Type
                   </label>
                   <Select 
@@ -335,8 +335,8 @@ const ProductListing = () => {
           </div>
         ) : (
           <div className="text-center py-12">
-            <h3 className="text-xl font-semibold mb-2 text-gray-900">No products found</h3>
-            <p className="text-gray-600 mb-6">
+            <h3 className="text-xl font-semibold mb-2 text-foreground">No products found</h3>
+            <p className="text-muted-foreground mb-6">
               Try adjusting your filters or search terms.
             </p>
             <Button onClick={() => window.location.href = '/'}>
