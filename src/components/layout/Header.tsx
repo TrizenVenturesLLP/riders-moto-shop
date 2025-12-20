@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/hooks/useCart';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -34,10 +35,11 @@ const CollapsibleAccessoryCategory = ({ title, accessories }: {
     <div>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between text-left py-2 px-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+        className="w-full flex items-center justify-between text-left py-2 px-2 bg-gray-100 dark:bg-card rounded-lg hover:bg-gray-200 dark:hover:bg-card/80 transition-colors"
       >
-        <h5 className="font-medium text-gray-800">{title}</h5>
-        <ChevronDown className={`h-4 w-4 text-gray-600 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+
+        <h5 className="font-medium text-gray-800 dark:text-foreground">{title}</h5>
+        <ChevronDown className={`h-4 w-4 text-gray-600 dark:text-muted-foreground transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
       
       {isOpen && (
@@ -47,12 +49,12 @@ const CollapsibleAccessoryCategory = ({ title, accessories }: {
               {accessory.link ? (
                 <button
                   onClick={() => handleAccessoryClick(accessory)}
-                  className="block w-full text-left py-1 text-xs text-gray-500 hover:text-red-600 transition-colors"
+                  className="block w-full text-left py-1 text-xs text-gray-500 dark:text-muted-foreground hover:text-red-600 dark:hover:text-red-400 transition-colors"
                 >
                   {accessory.title}
                 </button>
               ) : (
-                <div className="py-1 text-xs text-gray-400">
+                <div className="py-1 text-xs text-gray-400 dark:text-muted-foreground/70">
                   {accessory.title}
                 </div>
               )}
@@ -76,14 +78,14 @@ const MobileDropdown = ({ title, data }: {
     <div className="py-2">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between text-left py-3 px-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+        className="w-full flex items-center justify-between text-left py-3 px-4 bg-gray-50 dark:bg-card rounded-lg hover:bg-gray-100 dark:hover:bg-card/80 transition-colors"
       >
-        <span className="text-base font-medium text-gray-900">{title}</span>
-        <ChevronDown className={`h-4 w-4 text-gray-600 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <span className="text-base font-medium text-gray-900 dark:text-foreground">{title}</span>
+        <ChevronDown className={`h-4 w-4 text-gray-600 dark:text-muted-foreground transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
       
       {isOpen && (
-        <div className="mt-2 bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+        <div className="mt-2 bg-white dark:bg-card border border-gray-200 dark:border-border rounded-lg p-4 shadow-sm">
           <div className="space-y-3">
             {data.map((item: NavbarItem, index: number) => (
               <div key={index}>
@@ -113,12 +115,12 @@ const MobileDropdown = ({ title, data }: {
                           ) : subItem.link ? (
                             <button
                               onClick={() => navigate(subItem.link!)}
-                              className="block py-1 text-sm text-gray-600 hover:text-red-600 transition-colors"
+                              className="block py-1 text-sm text-gray-600 dark:text-muted-foreground hover:text-red-600 dark:hover:text-red-400 transition-colors"
                             >
                               {subItem.title}
                             </button>
                           ) : (
-                            <div className="py-1 text-sm text-gray-600">
+                            <div className="py-1 text-sm text-gray-600 dark:text-muted-foreground">
                               {subItem.title}
                             </div>
                           )}
@@ -129,12 +131,12 @@ const MobileDropdown = ({ title, data }: {
                 ) : item.link ? (
                   <Link
                     to={item.link}
-                    className="block py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                    className="block py-2 px-3 text-gray-700 dark:text-foreground hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-card/50 rounded transition-colors"
                   >
                     {item.title}
                   </Link>
                 ) : (
-                  <div className="py-2 px-3 text-gray-700">
+                  <div className="py-2 px-3 text-gray-700 dark:text-foreground">
                     {item.title}
                   </div>
                 )}
@@ -246,65 +248,35 @@ const Header = () => {
 
   // Handle scroll - hide blue bar and reduce top bar size when scrolling down
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout | null = null;
-    let lastKnownScrollY = 0;
+    let timeoutId: NodeJS.Timeout;
     
     const handleScroll = () => {
       // Clear any pending timeout
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
+      clearTimeout(timeoutId);
       
-      // Debounce scroll events to prevent rapid state changes
+      // Debounce scroll events
       timeoutId = setTimeout(() => {
         const currentScrollY = window.scrollY;
-        const scrollDelta = currentScrollY - lastKnownScrollY;
         
-        // Only show bottom bar when at absolute top (0px or very close to 0)
-        setIsScrolledDown((prev) => {
-          // Only show when at absolute top (within 5px)
-          if (currentScrollY <= 5) {
-            if (prev === false) return prev; // Already showing, no change needed
-            lastKnownScrollY = currentScrollY;
-            return false;
-          }
-          
-          // Any scroll down - hide immediately
-          if (scrollDelta > 0) {
-            if (prev === true) return prev; // Already hidden, no change needed
-            lastKnownScrollY = currentScrollY;
-            return true;
-          }
-          
-          // Scrolling up but not at top - keep hidden
-          if (scrollDelta < 0 && currentScrollY > 5) {
-            if (prev === true) return prev; // Already hidden, no change needed
-            lastKnownScrollY = currentScrollY;
-            return true;
-          }
-          
-          // No change needed
-          return prev;
-        });
+        // Set isScrolledDown based on whether we're past the top (2px threshold)
+        setIsScrolledDown(currentScrollY > 2);
         
-        lastKnownScrollY = currentScrollY;
-      }, 50); // 50ms debounce to prevent rapid updates
+        lastScrollYRef.current = currentScrollY;
+      }, 10); // 10ms debounce
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
+      clearTimeout(timeoutId);
     };
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-sm">
+    <header className="sticky top-0 z-50 bg-white dark:bg-background shadow-sm">
       {/* Main Header - White Background - Reduces size when scrolled */}
       <div className="container mx-auto px-4">
-        <div className={`flex items-center justify-between transition-[height] duration-300 ease-in-out ${
+        <div className={`flex items-center justify-between gap-4 transition-all duration-200 ${
           isScrolledDown ? 'h-16' : 'h-24'
         }`}>
           {/* Mobile Menu Button */}
@@ -316,32 +288,41 @@ const Header = () => {
           </button>
 
           {/* Logo */}
-          <div className="flex items-center">
+          <div className="flex items-center flex-shrink-0">
             <Link to="/">
-              <h1 className={`font-bold text-red-600 transition-[font-size] duration-300 ease-in-out cursor-pointer hover:text-red-700 ${
-                isScrolledDown ? 'text-lg' : 'text-2xl'
-              }`}>
-                Riders Moto Shop
-              </h1>
+              <img 
+                src="/rms-logo.jpeg" 
+                alt="Riders Moto Shop" 
+                className={`transition-all duration-300 cursor-pointer hover:opacity-90 ${
+                  isScrolledDown ? 'h-14' : 'h-20'
+                }`}
+              />
             </Link>
           </div>
 
-          {/* Search Bar - Desktop */}
-          <div className={`hidden md:flex flex-1 mx-8 transition-all duration-300 ${
-            isScrolledDown ? 'max-w-xl' : 'max-w-2xl'
+          {/* Search Bar - Desktop - Centered */}
+          <div className={`hidden md:flex flex-1 justify-center transition-all duration-300 ${
+            isScrolledDown ? 'max-w-lg' : 'max-w-3xl'
           }`}>
-            <div className="flex w-full border border-gray-300 rounded-none shadow-sm overflow-hidden bg-white">
+            <div className="flex w-full border border-gray-200 dark:border-gray-700 overflow-hidden bg-white dark:bg-card">
               {/* Category Filter */}
               <select 
                 value={searchCategory}
                 onChange={(e) => setSearchCategory(e.target.value)}
-                className={`px-4 bg-gray-50 border-0 border-r border-gray-300 text-gray-700 focus:outline-none focus:ring-0 focus:border-r focus:border-gray-300 appearance-none cursor-pointer transition-all duration-300 ${
-                  isScrolledDown ? 'py-1.5 text-xs h-9' : 'py-2.5 text-sm h-11'
+                className={`px-4 bg-white dark:bg-card/50 border-0 border-r border-gray-200 dark:border-gray-700 text-gray-700 dark:text-foreground focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-r focus:border-gray-200 appearance-none cursor-pointer transition-all duration-300 font-medium ${
+                  isScrolledDown ? 'py-2 text-xs h-10' : 'py-3 text-sm h-12'
                 }`}
+                style={{
+                  backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23dc2626' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'right 8px center',
+                  backgroundSize: '18px',
+                  paddingRight: '36px'
+                }}
               >
-                <option value="All">All</option>
-                <option value="Bikes">Bikes</option>
-                <option value="Accessories">Accessories</option>
+                <option value="All" className="py-2 px-4 bg-white text-gray-700 hover:bg-red-50">All Categories</option>
+                <option value="Bikes" className="py-2 px-4 bg-white text-gray-700 hover:bg-red-50">Bikes</option>
+                <option value="Accessories" className="py-2 px-4 bg-white text-gray-700 hover:bg-red-50">Accessories</option>
               </select>
               
               {/* Search Input */}
@@ -351,8 +332,8 @@ const Header = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="What are you looking for?"
-                  className={`rounded-none border-0 bg-white focus:border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-4 transition-all duration-300 ${
-                    isScrolledDown ? 'h-9 text-xs' : 'h-11 text-sm'
+                  className={`rounded-none border-0 bg-white dark:bg-card focus:border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-4 placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-300 ${
+                    isScrolledDown ? 'h-10 text-xs' : 'h-12 text-sm'
                   }`}
                 />
               </div>
@@ -360,8 +341,8 @@ const Header = () => {
               {/* Search Button */}
               <Button 
                 onClick={handleSearch}
-                className={`bg-red-600 hover:bg-red-700 rounded-none flex items-center justify-center border-0 focus:ring-0 focus-visible:ring-0 transition-all duration-300 ${
-                  isScrolledDown ? 'px-4 h-9 w-10' : 'px-5 h-11 w-12'
+                className={`bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 rounded-none flex items-center justify-center border-0 focus:ring-0 focus-visible:ring-0 transition-all duration-300 font-medium ${
+                  isScrolledDown ? 'px-4 h-10 w-11' : 'px-6 h-12 w-14'
                 }`}
               >
                 <Search className={`text-white transition-all duration-300 ${
@@ -372,7 +353,8 @@ const Header = () => {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 flex-shrink-0">
+            <ThemeToggle />
             {isAuthenticated ? (
               // Authenticated User Menu
               <div className="relative" data-user-menu>
@@ -391,7 +373,7 @@ const Header = () => {
                 
                 {/* User Dropdown Menu */}
                 {isUserMenuOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                  <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-card border border-gray-200 dark:border-border rounded-lg shadow-lg z-50">
                     <div className="py-2">
                       <div className="px-4 py-2 border-b border-gray-100">
                         <p className="text-sm font-medium text-gray-900">
@@ -466,8 +448,8 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Navigation - Desktop - Smaller, White Background - Full Width - Hide when scrolled down */}
-      <div className={`hidden md:flex items-center py-1.5 bg-white w-full transition-[transform,opacity,height] duration-300 ease-in-out ${
+      {/* Navigation - Desktop - Smaller, White Background - Full Width - ONLY visible when at absolute top */}
+      <div className={`hidden md:flex items-center py-1.5 bg-white dark:bg-background w-full transition-all duration-200 ${
         isScrolledDown ? '-translate-y-full opacity-0 h-0 overflow-hidden pointer-events-none' : 'translate-y-0 opacity-100'
       }`}>
         <div className="container mx-auto px-4">
@@ -476,13 +458,13 @@ const Header = () => {
               {navigationData.map((item, index) => (
                 <NavigationMenuItem key={index}>
                   {item.submenu ? (
-                    <NavigationMenuTrigger className="text-gray-900 hover:text-red-600 font-medium text-sm bg-transparent hover:bg-transparent focus:bg-transparent data-[active]:bg-transparent data-[state=open]:bg-transparent rounded-none px-3 py-1.5 h-auto">
+                    <NavigationMenuTrigger className="text-gray-900 dark:text-foreground hover:text-red-600 dark:hover:text-red-400 font-medium text-sm bg-transparent hover:bg-transparent focus:bg-transparent data-[active]:bg-transparent data-[state=open]:bg-transparent rounded-none px-3 py-1.5 h-auto">
                       {item.title}
                     </NavigationMenuTrigger>
                   ) : (
                     <Link 
                       to={item.link}
-                      className="text-gray-900 hover:text-red-600 transition-colors px-3 py-1.5 font-medium text-sm"
+                      className="text-gray-900 dark:text-foreground hover:text-red-600 dark:hover:text-red-400 transition-colors px-3 py-1.5 font-medium text-sm"
                     >
                       {item.title}
                     </Link>
@@ -492,44 +474,40 @@ const Header = () => {
                     <NavigationMenuContent>
                       <div className="max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
                         {item.title === "Shop by Bike" ? (
-                          <div className="grid grid-cols-4 gap-8 p-6 w-[900px]">
+                          <div className="grid grid-cols-3 gap-3 px-3 py-2 w-screen overflow-hidden">
                             {item.submenu.map((brand) => (
-                              <div key={brand.title} className="space-y-2">
-                                <h4 className="font-bold text-base text-red-600 uppercase">{brand.title}</h4>
-                                <div className="space-y-1">
+                              <div key={brand.title} className="space-y-0.5">
+                                    <h4 className="font-bold text-xs text-red-600 dark:text-red-500 uppercase px-1">{brand.title}</h4>
+                                <div className="space-y-0">
                                   {brand.submenu?.map((model) => (
                                     <div key={model.title} className="group relative">
                                       <Link
                                         to={model.link}
-                                        className="block text-sm text-gray-900 hover:text-red-600 transition-colors py-0.5"
+                                        className="block text-xs text-gray-900 dark:text-foreground hover:text-red-600 dark:hover:text-red-400 transition-colors py-0.5 px-1 rounded hover:bg-gray-100 dark:hover:bg-card/50"
                                       >
                                         {model.title}
                                       </Link>
-                                      {/* Show accessories submenu on hover - with gap for mouse movement */}
+                                      {/* Show accessories submenu on hover - positioned below the bike name */}
                                       {model.submenu && (
-                                        <div className="hidden group-hover:block absolute left-full top-0 ml-2 bg-white border border-gray-200 rounded shadow-md p-4 min-w-[280px] z-[100]">
-                                          {/* Invisible hover bridge to maintain hover when moving to nested menu */}
-                                          <div className="absolute -left-2 top-0 w-2 h-full"></div>
-                                          <div className="space-y-2 relative">
+                                        <div className="hidden group-hover:block absolute top-full left-0 mt-0 bg-white dark:bg-card border border-gray-200 dark:border-border rounded shadow-lg p-1.5 min-w-[160px] z-50 whitespace-nowrap">
+                                          <div className="space-y-0.5">
                                             {model.submenu.map((accessoryCategory) => (
                                               <div key={accessoryCategory.title} className="group/accessory relative">
                                                 <Link
                                                   to={accessoryCategory.link}
-                                                  className="block text-sm font-semibold text-red-600 hover:text-red-700 transition-colors py-1 pr-3"
+                                                  className="block text-xs font-semibold text-red-600 dark:text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors py-0.5 px-1 rounded hover:bg-gray-100 dark:hover:bg-card/80"
                                                 >
                                                   {accessoryCategory.title}
                                                 </Link>
-                                                {/* Show individual accessories on hover - positioned beside category */}
+                                                {/* Show individual accessories on hover - compact */}
                                                 {accessoryCategory.submenu && (
-                                                  <div className="hidden group-hover/accessory:block absolute left-full top-0 -ml-1 bg-white border border-gray-200 rounded shadow-md p-3 min-w-[220px] z-[100]">
-                                                    {/* Invisible hover bridge */}
-                                                    <div className="absolute -left-1 top-0 w-1 h-full"></div>
-                                                    <div className="space-y-1 relative">
+                                                  <div className="hidden group-hover/accessory:block absolute top-full left-0 mt-0.5 bg-white dark:bg-card border border-gray-200 dark:border-border rounded shadow-lg p-1.5 min-w-[140px] z-40 whitespace-nowrap">
+                                                    <div className="space-y-0 relative">
                                                       {accessoryCategory.submenu.map((individualAccessory) => (
                                                         <Link
                                                           key={individualAccessory.title}
                                                           to={individualAccessory.link}
-                                                          className="block text-sm text-gray-600 hover:text-red-600 transition-colors py-1.5 px-2 rounded hover:bg-red-50"
+                                                          className="block text-xs text-gray-700 dark:text-foreground hover:text-red-600 dark:hover:text-red-400 transition-colors py-0.5 px-1 rounded hover:bg-red-50 dark:hover:bg-card/70"
                                                         >
                                                           {individualAccessory.title}
                                                         </Link>
@@ -652,9 +630,11 @@ const Header = () => {
                 <X className="h-6 w-6 text-gray-900" />
               </button>
               <Link to="/" onClick={() => setIsMenuOpen(false)}>
-                <h1 className="text-xl font-bold text-red-600 text-glow cursor-pointer hover:text-red-700">
-                  Riders Moto Shop
-                </h1>
+                <img 
+                  src="/rms-logo.jpeg" 
+                  alt="Riders Moto Shop" 
+                  className="h-10 cursor-pointer hover:opacity-90"
+                />
               </Link>
               <div className="w-6"></div>
             </div>
@@ -699,7 +679,7 @@ const Header = () => {
 
             {/* Auth Section - Mobile */}
             {isAuthenticated ? (
-              <div className="bg-white px-4 py-4 border-b border-gray-100">
+              <div className="bg-white dark:bg-card px-4 py-4 border-b border-gray-100 dark:border-border">
                 <div className="flex items-center space-x-3 mb-4">
                   <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center">
                     <span className="text-white font-bold text-sm">
@@ -707,24 +687,24 @@ const Header = () => {
                     </span>
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">
+                    <p className="font-medium text-gray-900 dark:text-foreground">
                       {user?.firstName} {user?.lastName}
                     </p>
-                    <p className="text-sm text-gray-500">{user?.email}</p>
+                    <p className="text-sm text-gray-500 dark:text-muted-foreground">{user?.email}</p>
                   </div>
                 </div>
                 
                 <div className="space-y-2">
                   <Link
                     to="/profile"
-                    className="block py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                    className="block py-2 px-3 text-gray-700 dark:text-foreground hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-card/50 rounded transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Profile
                   </Link>
                   <Link
                     to="/orders"
-                    className="block py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                    className="block py-2 px-3 text-gray-700 dark:text-foreground hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-card/50 rounded transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Orders
@@ -734,14 +714,14 @@ const Header = () => {
                       handleLogout();
                       setIsMenuOpen(false);
                     }}
-                    className="block w-full text-left py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                    className="block w-full text-left py-2 px-3 text-gray-700 dark:text-foreground hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-card/50 rounded transition-colors"
                   >
                     Logout
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="bg-white px-4 py-4 border-b border-gray-100">
+              <div className="bg-white dark:bg-card px-4 py-4 border-b border-gray-100 dark:border-border">
                 <div className="space-y-2">
                   <button
                     disabled={isLoading}

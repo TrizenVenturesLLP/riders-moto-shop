@@ -70,10 +70,10 @@ const SearchResults = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Searching products...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Searching products...</p>
         </div>
       </div>
     );
@@ -81,9 +81,9 @@ const SearchResults = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-600 mb-4">Error loading search results</p>
+          <p className="text-destructive mb-4">Error loading search results</p>
           <Button onClick={() => navigate('/')} variant="outline">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Go Back Home
@@ -94,9 +94,9 @@ const SearchResults = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-card border-b border-border">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center gap-4 mb-4">
             <Button 
@@ -107,35 +107,35 @@ const SearchResults = () => {
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back
             </Button>
-            <Search className="h-6 w-6 text-red-600" />
+            <Search className="h-6 w-6 text-primary" />
           </div>
           
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-foreground mb-2">
               Search Results
             </h1>
             
-            <div className="text-gray-600">
+            <div className="text-muted-foreground">
               {query ? (
                 <>
                   <span>Searching for: </span>
-                  <span className="font-semibold text-red-600">"{query}"</span>
+                  <span className="font-semibold text-primary">"{query}"</span>
                   {category !== 'All' && (
                     <>
                       <span> in </span>
-                      <span className="font-semibold text-red-600">{category}</span>
+                      <span className="font-semibold text-primary">{category}</span>
                     </>
                   )}
                 </>
               ) : (
                 <>
                   <span>Showing all </span>
-                  <span className="font-semibold text-red-600">{category.toLowerCase()}</span>
+                  <span className="font-semibold text-primary">{category.toLowerCase()}</span>
                 </>
               )}
             </div>
             
-            <div className="mt-2 text-sm text-gray-500">
+            <div className="mt-2 text-sm text-muted-foreground">
               {totalResults} {totalResults === 1 ? 'result' : 'results'} found
             </div>
           </div>
@@ -146,11 +146,11 @@ const SearchResults = () => {
       <div className="container mx-auto px-4 py-8">
         {products.length === 0 ? (
           <div className="text-center py-12">
-            <Search className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <Search className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-foreground mb-2">
               No products found
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-muted-foreground mb-6">
               {query ? 
                 `No products match your search for "${query}"` :
                 `No ${category.toLowerCase()} found`

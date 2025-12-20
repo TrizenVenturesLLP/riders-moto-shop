@@ -1,4 +1,13 @@
-import { Truck, Clock, Shield, CreditCard, Facebook, Instagram, Youtube, ChevronUp } from 'lucide-react';
+import {
+  Truck,
+  Clock,
+  Shield,
+  CreditCard,
+  Facebook,
+  Instagram,
+  Youtube,
+  ChevronUp
+} from 'lucide-react';
 
 const Footer = () => {
   const scrollToTop = () => {
@@ -6,179 +15,109 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-white border-t border-gray-200">
-      {/* Feature Section */}
-      <div className="bg-gray-50 border-b border-gray-200">
-        <div className="container mx-auto px-4 sm:px-6 py-5 sm:py-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 mt-0.5">
-                <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center">
-                  <Truck className="text-red-600" size={18} />
-                </div>
-              </div>
+    <footer className="bg-surface border-t border-border text-sm">
+      {/* Feature Strip */}
+      <div className="container mx-auto px-6 py-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            { Icon: Truck, title: 'FREE SHIPPING', desc: 'On all orders' },
+            { Icon: Clock, title: '24/7 SUPPORT', desc: 'Always available' },
+            { Icon: Shield, title: '100% AUTHENTIC', desc: 'Genuine products' },
+            { Icon: CreditCard, title: 'SECURE PAYMENTS', desc: 'Safe checkout' }
+          ].map(({ Icon, title, desc }) => (
+            <div key={title} className="flex items-start gap-3">
+              <Icon className="text-primary mt-0.5" size={22} />
               <div>
-                <h4 className="font-semibold text-gray-900 text-sm mb-1">FREE SHIPPING</h4>
-                <p className="text-gray-600 text-xs leading-relaxed">Free shipping on all orders</p>
+                <h4 className="text-xs font-semibold text-foreground leading-tight">
+                  {title}
+                </h4>
+                <p className="text-xs text-muted-foreground leading-snug">
+                  {desc}
+                </p>
               </div>
             </div>
-            
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 mt-0.5">
-                <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center">
-                  <Clock className="text-red-600" size={18} />
-                </div>
-              </div>
-              <div>
-                <h4 className="font-semibold text-gray-900 text-sm mb-1">24/7 SUPPORT</h4>
-                <p className="text-gray-600 text-xs leading-relaxed">Contact us anytime, anywhere</p>
-              </div>
-            </div>
-            
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 mt-0.5">
-                <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center">
-                  <Shield className="text-red-600" size={18} />
-                </div>
-              </div>
-              <div>
-                <h4 className="font-semibold text-gray-900 text-sm mb-1">100% AUTHENTIC</h4>
-                <p className="text-gray-600 text-xs leading-relaxed">Genuine parts with warranty</p>
-              </div>
-            </div>
-            
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 mt-0.5">
-                <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center">
-                  <CreditCard className="text-red-600" size={18} />
-                </div>
-              </div>
-              <div>
-                <h4 className="font-semibold text-gray-900 text-sm mb-1">PAYMENT SECURE</h4>
-                <p className="text-gray-600 text-xs leading-relaxed">We ensure secure payment</p>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 
-      {/* Main Footer Content */}
-      <div className="bg-white">
-        <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-            {/* Company Info */}
-            <div className="lg:col-span-2">
-              <h2 className="text-xl font-bold text-red-600 mb-3 uppercase tracking-wide">RIDERS MOTO SHOP</h2>
-              <p className="text-gray-600 text-sm leading-relaxed max-w-md">
-                We are one of the leading motorcycle parts and accessories retailer 
-                with expertise in quality products and exceptional service. 
-                We drive excellence with our passionate and experienced team.
+      {/* Main Footer */}
+      <div className="bg-background border-t border-border">
+        <div className="container mx-auto px-6 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Brand */}
+            <div>
+              <img src="/rms-logo.jpeg" alt="Riders Moto Shop" className="h-12 mb-3" />
+              <p className="text-xs text-muted-foreground leading-relaxed max-w-sm">
+                Premium motorcycle parts and accessories built for riders who
+                value quality, performance, and reliability.
               </p>
             </div>
 
-            {/* Info Links */}
+            {/* Info */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wide">Info</h3>
-              <ul className="space-y-2.5">
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-red-600 transition-colors text-sm inline-block">
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-red-600 transition-colors text-sm inline-block">
-                    Contact Us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-red-600 transition-colors text-sm inline-block">
-                    FAQ
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-red-600 transition-colors text-sm inline-block">
-                    Store Locator
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-red-600 transition-colors text-sm inline-block">
-                    Blog
-                  </a>
-                </li>
+              <h3 className="text-sm font-semibold mb-3">Info</h3>
+              <ul className="space-y-2">
+                {['About Us', 'Contact Us', 'FAQ', 'Store Locator', 'Blog'].map(item => (
+                  <li key={item}>
+                    <a
+                      href="#"
+                      className="text-xs text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      {item}
+                    </a>
+                  </li>
+                ))}
               </ul>
             </div>
 
-            {/* Policy Links */}
+            {/* Policy */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wide">Policy</h3>
-              <ul className="space-y-2.5">
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-red-600 transition-colors text-sm inline-block">
-                    Privacy Policy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-red-600 transition-colors text-sm inline-block">
-                    Return, Refund & Replacement Policy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-red-600 transition-colors text-sm inline-block">
-                    Shipping Policy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-red-600 transition-colors text-sm inline-block">
-                    Terms of Warranty
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-red-600 transition-colors text-sm inline-block">
-                    Terms & Conditions
-                  </a>
-                </li>
+              <h3 className="text-sm font-semibold mb-3">Policy</h3>
+              <ul className="space-y-2">
+                {[
+                  'Privacy Policy',
+                  'Return & Refund Policy',
+                  'Shipping Policy',
+                  'Warranty Terms',
+                  'Terms & Conditions'
+                ].map(item => (
+                  <li key={item}>
+                    <a
+                      href="#"
+                      className="text-xs text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      {item}
+                    </a>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom Section */}
-      <div className="bg-gray-900 border-t border-gray-800">
-        <div className="container mx-auto px-4 sm:px-6 py-4">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            {/* Copyright */}
-            <div className="text-gray-400 text-xs sm:text-sm">
-              © 2025, Riders Moto Shop. Built with passion for riders.
-            </div>
+      {/* Bottom Bar */}
+      <div className="bg-surface border-t border-border">
+        <div className="container mx-auto px-6 py-3">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
+            <p className="text-xs text-muted-foreground">
+              © 2025 Riders Moto Shop. All rights reserved.
+            </p>
 
-            {/* Social Icons & Back to Top */}
-            <div className="flex items-center gap-4">
-              <a 
-                href="#" 
-                className="text-gray-400 hover:text-red-600 transition-colors p-1.5 hover:bg-gray-800 rounded"
-                aria-label="Facebook"
-              >
-                <Facebook size={16} />
-              </a>
-              <a 
-                href="#" 
-                className="text-gray-400 hover:text-red-600 transition-colors p-1.5 hover:bg-gray-800 rounded"
-                aria-label="Instagram"
-              >
-                <Instagram size={16} />
-              </a>
-              <a 
-                href="#" 
-                className="text-gray-400 hover:text-red-600 transition-colors p-1.5 hover:bg-gray-800 rounded"
-                aria-label="YouTube"
-              >
-                <Youtube size={16} />
-              </a>
-              
+            <div className="flex items-center gap-3">
+              {[Facebook, Instagram, Youtube].map((Icon, i) => (
+                <a
+                  key={i}
+                  href="#"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <Icon size={18} />
+                </a>
+              ))}
+
               <button
                 onClick={scrollToTop}
-                className="ml-2 p-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors shadow-lg hover:shadow-xl"
+                className="ml-2 p-1.5 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition"
                 aria-label="Back to top"
               >
                 <ChevronUp size={14} />

@@ -74,21 +74,21 @@ const Profile = () => {
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case 'admin': return 'bg-red-100 text-red-800';
-      case 'staff': return 'bg-blue-100 text-blue-800';
-      default: return 'bg-green-100 text-green-800';
+      case 'admin': return 'bg-primary/10 text-primary';
+      case 'staff': return 'bg-blue-500/10 text-blue-500';
+      default: return 'bg-green-500/10 text-green-500';
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-background py-8">
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Header */}
         <div className="mb-8">
           <Button
             variant="ghost"
             onClick={() => navigate('/')}
-            className="mb-4 text-gray-600 hover:text-gray-900"
+            className="mb-4 text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Home
@@ -96,8 +96,8 @@ const Profile = () => {
           
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">My Account</h1>
-              <p className="text-gray-600 mt-1">Manage your account settings and preferences</p>
+              <h1 className="text-3xl font-bold text-foreground">My Account</h1>
+              <p className="text-muted-foreground mt-1">Manage your account settings and preferences</p>
             </div>
             <div className="flex items-center space-x-2">
               <Badge className={getRoleColor(user?.role || 'customer')}>
@@ -186,17 +186,17 @@ const Profile = () => {
                   <>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label className="text-sm font-medium text-gray-500">First Name</Label>
-                        <p className="text-gray-900 font-medium">{user?.firstName}</p>
+                        <Label className="text-sm font-medium text-muted-foreground">First Name</Label>
+                        <p className="text-foreground font-medium">{user?.firstName}</p>
                       </div>
                       <div>
-                        <Label className="text-sm font-medium text-gray-500">Last Name</Label>
-                        <p className="text-gray-900 font-medium">{user?.lastName}</p>
+                        <Label className="text-sm font-medium text-muted-foreground">Last Name</Label>
+                        <p className="text-foreground font-medium">{user?.lastName}</p>
                       </div>
                     </div>
                     <div>
-                      <Label className="text-sm font-medium text-gray-500">Email Address</Label>
-                      <p className="text-gray-900 font-medium flex items-center">
+                      <Label className="text-sm font-medium text-muted-foreground">Email Address</Label>
+                      <p className="text-foreground font-medium flex items-center">
                         <Mail className="h-4 w-4 mr-2" />
                         {user?.email}
                       </p>
@@ -220,22 +220,22 @@ const Profile = () => {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-sm font-medium text-gray-500">Account ID</Label>
-                    <p className="text-gray-900 font-mono text-sm">{user?.id}</p>
+                    <Label className="text-sm font-medium text-muted-foreground">Account ID</Label>
+                    <p className="text-foreground font-mono text-sm">{user?.id}</p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-gray-500">Member Since</Label>
-                    <p className="text-gray-900 font-medium flex items-center">
+                    <Label className="text-sm font-medium text-muted-foreground">Member Since</Label>
+                    <p className="text-foreground font-medium flex items-center">
                       <Calendar className="h-4 w-4 mr-2" />
                       {user?.createdAt ? formatDate(user.createdAt) : 'N/A'}
                     </p>
                   </div>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-gray-500">Account Status</Label>
+                  <Label className="text-sm font-medium text-muted-foreground">Account Status</Label>
                   <div className="flex items-center mt-1">
                     <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                    <span className="text-green-600 font-medium">Active</span>
+                    <span className="text-green-600 dark:text-green-400 font-medium">Active</span>
                   </div>
                 </div>
               </CardContent>
@@ -287,18 +287,18 @@ const Profile = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Total Orders</span>
-                  <span className="font-semibold">0</span>
+                  <span className="text-muted-foreground">Total Orders</span>
+                  <span className="font-semibold text-foreground">0</span>
                 </div>
                 <Separator />
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Wishlist Items</span>
-                  <span className="font-semibold">0</span>
+                  <span className="text-muted-foreground">Wishlist Items</span>
+                  <span className="font-semibold text-foreground">0</span>
                 </div>
                 <Separator />
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Reviews Written</span>
-                  <span className="font-semibold">0</span>
+                  <span className="text-muted-foreground">Reviews Written</span>
+                  <span className="font-semibold text-foreground">0</span>
                 </div>
               </CardContent>
             </Card>
