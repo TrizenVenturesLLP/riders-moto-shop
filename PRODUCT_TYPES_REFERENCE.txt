@@ -1,0 +1,192 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║              PRODUCT TYPES REFERENCE - ROYAL ENFIELD SUPER METEOR 650      ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+Model: Royal Enfield Super Meteor 650
+Total Products: 25
+Categories: 4
+
+════════════════════════════════════════════════════════════════════════════
+
+��� TOURING ACCESSORIES (8 Products)
+
+URL Base: /bikes/royal-enfield/super-meteor-650/touring-accessories
+
+1. Back Rest                    → back-rest              ₹3,499
+2. Top Rack                     → top-rack               ₹5,999
+3. Luggage Carrier              → luggage-carrier        ₹4,499
+4. Saddle Stay                  → saddle-stay            ₹2,799
+5. GPS Mount                    → gps-mount              ₹1,999
+6. Fog Light Clamp              → fog-light-clamp        ₹899
+7. Toprack Saddle Stay          → toprack-saddle-stay    ₹3,199
+8. Top Plate                    → top-plate              ₹799
+
+Examples:
+  /bikes/royal-enfield/super-meteor-650/touring-accessories/back-rest
+  /bikes/royal-enfield/super-meteor-650/touring-accessories/top-rack
+  /bikes/royal-enfield/super-meteor-650/touring-accessories/luggage-carrier
+
+════════════════════════════════════════════════════════════════════════════
+
+���️ PROTECTION ACCESSORIES (7 Products)
+
+URL Base: /bikes/royal-enfield/super-meteor-650/protection-accessories
+
+1. Crash Guard                  → crash-guard            ₹4,999
+2. Frame Slider                 → frame-slider           ₹2,499
+3. Sump Guard                   → sump-guard             ₹3,499
+4. Radiator Guard               → radiator-guard         ₹2,999
+5. Head Light Grill             → head-light-grill       ₹1,899
+6. Chain Protector              → chain-protector        ₹1,499
+7. Silencer Guard               → silencer-guard         ₹1,299
+
+Examples:
+  /bikes/royal-enfield/super-meteor-650/protection-accessories/crash-guard
+  /bikes/royal-enfield/super-meteor-650/protection-accessories/frame-slider
+  /bikes/royal-enfield/super-meteor-650/protection-accessories/sump-guard
+
+════════════════════════════════════════════════════════════════════════════
+
+⚡ PERFORMANCE ACCESSORIES (3 Products)
+
+URL Base: /bikes/royal-enfield/super-meteor-650/performance-accessories
+
+1. Exhaust Bend Pipe            → exhaust-bend-pipe      ₹2,899
+2. Silencer - Silver            → silencer-silver        ₹3,999
+3. Silencer - Black             → silencer-black         ₹3,999
+
+Examples:
+  /bikes/royal-enfield/super-meteor-650/performance-accessories/exhaust-bend-pipe
+  /bikes/royal-enfield/super-meteor-650/performance-accessories/silencer-silver
+  /bikes/royal-enfield/super-meteor-650/performance-accessories/silencer-black
+
+════════════════════════════════════════════════════════════════════════════
+
+��� AUXILIARY ACCESSORIES (7 Products)
+
+URL Base: /bikes/royal-enfield/super-meteor-650/auxiliary-accessories
+
+1. Foot Rest                    → foot-rest              ₹1,599
+2. Master Cylinder Cap          → master-cylinder-cap    ₹499
+3. Paddock Stand                → paddock-stand          ₹4,199
+4. Handle Bar                   → handle-bar             ₹2,199
+5. Visor                        → visor                  ₹3,299
+6. Side Stand Base              → side-stand-base        ₹1,099
+7. Tail Tidy                    → tail-tidy              ₹2,799
+
+Examples:
+  /bikes/royal-enfield/super-meteor-650/auxiliary-accessories/foot-rest
+  /bikes/royal-enfield/super-meteor-650/auxiliary-accessories/paddock-stand
+  /bikes/royal-enfield/super-meteor-650/auxiliary-accessories/tail-tidy
+
+════════════════════════════════════════════════════════════════════════════
+
+��� PRICE RANGES
+
+Cheapest:   Master Cylinder Cap (₹499)
+Most Expensive: Top Rack (₹5,999)
+
+By Category:
+  Touring:      ₹799 - ₹5,999 (avg: ₹3,149)
+  Protection:   ₹1,299 - ₹4,999 (avg: ₹2,771)
+  Performance:  ₹2,899 - ₹3,999 (avg: ₹3,632)
+  Auxiliary:    ₹499 - ₹4,199 (avg: ₹2,313)
+
+════════════════════════════════════════════════════════════════════════════
+
+��� STOCK STATUS
+
+In Stock:     25/25 products (100%)
+Stock Levels: 5 - 35 units per product
+
+Low Stock (<10):      Crash Guard (5), Silencer-Silver (6), Silencer-Black (7)
+High Stock (>20):     Master Cylinder Cap (35), GPS Mount (25), Fog Light Clamp (25)
+
+════════════════════════════════════════════════════════════════════════════
+
+⭐ FEATURED PRODUCTS (11 items)
+
+Featured Count: 11/25 (44%)
+
+Touring:
+  ✅ Back Rest
+  ✅ Top Rack
+  ✅ Luggage Carrier
+  ✅ Toprack Saddle Stay
+
+Protection:
+  ✅ Crash Guard
+  ✅ Radiator Guard
+
+Performance:
+  ✅ Silencer - Silver
+  ✅ Silencer - Black
+
+Auxiliary:
+  ✅ Paddock Stand
+  ✅ Tail Tidy
+  ✅ (1 more)
+
+════════════════════════════════════════════════════════════════════════════
+
+��� COMPLETE URL EXAMPLES
+
+All 25 Products:
+  /bikes/royal-enfield/super-meteor-650
+
+By Category (8 URLs):
+  /bikes/royal-enfield/super-meteor-650/touring-accessories
+  /bikes/royal-enfield/super-meteor-650/protection-accessories
+  /bikes/royal-enfield/super-meteor-650/performance-accessories
+  /bikes/royal-enfield/super-meteor-650/auxiliary-accessories
+
+By Product Type (25 URLs):
+  /bikes/royal-enfield/super-meteor-650/touring-accessories/back-rest
+  /bikes/royal-enfield/super-meteor-650/touring-accessories/top-rack
+  /bikes/royal-enfield/super-meteor-650/touring-accessories/luggage-carrier
+  /bikes/royal-enfield/super-meteor-650/touring-accessories/saddle-stay
+  /bikes/royal-enfield/super-meteor-650/touring-accessories/gps-mount
+  /bikes/royal-enfield/super-meteor-650/touring-accessories/fog-light-clamp
+  /bikes/royal-enfield/super-meteor-650/touring-accessories/toprack-saddle-stay
+  /bikes/royal-enfield/super-meteor-650/touring-accessories/top-plate
+  
+  /bikes/royal-enfield/super-meteor-650/protection-accessories/crash-guard
+  /bikes/royal-enfield/super-meteor-650/protection-accessories/frame-slider
+  /bikes/royal-enfield/super-meteor-650/protection-accessories/sump-guard
+  /bikes/royal-enfield/super-meteor-650/protection-accessories/radiator-guard
+  /bikes/royal-enfield/super-meteor-650/protection-accessories/head-light-grill
+  /bikes/royal-enfield/super-meteor-650/protection-accessories/chain-protector
+  /bikes/royal-enfield/super-meteor-650/protection-accessories/silencer-guard
+  
+  /bikes/royal-enfield/super-meteor-650/performance-accessories/exhaust-bend-pipe
+  /bikes/royal-enfield/super-meteor-650/performance-accessories/silencer-silver
+  /bikes/royal-enfield/super-meteor-650/performance-accessories/silencer-black
+  
+  /bikes/royal-enfield/super-meteor-650/auxiliary-accessories/foot-rest
+  /bikes/royal-enfield/super-meteor-650/auxiliary-accessories/master-cylinder-cap
+  /bikes/royal-enfield/super-meteor-650/auxiliary-accessories/paddock-stand
+  /bikes/royal-enfield/super-meteor-650/auxiliary-accessories/handle-bar
+  /bikes/royal-enfield/super-meteor-650/auxiliary-accessories/visor
+  /bikes/royal-enfield/super-meteor-650/auxiliary-accessories/side-stand-base
+  /bikes/royal-enfield/super-meteor-650/auxiliary-accessories/tail-tidy
+
+════════════════════════════════════════════════════════════════════════════
+
+��� QUICK NAVIGATION
+
+Most Popular Products (by price):
+  High-end:     Top Rack (₹5,999)
+  Mid-range:    Crash Guard (₹4,999)
+  Budget-friendly: Master Cylinder Cap (₹499)
+
+Most Featured Items:
+  Touring:      4/8 (50%) featured
+  Protection:   2/7 (29%) featured
+  Performance:  2/3 (67%) featured
+  Auxiliary:    3/7 (43%) featured
+
+════════════════════════════════════════════════════════════════════════════
+
+For complete product details, see IMPLEMENTATION_DETAILS.md
+
+Last Updated: December 24, 2024

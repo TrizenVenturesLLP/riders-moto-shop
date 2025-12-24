@@ -1,46 +1,38 @@
-import { useQuery } from '@tanstack/react-query';
-import { API_BASE_URL } from '@/config/api';
+import { useQuery } from "@tanstack/react-query";
+import { API_BASE_URL } from "@/config/api";
+import { mockProducts } from "../mock/products";
 
 export interface Product {
   id: string;
   name: string;
   slug: string;
-  description: string;
-  shortDescription: string;
   sku: string;
   price: string;
-  comparePrice: string;
-  costPrice: string;
+  comparePrice?: string;
   stockQuantity: number;
-  lowStockThreshold: number;
-  weight: string;
-  dimensions: {
-    length: number;
-    width: number;
-    height: number;
-  };
-  categoryId: string | null;
-  brandId: string | null;
   isActive: boolean;
-  isDigital: boolean;
   isFeatured: boolean;
-  sortOrder: number;
-  metaTitle: string;
-  metaDescription: string;
-  tags: string[];
-  attributes: any;
-  createdAt: string;
-  updatedAt: string;
-  category: any;
-  brand: any;
+  category?: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+  brand?: {
+    id: string;
+    name: string;
+    slug: string;
+    logo?: string;
+  };
   images: Array<{
     id: string;
     url: string;
-    altText: string | null;
+    altText?: string;
     isPrimary: boolean;
     sortOrder: number;
   }>;
 }
+
+const USE_MOCK_DATA = true;
 
 export interface ProductsResponse {
   success: boolean;
@@ -55,21 +47,166 @@ export interface ProductsResponse {
   };
 }
 
-const fetchProducts = async (): Promise<ProductsResponse> => {
-  const response = await fetch(`${API_BASE_URL}/products`);
-  
+/**
+ * Filters supported:
+ * - brand, model, category, productType (slug)
+ * - minPrice, maxPrice
+ * - inStock, featured
+ * - search, sort, order, page, limit
+ */
+export interface UseProductsParams {
+  brand?: string;
+  model?: string;
+  category?: string;
+  productType?: string;
+  page?: number;
+  limit?: number;
+  sort?: string;
+  order?: 'ASC' | 'DESC';
+  minPrice?: number;
+  maxPrice?: number;
+  inStock?: boolean;
+  featured?: boolean;
+  search?: string;
+}
+
+const fetchProducts = async (
+  params: UseProductsParams
+): Promise<ProductsResponse> => {
+  const searchParams = new URLSearchParams();
+
+  // Add all parameters
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      searchParams.append(key, value.toString());
+    }
+  });
+
+  const url = `${API_BASE_URL}/products?${searchParams.toString()}`;
+
+  console.log("🔍 Fetching products:", url);
+
+  const response = await fetch(url);
+
   if (!response.ok) {
-    throw new Error('Failed to fetch products');
+    const errorText = await response.text();
+    console.error("❌ Product fetch failed:", errorText);
+    throw new Error("Failed to fetch products");
   }
-  
+
   return response.json();
 };
 
-export const useProducts = () => {
+const filterMockProducts = (params: UseProductsParams): ProductsResponse => {
+  let filtered = [...mockProducts];
+
+  // Apply filters
+  if (params.brand) {
+    filtered = filtered.filter((p) => p.brand?.slug === params.brand);
+  }
+
+  if (params.model) {
+    filtered = filtered.filter(
+      (p) => p.compatibleModels && p.compatibleModels.includes(params.model)
+    );
+  }
+
+  if (params.category) {
+    filtered = filtered.filter((p) => p.category?.slug === params.category);
+  }
+
+  if (params.productType) {
+    filtered = filtered.filter((p) => p.productType?.slug === params.productType);
+  }
+
+  if (params.minPrice !== undefined) {
+    filtered = filtered.filter((p) => parseFloat(p.price) >= params.minPrice!);
+  }
+
+  if (params.maxPrice !== undefined) {
+    filtered = filtered.filter((p) => parseFloat(p.price) <= params.maxPrice!);
+  }
+
+  if (params.inStock) {
+    filtered = filtered.filter((p) => p.stockQuantity > 0);
+  }
+
+  if (params.featured) {
+    filtered = filtered.filter((p) => p.isFeatured);
+  }
+
+  if (params.search) {
+    const query = params.search.toLowerCase();
+    filtered = filtered.filter((p) =>
+      p.name.toLowerCase().includes(query) ||
+      p.slug.toLowerCase().includes(query)
+    );
+  }
+
+  // Apply sorting
+  if (params.sort) {
+    const sortField = params.sort;
+    const isAsc = params.order === 'ASC';
+    
+    filtered.sort((a, b) => {
+      let aVal: any;
+      let bVal: any;
+      
+      if (sortField === 'price') {
+        aVal = parseFloat(a.price);
+        bVal = parseFloat(b.price);
+      } else if (sortField === 'name') {
+        aVal = a.name;
+        bVal = b.name;
+      } else if (sortField === 'createdAt') {
+        // For mock data, use name as fallback since we don't have createdAt
+        aVal = a.name;
+        bVal = b.name;
+      } else {
+        aVal = (a as any)[sortField];
+        bVal = (b as any)[sortField];
+      }
+      
+      if (typeof aVal === 'string') {
+        return isAsc ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+      }
+      return isAsc ? aVal - bVal : bVal - aVal;
+    });
+  }
+
+  // Apply pagination
+  const page = params.page || 1;
+  const limit = params.limit || 20;
+  const start = (page - 1) * limit;
+  const paginatedProducts = filtered.slice(start, start + limit);
+
+  return {
+    success: true,
+    data: {
+      products: paginatedProducts,
+      pagination: {
+        currentPage: page,
+        totalPages: Math.ceil(filtered.length / limit),
+        totalItems: filtered.length,
+        itemsPerPage: limit,
+      },
+    },
+  };
+};
+
+export const useProducts = (params: UseProductsParams = {}) => {
   return useQuery({
-    queryKey: ['products'],
-    queryFn: fetchProducts,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    cacheTime: 10 * 60 * 1000, // 10 minutes
+    queryKey: ["products", params],
+    queryFn: async () => {
+      if (USE_MOCK_DATA) {
+        console.log("🧪 Using MOCK products", params);
+        await new Promise((r) => setTimeout(r, 300)); // fake latency
+        return filterMockProducts(params);
+      }
+
+      return fetchProducts(params);
+    },
+    staleTime: 5 * 60 * 1000, // 5 min
+    // cacheTime: 10 * 60 * 1000, // 10 min
   });
 };

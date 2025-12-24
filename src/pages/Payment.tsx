@@ -256,17 +256,17 @@ const Payment = () => {
 
   if (!paymentData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading payment details...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading payment details...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center mb-6">
@@ -279,7 +279,7 @@ const Payment = () => {
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Checkout
           </Button>
-          <h1 className="text-2xl font-bold text-gray-900">Complete Payment</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-foreground">Complete Payment</h1>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -298,17 +298,17 @@ const Payment = () => {
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* UPI ID Display */}
-                <div className="bg-blue-50 p-4 rounded-lg">
+                <div className="bg-primary/10 p-4 rounded-lg border border-primary/20">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-blue-600 font-medium">Pay to UPI ID</p>
-                      <p className="text-lg font-mono text-blue-800">{paymentConfig.upiId}</p>
+                      <p className="text-sm text-primary font-medium">Pay to UPI ID</p>
+                      <p className="text-lg font-mono text-foreground">{paymentConfig.upiId}</p>
                     </div>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={copyUPIId}
-                      className="text-blue-600 border-blue-200 hover:bg-blue-100"
+                      className="text-primary border-primary/30 hover:bg-primary/20"
                     >
                       <Copy className="h-4 w-4 mr-2" />
                       Copy
@@ -318,11 +318,11 @@ const Payment = () => {
 
                 {/* QR Code Section */}
                 <div className="text-center space-y-4">
-                  <div className="bg-white p-6 rounded-lg border-2 border-dashed border-gray-300">
+                  <div className="bg-card p-4 md:p-6 rounded-lg border-2 border-dashed border-border">
                     {isGeneratingQR ? (
                       <div className="flex flex-col items-center justify-center h-32">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-2"></div>
-                        <p className="text-sm text-gray-600">Generating QR Code...</p>
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2"></div>
+                        <p className="text-sm text-muted-foreground">Generating QR Code...</p>
                       </div>
                     ) : qrCodeImage ? (
                       <div className="flex flex-col items-center">
@@ -331,10 +331,10 @@ const Payment = () => {
                           alt="UPI Payment QR Code" 
                           className="w-32 h-32 mb-4 rounded-lg shadow-sm"
                         />
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-muted-foreground">
                           {isMobile ? 'Tap "Pay Now" to open UPI app' : 'Scan this QR code with your UPI app'}
                         </p>
-                        <p className="text-xs text-gray-500 mt-2">
+                        <p className="text-xs text-muted-foreground/70 mt-2">
                           Amount: ₹{paymentData.total}
                         </p>
                         <Button
@@ -346,7 +346,7 @@ const Payment = () => {
                         >
                           {isGeneratingQR ? (
                             <>
-                              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600 mr-1"></div>
+                              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-primary mr-1"></div>
                               Refreshing...
                             </>
                           ) : (
@@ -359,28 +359,28 @@ const Payment = () => {
                       </div>
                     ) : (
                       <div className="flex flex-col items-center justify-center h-32">
-                        <QrCode className="h-16 w-16 mx-auto text-gray-400 mb-2" />
-                        <p className="text-sm text-gray-600">QR Code will appear here</p>
+                        <QrCode className="h-16 w-16 mx-auto text-muted-foreground/40 mb-2" />
+                        <p className="text-sm text-muted-foreground">QR Code will appear here</p>
                       </div>
                     )}
                   </div>
                   
                   {/* Payment Instructions */}
-                  <div className="text-left space-y-2 text-sm text-gray-600">
+                  <div className="text-left space-y-2 text-sm text-muted-foreground">
                     <div className="flex items-center">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                      <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
                       <span>Open your UPI app (Google Pay, PhonePe, Paytm)</span>
                     </div>
                     <div className="flex items-center">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                      <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
                       <span>Scan the QR code or enter UPI ID manually</span>
                     </div>
                     <div className="flex items-center">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                      <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
                       <span>Enter amount: ₹{paymentData.total}</span>
                     </div>
                     <div className="flex items-center">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                      <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
                       <span>Complete the payment</span>
                     </div>
                   </div>
@@ -391,7 +391,7 @@ const Payment = () => {
                   <Button
                     onClick={handlePayNow}
                     disabled={paymentStatus === 'processing'}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-lg"
+                    className="w-full bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white py-3 text-lg"
                     size="lg"
                   >
                     {paymentStatus === 'processing' ? (
@@ -420,7 +420,7 @@ const Payment = () => {
                   >
                     {paymentStatus === 'completed' ? (
                       <>
-                        <CheckCircle className="h-4 w-4 mr-2 text-green-600" />
+                        <CheckCircle className="h-4 w-4 mr-2 text-green-600 dark:text-green-400" />
                         Payment Completed
                       </>
                     ) : (
@@ -433,7 +433,7 @@ const Payment = () => {
                 </div>
 
                 {/* Security Badge */}
-                <div className="flex items-center justify-center text-sm text-gray-500">
+                <div className="flex items-center justify-center text-sm text-muted-foreground/70">
                   <Shield className="h-4 w-4 mr-2" />
                   <span>Secure payment powered by UPI</span>
                 </div>
@@ -447,13 +447,13 @@ const Payment = () => {
                   <div className="flex items-center space-x-3">
                     {paymentStatus === 'processing' ? (
                       <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
-                        <span className="text-blue-600">Processing payment...</span>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
+                        <span className="text-primary">Processing payment...</span>
                       </>
                     ) : (
                       <>
-                        <CheckCircle className="h-5 w-5 text-green-600" />
-                        <span className="text-green-600">Payment completed successfully!</span>
+                        <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
+                        <span className="text-green-600 dark:text-green-400">Payment completed successfully!</span>
                       </>
                     )}
                   </div>
@@ -482,7 +482,7 @@ const Payment = () => {
                       />
                       <div className="flex-1">
                         <p className="font-medium text-sm">{item.name}</p>
-                        <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                        <p className="text-xs text-muted-foreground/70">Qty: {item.quantity}</p>
                       </div>
                       <p className="font-medium">₹{item.price * item.quantity}</p>
                     </div>
@@ -529,7 +529,7 @@ const Payment = () => {
                     {paymentData.shippingAddress.city}, {paymentData.shippingAddress.state} {paymentData.shippingAddress.pincode}
                   </p>
                   <p>{paymentData.shippingAddress.country}</p>
-                  <p className="text-gray-500">{paymentData.shippingAddress.phone}</p>
+                  <p className="text-muted-foreground/70">{paymentData.shippingAddress.phone}</p>
                 </div>
               </CardContent>
             </Card>
@@ -539,7 +539,7 @@ const Payment = () => {
               <CardHeader>
                 <CardTitle className="text-sm">Need Help?</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2 text-sm text-gray-600">
+              <CardContent className="space-y-2 text-sm text-muted-foreground">
                 <p>• Make sure you have sufficient balance in your UPI app</p>
                 <p>• Keep your phone nearby for OTP verification</p>
                 <p>• Contact support if payment fails</p>

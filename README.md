@@ -1,6 +1,42 @@
-# Welcome to your Lovable project
+# Riders Moto Shop - Frontend
 
-## Project info
+**Status**: ✅ Shop by Bike feature with 4-level filtering fully implemented
+
+## 🚀 Features Implemented
+
+### Shop by Bike - Multi-Level Filtering
+- **4-Level Navigation**: Brand → Model → Category → Product Type
+- **Dynamic Filtering**: Product types automatically extracted per category
+- **25 Mock Products**: Complete dataset for Royal Enfield Super Meteor 650
+- **Smart UI**: Product Type filter disabled until category selected
+- **Breadcrumb Navigation**: Full path display with 5 levels
+- **URL-Based State**: All filter state preserved in URL
+
+### Product Categories
+```
+Touring Accessories (8)       - Back Rest, Top Rack, Luggage Carrier, Saddle Stay, GPS Mount, Fog Light Clamp, Toprack Saddle Stay, Top Plate
+Protection Accessories (7)    - Crash Guard, Frame Slider, Sump Guard, Radiator Guard, Head Light Grill, Chain Protector, Silencer Guard
+Performance Accessories (3)   - Exhaust Bend Pipe, Silencer - Silver, Silencer - Black
+Auxiliary Accessories (7)     - Foot Rest, Master Cylinder Cap, Paddock Stand, Handle Bar, Visor, Side Stand Base, Tail Tidy
+```
+
+### Example URLs
+```
+/bikes/royal-enfield/super-meteor-650/touring-accessories/back-rest
+/bikes/royal-enfield/super-meteor-650/protection-accessories/crash-guard
+/bikes/royal-enfield/super-meteor-650/performance-accessories/silencer-silver
+```
+
+---
+
+## 📚 Documentation
+- [PRODUCT_FILTERING_COMPLETE.md](PRODUCT_FILTERING_COMPLETE.md) - Quick reference
+- [BEFORE_AFTER_COMPARISON.md](BEFORE_AFTER_COMPARISON.md) - Detailed comparison
+- [IMPLEMENTATION_DETAILS.md](IMPLEMENTATION_DETAILS.md) - Complete code reference
+
+---
+
+## Welcome to your Lovable project
 
 **URL**: https://lovable.dev/projects/aa17805a-509e-4f73-8710-c77627d91933
 

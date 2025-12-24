@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { API_BASE_URL } from '@/config/api';
+import { mockProducts } from '@/mock/products';
 
 interface ProductImage {
   id: string;
@@ -13,12 +14,12 @@ interface Product {
   id: string;
   name: string;
   sku: string;
-  price: number;
-  comparePrice?: number;
+  price: string | number;
+  comparePrice?: string | number;
   description?: string;
   shortDescription?: string;
   stockQuantity: number;
-  lowStockThreshold: number;
+  lowStockThreshold?: number;
   weight?: number;
   dimensions?: {
     length?: number;
@@ -26,25 +27,25 @@ interface Product {
     height?: number;
   };
   category?: {
-    id: string;
+    id?: string;
     name: string;
     slug: string;
   };
   brand?: {
-    id: string;
+    id?: string;
     name: string;
     slug: string;
     logo?: string;
   };
   images: ProductImage[];
   isActive: boolean;
-  isDigital: boolean;
+  isDigital?: boolean;
   isFeatured: boolean;
   metaTitle?: string;
   metaDescription?: string;
   tags?: string[];
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface ProductResponse {
@@ -67,8 +68,28 @@ interface ProductsResponse {
   };
 }
 
+const USE_MOCK_DATA = true;
+
 export const useProductWithFallback = (productId: string) => {
-  // First try to get the product directly
+  // Check mock products immediately (synchronous)
+  const mockProduct = mockProducts.find(p => p.id === productId);
+  const foundInMock = !!mockProduct && USE_MOCK_DATA;
+  
+  // If found in mock data, return it immediately
+  if (foundInMock) {
+    console.log('✅ Found product in mock data:', mockProduct.name);
+    return {
+      data: {
+        success: true,
+        data: { product: mockProduct as Product }
+      },
+      isLoading: false,
+      error: null,
+      source: 'mock'
+    };
+  }
+
+  // If not in mock, try API (even if USE_MOCK_DATA is true)
   const directQuery = useQuery<ProductResponse>({
     queryKey: ['product', productId],
     queryFn: async () => {
@@ -76,12 +97,16 @@ export const useProductWithFallback = (productId: string) => {
       const response = await fetch(`${API_BASE_URL}/products/${productId}`);
       
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ API Error:', errorText);
         throw new Error(`Failed to fetch product: ${response.status} ${response.statusText}`);
       }
       
-      return response.json();
+      const data = await response.json();
+      console.log('✅ Product fetched from API:', data);
+      return data;
     },
-    enabled: !!productId,
+    enabled: !!productId && !foundInMock, // Enable API if not found in mock
     staleTime: 5 * 60 * 1000,
     cacheTime: 10 * 60 * 1000,
   });
@@ -99,7 +124,7 @@ export const useProductWithFallback = (productId: string) => {
       
       return response.json();
     },
-    enabled: !!productId && directQuery.isError,
+    enabled: !!productId && !foundInMock && directQuery.isError, // Enable fallback if not in mock and direct query failed
     staleTime: 5 * 60 * 1000,
     cacheTime: 10 * 60 * 1000,
   });
@@ -130,10 +155,11 @@ export const useProductWithFallback = (productId: string) => {
     }
   }
 
+  // Return loading/error state
   return {
     data: null,
-    isLoading: directQuery.isLoading || fallbackQuery.isLoading,
-    error: directQuery.error || fallbackQuery.error,
+    isLoading: !foundInMock && (directQuery.isLoading || fallbackQuery.isLoading),
+    error: !foundInMock ? (directQuery.error || fallbackQuery.error) : null,
     source: 'none'
   };
 };

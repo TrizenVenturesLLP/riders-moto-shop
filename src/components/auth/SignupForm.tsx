@@ -175,24 +175,24 @@ const SignupForm = () => {
   const passwordStrength = getPasswordStrength(formData.password);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4 py-12">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 py-12">
       <div className="w-full max-w-md">
         {/* Back Button */}
         <Button
           variant="ghost"
           onClick={() => navigate('/')}
-          className="mb-4 text-gray-600 hover:text-gray-900 text-sm"
+          className="mb-4 text-muted-foreground hover:text-foreground text-sm"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Home
         </Button>
 
-        <Card className="shadow-sm border border-gray-200 bg-white">
+        <Card className="shadow-sm border border-border bg-card">
           <CardHeader className="text-center pb-6">
-            <CardTitle className="text-2xl font-bold text-gray-900 mb-2">
+            <CardTitle className="text-2xl font-bold text-card-foreground mb-2">
               CREATE ACCOUNT
             </CardTitle>
-            <CardDescription className="text-sm text-gray-600">
+            <CardDescription className="text-sm text-muted-foreground">
               Join Riders Moto Shop and start your journey
             </CardDescription>
           </CardHeader>
@@ -202,7 +202,7 @@ const SignupForm = () => {
               {/* Name Fields */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <Label htmlFor="firstName" className="text-sm font-medium text-gray-700">
+                  <Label htmlFor="firstName" className="text-sm font-medium text-foreground">
                     First Name
                   </Label>
                   <Input
@@ -216,12 +216,12 @@ const SignupForm = () => {
                     disabled={isLoading}
                   />
                   {errors.firstName && (
-                    <p className="text-xs text-red-600">{errors.firstName}</p>
+                    <p className="text-xs text-destructive">{errors.firstName}</p>
                   )}
                 </div>
                 
                 <div className="space-y-1.5">
-                  <Label htmlFor="lastName" className="text-sm font-medium text-gray-700">
+                  <Label htmlFor="lastName" className="text-sm font-medium text-foreground">
                     Last Name
                   </Label>
                   <Input
@@ -235,14 +235,14 @@ const SignupForm = () => {
                     disabled={isLoading}
                   />
                   {errors.lastName && (
-                    <p className="text-xs text-red-600">{errors.lastName}</p>
+                    <p className="text-xs text-destructive">{errors.lastName}</p>
                   )}
                 </div>
               </div>
 
               {/* Email Field */}
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="email" className="text-sm font-medium text-foreground">
                   Email Address
                 </Label>
                 <Input
@@ -256,15 +256,15 @@ const SignupForm = () => {
                   disabled={isLoading}
                 />
                 {errors.email && (
-                  <p className="text-xs text-red-600">{errors.email}</p>
+                  <p className="text-xs text-destructive">{errors.email}</p>
                 )}
               </div>
 
               {/* Bike Details Section */}
               <div className="space-y-3 pt-2">
-                <div className="border-t border-gray-200 pt-4">
-                  <h3 className="text-base font-semibold text-gray-900 mb-1.5">Your Bike Details</h3>
-                  <p className="text-xs text-gray-600 mb-3">
+                <div className="border-t border-border pt-4">
+                  <h3 className="text-base font-semibold text-foreground mb-1.5">Your Bike Details</h3>
+                  <p className="text-xs text-muted-foreground mb-3">
                     Help us personalize your experience
                   </p>
                 </div>
@@ -272,7 +272,7 @@ const SignupForm = () => {
                 {/* Bike Brand and Model Fields */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <Label htmlFor="bikeBrand" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="bikeBrand" className="text-sm font-medium text-foreground">
                       Bike Brand
                     </Label>
                     <Input
@@ -286,12 +286,12 @@ const SignupForm = () => {
                       disabled={isLoading}
                     />
                     {errors.bikeBrand && (
-                      <p className="text-xs text-red-600">{errors.bikeBrand}</p>
+                      <p className="text-xs text-destructive">{errors.bikeBrand}</p>
                     )}
                   </div>
                   
                   <div className="space-y-1.5">
-                    <Label htmlFor="bikeModel" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="bikeModel" className="text-sm font-medium text-foreground">
                       Bike Model
                     </Label>
                     <Input
@@ -305,7 +305,7 @@ const SignupForm = () => {
                       disabled={isLoading}
                     />
                     {errors.bikeModel && (
-                      <p className="text-xs text-red-600">{errors.bikeModel}</p>
+                      <p className="text-xs text-destructive">{errors.bikeModel}</p>
                     )}
                   </div>
                 </div>
@@ -313,7 +313,7 @@ const SignupForm = () => {
 
               {/* Password Field */}
               <div className="space-y-1.5">
-                <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="password" className="text-sm font-medium text-foreground">
                   Password
                 </Label>
                 <div className="relative">
@@ -336,9 +336,9 @@ const SignupForm = () => {
                     disabled={isLoading}
                   >
                     {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-gray-400" />
+                      <EyeOff className="h-4 w-4 text-muted-foreground/40" />
                     ) : (
-                      <Eye className="h-4 w-4 text-gray-400" />
+                      <Eye className="h-4 w-4 text-muted-foreground/40" />
                     )}
                   </Button>
                 </div>
@@ -353,13 +353,13 @@ const SignupForm = () => {
                           className={`h-1 flex-1 rounded-full ${
                             level <= passwordStrength.strength
                               ? passwordStrength.color
-                              : 'bg-gray-200'
+                              : 'bg-muted'
                           }`}
                         />
                       ))}
                     </div>
                     {passwordStrength.label && (
-                      <p className="text-xs text-gray-600">
+                      <p className="text-xs text-muted-foreground">
                         Password strength: <span className="font-medium">{passwordStrength.label}</span>
                       </p>
                     )}
@@ -367,13 +367,13 @@ const SignupForm = () => {
                 )}
                 
                 {errors.password && (
-                  <p className="text-xs text-red-600">{errors.password}</p>
+                  <p className="text-xs text-destructive">{errors.password}</p>
                 )}
               </div>
 
               {/* Confirm Password Field */}
               <div className="space-y-1.5">
-                <Label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="confirmPassword" className="text-sm font-medium text-foreground">
                   Confirm Password
                 </Label>
                 <div className="relative">
@@ -396,14 +396,14 @@ const SignupForm = () => {
                     disabled={isLoading}
                   >
                     {showConfirmPassword ? (
-                      <EyeOff className="h-4 w-4 text-gray-400" />
+                      <EyeOff className="h-4 w-4 text-muted-foreground/40" />
                     ) : (
-                      <Eye className="h-4 w-4 text-gray-400" />
+                      <Eye className="h-4 w-4 text-muted-foreground/40" />
                     )}
                   </Button>
                 </div>
                 {errors.confirmPassword && (
-                  <p className="text-xs text-red-600">{errors.confirmPassword}</p>
+                  <p className="text-xs text-destructive">{errors.confirmPassword}</p>
                 )}
               </div>
 
@@ -415,29 +415,29 @@ const SignupForm = () => {
                     name="agreeToTerms"
                     checked={formData.agreeToTerms}
                     onChange={handleInputChange}
-                    className="mt-0.5 rounded border-gray-300 text-red-600 focus:ring-red-500 h-4 w-4"
+                    className="mt-0.5 rounded border-border text-primary focus:ring-primary h-4 w-4"
                     disabled={isLoading}
                   />
-                  <span className="text-xs text-gray-600 leading-relaxed">
+                  <span className="text-xs text-muted-foreground leading-relaxed">
                     I agree to the{' '}
-                    <Link to="/terms" className="text-red-600 hover:text-red-700 font-medium">
+                    <Link to="/terms" className="text-primary hover:text-primary/90 font-medium">
                       Terms and Conditions
                     </Link>{' '}
                     and{' '}
-                    <Link to="/privacy" className="text-red-600 hover:text-red-700 font-medium">
+                    <Link to="/privacy" className="text-primary hover:text-primary/90 font-medium">
                       Privacy Policy
                     </Link>
                   </span>
                 </label>
                 {errors.agreeToTerms && (
-                  <p className="text-xs text-red-600">{errors.agreeToTerms}</p>
+                  <p className="text-xs text-destructive">{errors.agreeToTerms}</p>
                 )}
               </div>
 
               {/* Submit Button */}
               <Button
                 type="submit"
-                className="w-full h-11 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm rounded-none"
+                className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm rounded-none"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -457,10 +457,10 @@ const SignupForm = () => {
             {/* Divider */}
             <div className="relative py-2">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200" />
+                <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="px-3 bg-white text-gray-500">Or continue with</span>
+                <span className="px-3 bg-card text-muted-foreground">Or continue with</span>
               </div>
             </div>
 
@@ -468,7 +468,7 @@ const SignupForm = () => {
             <div className="grid grid-cols-2 gap-3">
               <Button
                 variant="outline"
-                className="h-10 border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all text-sm rounded-none"
+                className="h-10 border-border hover:bg-muted hover:border-border/70 transition-all text-sm rounded-none"
                 disabled={isLoading}
               >
                 <svg className="h-4 w-4 mr-2" viewBox="0 0 24 24">
@@ -493,7 +493,7 @@ const SignupForm = () => {
               </Button>
               <Button
                 variant="outline"
-                className="h-10 border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all text-sm rounded-none"
+                className="h-10 border-border hover:bg-muted hover:border-border/70 transition-all text-sm rounded-none"
                 disabled={isLoading}
               >
                 <svg className="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
@@ -505,11 +505,11 @@ const SignupForm = () => {
 
             {/* Login Link */}
             <div className="text-center pt-2">
-              <p className="text-gray-600 text-sm">
+              <p className="text-muted-foreground text-sm">
                 Already have an account?{' '}
                 <Link
                   to="/login"
-                  className="text-red-600 hover:text-red-700 font-semibold transition-colors hover:underline"
+                  className="text-primary hover:text-primary/90 font-semibold transition-colors hover:underline"
                 >
                   Sign in here
                 </Link>

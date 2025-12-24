@@ -99,24 +99,24 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4 py-12">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 py-12">
       <div className="w-full max-w-md">
         {/* Back Button */}
         <Button
           variant="ghost"
           onClick={() => navigate('/')}
-          className="mb-4 text-gray-600 hover:text-gray-900 text-sm"
+          className="mb-4 text-muted-foreground hover:text-foreground text-sm"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Home
         </Button>
 
-        <Card className="shadow-sm border border-gray-200 bg-white">
+        <Card className="shadow-sm border border-border bg-card">
           <CardHeader className="text-center pb-6">
-            <CardTitle className="text-2xl font-bold text-gray-900 mb-2">
+            <CardTitle className="text-2xl font-bold text-card-foreground mb-2">
               WELCOME BACK
             </CardTitle>
-            <CardDescription className="text-sm text-gray-600">
+            <CardDescription className="text-sm text-muted-foreground">
               Sign in to your account to continue shopping
             </CardDescription>
           </CardHeader>
@@ -125,7 +125,7 @@ const LoginForm = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Email Field */}
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="email" className="text-sm font-medium text-foreground">
                   Email Address
                 </Label>
                 <Input
@@ -139,13 +139,13 @@ const LoginForm = () => {
                   disabled={isLoading}
                 />
                 {errors.email && (
-                  <p className="text-xs text-red-600">{errors.email}</p>
+                  <p className="text-xs text-destructive">{errors.email}</p>
                 )}
               </div>
 
               {/* Password Field */}
               <div className="space-y-1.5">
-                <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="password" className="text-sm font-medium text-foreground">
                   Password
                 </Label>
                 <div className="relative">
@@ -168,14 +168,14 @@ const LoginForm = () => {
                     disabled={isLoading}
                   >
                     {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-gray-400" />
+                      <EyeOff className="h-4 w-4 text-muted-foreground/40" />
                     ) : (
-                      <Eye className="h-4 w-4 text-gray-400" />
+                      <Eye className="h-4 w-4 text-muted-foreground/40" />
                     )}
                   </Button>
                 </div>
                 {errors.password && (
-                  <p className="text-xs text-red-600">{errors.password}</p>
+                  <p className="text-xs text-destructive">{errors.password}</p>
                 )}
               </div>
 
@@ -186,13 +186,13 @@ const LoginForm = () => {
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="rounded border-gray-300 text-red-600 focus:ring-red-500 cursor-pointer"
+                    className="rounded border-border text-primary focus:ring-primary cursor-pointer"
                   />
-                  <span className="text-sm text-gray-600">Remember me for 14 days</span>
+                  <span className="text-sm text-muted-foreground">Remember me for 14 days</span>
                 </label>
                 <Link
                   to="/forgot-password"
-                  className="text-sm text-red-600 hover:text-red-700 transition-colors"
+                  className="text-sm text-primary hover:text-primary/90 transition-colors"
                 >
                   Forgot password?
                 </Link>
@@ -201,7 +201,7 @@ const LoginForm = () => {
               {/* Submit Button */}
               <Button
                 type="submit"
-                className="w-full h-11 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm rounded-none"
+                className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm rounded-none"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -218,10 +218,10 @@ const LoginForm = () => {
             {/* Divider */}
             <div className="relative py-2">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200" />
+                <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="px-3 bg-white text-gray-500">Or continue with</span>
+                <span className="px-3 bg-card text-muted-foreground">Or continue with</span>
               </div>
             </div>
 
@@ -229,7 +229,7 @@ const LoginForm = () => {
             <div className="grid grid-cols-2 gap-3">
               <Button
                 variant="outline"
-                className="h-10 border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all text-sm rounded-none"
+                className="h-10 border-border hover:bg-muted hover:border-border/70 transition-all text-sm rounded-none"
                 disabled={isLoading}
               >
                 <svg className="h-4 w-4 mr-2" viewBox="0 0 24 24">
@@ -254,7 +254,7 @@ const LoginForm = () => {
               </Button>
               <Button
                 variant="outline"
-                className="h-10 border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all text-sm rounded-none"
+                className="h-10 border-border hover:bg-muted hover:border-border/70 transition-all text-sm rounded-none"
                 disabled={isLoading}
               >
                 <svg className="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
@@ -266,11 +266,11 @@ const LoginForm = () => {
 
             {/* Sign Up Link */}
             <div className="text-center pt-2">
-              <p className="text-gray-600 text-sm">
+              <p className="text-muted-foreground text-sm">
                 Don't have an account?{' '}
                 <Link
                   to="/signup"
-                  className="text-red-600 hover:text-red-700 font-semibold transition-colors hover:underline"
+                  className="text-primary hover:text-primary/90 font-semibold transition-colors hover:underline"
                 >
                   Sign up for free
                 </Link>

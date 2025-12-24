@@ -4,13 +4,14 @@ import { Button } from '@/components/ui/button';
 import { ShoppingCart, Eye, Heart, Check, Loader2 } from 'lucide-react';
 import { Product } from '@/hooks/useProducts';
 import { useCart } from '@/hooks/useCart';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 
 interface ProductCardProps {
   product: Product;
+  viewMode?: 'grid' | 'list';
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode = 'grid' }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
@@ -18,7 +19,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   
   // Cart functionality
   const { addToCart, isInCart, getCartItem } = useCart();
-  const { toast } = useToast();
   
   const allImages = product.images || [];
   const primaryImage = allImages.find(img => img.isPrimary) || allImages[0];
@@ -50,17 +50,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         maxQuantity: product.stockQuantity
       });
       
-      toast({
-        title: "Added to Cart!",
+      toast.success("Added to Cart!", {
         description: `${product.name} added to your cart.`,
       });
       
     } catch (error) {
       console.error('Error adding to cart:', error);
-      toast({
-        title: "Error",
-        description: "Failed to add item to cart. Please try again.",
-        variant: "destructive",
+      toast.error("Failed to add item to cart", {
+        description: "Please try again.",
       });
     } finally {
       setIsAddingToCart(false);
@@ -182,9 +179,74 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const productTitle = getProductTitle(product.name);
   const productSubtitle = getProductSubtitle(product.name, product.category);
 
+  // List view layout
+  if (viewMode === 'list') {
+    return (
+      <div 
+        className="group bg-card rounded-lg border border-border overflow-hidden hover:border-primary transition-all duration-200"
+        style={{ 
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+        }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <Link to={`/products/${product.id}`} className="block">
+          <div className="flex flex-row gap-4">
+            {/* Product Image Container - Smaller in list view */}
+            <div className="relative w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 bg-muted overflow-hidden rounded">
+              <img
+                src={getImageUrl(getCurrentImage()?.url)}
+                alt={product.name}
+                className="w-full h-full object-cover"
+                onLoad={() => {
+                  console.log('✅ Image loaded successfully:', getImageUrl(getCurrentImage()?.url));
+                }}
+                onError={(e) => {
+                  console.error('❌ Image failed to load:', getImageUrl(getCurrentImage()?.url));
+                  e.currentTarget.src = 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=300&fit=crop';
+                }}
+              />
+            </div>
+
+            {/* Product Information - Compact in list view */}
+            <div className="bg-card p-3 flex-1 flex flex-col justify-between min-w-0">
+              <div className="flex-1">
+                {/* Title - Smaller in list view */}
+                <h3 className="text-sm sm:text-base font-bold text-card-foreground mb-1 uppercase leading-tight line-clamp-1">
+                  {productTitle}
+                </h3>
+                
+                {/* Subtitle - Smaller */}
+                <div className="text-xs text-primary font-medium mb-1 uppercase line-clamp-1">
+                  {productSubtitle}
+                </div>
+
+                {/* Brand - Smaller */}
+                <div className="text-xs text-muted-foreground mb-1 uppercase tracking-wide font-medium">
+                  {product.brand?.name || 'HITECH'}
+                </div>
+                
+                {/* Full Product Name - Smaller, single line */}
+                <div className="text-xs text-muted-foreground mb-2 line-clamp-1 leading-snug">
+                  {product.name}
+                </div>
+              </div>
+
+              {/* Price - Bottom aligned */}
+              <div className="text-sm font-semibold text-card-foreground">
+                RS. {parseFloat(product.price).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </div>
+            </div>
+          </div>
+        </Link>
+      </div>
+    );
+  }
+
+  // Grid view layout (default)
   return (
     <div 
-      className="group bg-white rounded-lg border border-gray-200 overflow-hidden hover:border-red-600 transition-all duration-200"
+      className="group bg-card rounded-lg border border-border overflow-hidden hover:border-primary transition-all duration-200"
       style={{ 
         boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
       }}
@@ -192,8 +254,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <Link to={`/products/${product.id}`} className="block">
-        {/* Product Image Container - Light Gray Background */}
-        <div className="relative aspect-square bg-gray-50 overflow-hidden">
+        {/* Product Image Container - Smaller in grid view */}
+        <div className="relative aspect-square bg-muted overflow-hidden">
           <img
             src={getImageUrl(getCurrentImage()?.url)}
             alt={product.name}
@@ -215,8 +277,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   key={index}
                   className={`w-1.5 h-1.5 rounded-full transition-all ${
                     index === currentImageIndex 
-                      ? 'bg-white' 
-                      : 'bg-white/60'
+                      ? 'bg-background' 
+                      : 'bg-background/60'
                   }`}
                 />
               ))}
@@ -224,30 +286,30 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           )}
         </div>
 
-        {/* Product Information - White Background */}
-        <div className="bg-white p-4">
-          {/* Title - Large, Bold, Uppercase */}
-          <h3 className="text-lg font-bold text-gray-900 mb-1 uppercase leading-tight">
+        {/* Product Information - Compact in grid view */}
+        <div className="bg-card p-3">
+          {/* Title - Smaller */}
+          <h3 className="text-sm sm:text-base font-bold text-card-foreground mb-1 uppercase leading-tight line-clamp-2">
             {productTitle}
           </h3>
           
-          {/* Subtitle - Red, Smaller */}
-          <div className="text-xs text-red-600 font-medium mb-2 uppercase">
+          {/* Subtitle - Smaller */}
+          <div className="text-xs text-primary font-medium mb-1 uppercase line-clamp-1">
             {productSubtitle}
           </div>
 
-          {/* Brand - Uppercase */}
-          <div className="text-xs text-gray-600 mb-2 uppercase tracking-wide font-medium">
+          {/* Brand - Smaller */}
+          <div className="text-xs text-muted-foreground mb-1 uppercase tracking-wide font-medium">
             {product.brand?.name || 'HITECH'}
           </div>
           
-          {/* Full Product Name - Smaller */}
-          <div className="text-xs text-gray-700 mb-3 line-clamp-2 leading-snug">
+          {/* Full Product Name - Smaller, single line */}
+          <div className="text-xs text-muted-foreground mb-2 line-clamp-1 leading-snug">
             {product.name}
           </div>
 
           {/* Price */}
-          <div className="text-sm font-semibold text-gray-900">
+          <div className="text-sm font-semibold text-card-foreground">
             RS. {parseFloat(product.price).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </div>
         </div>

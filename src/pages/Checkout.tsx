@@ -374,12 +374,12 @@ const Checkout = () => {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen bg-background py-6 md:py-8">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center py-16">
-            <ShoppingBag className="h-24 w-24 text-gray-300 mx-auto mb-6" />
-            <h2 className="text-2xl font-bold text-gray-800 mb-3">Your cart is empty</h2>
-            <p className="text-gray-600 mb-6">Add some items to your cart to proceed with checkout.</p>
+            <ShoppingBag className="h-16 w-16 md:h-24 md:w-24 text-muted-foreground/30 mx-auto mb-4 md:mb-6" />
+            <h2 className="text-xl md:text-2xl font-bold text-foreground mb-3">Your cart is empty</h2>
+            <p className="text-sm md:text-base text-muted-foreground mb-6">Add some items to your cart to proceed with checkout.</p>
             <Button onClick={() => navigate('/')} size="lg">
               Continue Shopping
             </Button>
@@ -390,21 +390,21 @@ const Checkout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-background py-8">
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Header */}
         <div className="mb-8">
           <Button
             variant="ghost"
             onClick={() => navigate('/cart')}
-            className="mb-4 text-gray-600 hover:text-gray-900"
+            className="mb-4 text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Cart
           </Button>
           
-          <h1 className="text-3xl font-bold text-gray-900">Checkout</h1>
-          <p className="text-gray-600 mt-1">Complete your order</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Checkout</h1>
+          <p className="text-sm md:text-base text-muted-foreground mt-1">Complete your order</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -479,19 +479,19 @@ const Checkout = () => {
                     placeholder="Enter your full address"
                   />
                   {addressValidation.isValidating && (
-                    <div className="flex items-center text-sm text-blue-600">
+                    <div className="flex items-center text-sm text-primary">
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                       {addressValidation.message}
                     </div>
                   )}
                   {addressValidation.isValid && !addressValidation.isValidating && (
-                    <div className="flex items-center text-sm text-green-600">
+                    <div className="flex items-center text-sm text-green-600 dark:text-green-400">
                       <CheckCircle className="h-4 w-4 mr-2" />
                       {addressValidation.message}
                     </div>
                   )}
                   {!addressValidation.isValid && !addressValidation.isValidating && addressValidation.message && (
-                    <div className="flex items-center text-sm text-red-600">
+                    <div className="flex items-center text-sm text-destructive">
                       <AlertCircle className="h-4 w-4 mr-2" />
                       {addressValidation.message}
                     </div>
@@ -529,19 +529,19 @@ const Checkout = () => {
                       placeholder="Enter pincode"
                     />
                     {pincodeValidation.isValidating && (
-                      <div className="flex items-center text-sm text-blue-600">
+                      <div className="flex items-center text-sm text-primary">
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                         {pincodeValidation.message}
                       </div>
                     )}
                     {pincodeValidation.isValid && !pincodeValidation.isValidating && (
-                      <div className="flex items-center text-sm text-green-600">
+                      <div className="flex items-center text-sm text-green-600 dark:text-green-400">
                         <CheckCircle className="h-4 w-4 mr-2" />
                         {pincodeValidation.message}
                       </div>
                     )}
                     {!pincodeValidation.isValid && !pincodeValidation.isValidating && pincodeValidation.message && (
-                      <div className="flex items-center text-sm text-red-600">
+                      <div className="flex items-center text-sm text-destructive">
                         <AlertCircle className="h-4 w-4 mr-2" />
                         {pincodeValidation.message}
                       </div>
@@ -585,8 +585,8 @@ const Checkout = () => {
                       key={key}
                       className={`border rounded-lg p-4 cursor-pointer transition-colors ${
                         selectedShipping === key
-                          ? 'border-red-500 bg-red-50'
-                          : 'border-gray-200 hover:border-gray-300'
+                          ? 'border-primary bg-primary/10'
+                          : 'border-border hover:border-border/70'
                       }`}
                       onClick={() => setSelectedShipping(key)}
                     >
@@ -598,12 +598,12 @@ const Checkout = () => {
                             value={key}
                             checked={selectedShipping === key}
                             onChange={() => setSelectedShipping(key)}
-                            className="text-red-600"
+                            className="text-primary"
                           />
                           <div>
                             <h4 className="font-medium">{rate.name}</h4>
-                            <p className="text-sm text-gray-600">{rate.estimatedDays}</p>
-                            <p className="text-xs text-gray-500">{rate.description}</p>
+                            <p className="text-sm text-muted-foreground">{rate.estimatedDays}</p>
+                            <p className="text-xs text-muted-foreground/70">{rate.description}</p>
                           </div>
                         </div>
                         <div className="text-right">
@@ -615,15 +615,15 @@ const Checkout = () => {
                     </div>
                   ))
                 ) : (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-8 text-muted-foreground/70">
                     <p>Please complete your address to see shipping options</p>
                   </div>
                 )}
                 
                 {/* Show distance information if available */}
                 {shippingData?.data?.distance && (
-                  <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                    <div className="flex items-center text-sm text-blue-700">
+                  <div className="mt-4 p-3 bg-primary/10 rounded-lg border border-primary/20">
+                    <div className="flex items-center text-sm text-primary">
                       <MapPin className="h-4 w-4 mr-2" />
                       <span>
                         Distance: {shippingData.data.distance.toFixed(1)} km
@@ -631,7 +631,7 @@ const Checkout = () => {
                       </span>
                     </div>
                     {shippingData.data.warning && (
-                      <p className="text-xs text-blue-600 mt-1">{shippingData.data.warning}</p>
+                      <p className="text-xs text-primary/80 mt-1">{shippingData.data.warning}</p>
                     )}
                   </div>
                 )}
@@ -648,11 +648,11 @@ const Checkout = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Subtotal ({totalItems} items)</span>
+                  <span className="text-muted-foreground">Subtotal ({totalItems} items)</span>
                   <span className="font-medium">₹{totalPrice.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Shipping</span>
+                  <span className="text-muted-foreground">Shipping</span>
                   <span className="font-medium">
                     {isCalculatingShipping ? (
                       <div className="flex items-center">
@@ -660,14 +660,14 @@ const Checkout = () => {
                         <span className="text-sm">Calculating...</span>
                       </div>
                     ) : shippingCost === 0 ? (
-                      <span className="text-green-600">Free</span>
+                      <span className="text-green-600 dark:text-green-400">Free</span>
                     ) : (
                       `₹${shippingCost.toLocaleString()}`
                     )}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Tax (GST 18%)</span>
+                  <span className="text-muted-foreground">Tax (GST 18%)</span>
                   <span className="font-medium">₹{tax.toLocaleString()}</span>
                 </div>
                 <Separator />
@@ -682,7 +682,7 @@ const Checkout = () => {
             <Button 
               onClick={handlePlaceOrder}
               disabled={isProcessing}
-              className="w-full bg-red-600 hover:bg-red-700 text-white py-3 text-lg"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3 text-lg"
               size="lg"
             >
               {isProcessing ? (
@@ -702,15 +702,15 @@ const Checkout = () => {
             <Card>
               <CardContent className="p-4">
                 <div className="space-y-3">
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                     <Shield className="h-4 w-4" />
                     <span>Secure checkout with SSL encryption</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                     <CreditCard className="h-4 w-4" />
                     <span>Multiple payment options available</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                     <Truck className="h-4 w-4" />
                     <span>Fast and reliable delivery</span>
                   </div>

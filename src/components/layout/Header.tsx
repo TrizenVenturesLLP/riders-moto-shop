@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/hooks/useCart';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -14,6 +15,7 @@ import {
 } from '@/components/ui/navigation-menu';
 import navbarData from '@/data/navbar.json';
 import mobileMenuBg from '@/assets/mobile-menu-bg.jpg';
+import rmsLogo from '@/assets/rms-logo.jpg';
 import { NavbarItem } from '@/types/navbar';
 
 // Collapsible Accessory Category Component
@@ -34,10 +36,10 @@ const CollapsibleAccessoryCategory = ({ title, accessories }: {
     <div>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between text-left py-2 px-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+        className="w-full flex items-center justify-between text-left py-2 px-2 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
       >
-        <h5 className="font-medium text-gray-800">{title}</h5>
-        <ChevronDown className={`h-4 w-4 text-gray-600 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <h5 className="font-medium text-foreground">{title}</h5>
+        <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
       
       {isOpen && (
@@ -47,12 +49,12 @@ const CollapsibleAccessoryCategory = ({ title, accessories }: {
               {accessory.link ? (
                 <button
                   onClick={() => handleAccessoryClick(accessory)}
-                  className="block w-full text-left py-1 text-xs text-gray-500 hover:text-red-600 transition-colors"
+                  className="block w-full text-left py-1 text-xs text-muted-foreground hover:text-primary transition-colors"
                 >
                   {accessory.title}
                 </button>
               ) : (
-                <div className="py-1 text-xs text-gray-400">
+                <div className="py-1 text-xs text-muted-foreground/60">
                   {accessory.title}
                 </div>
               )}
@@ -76,14 +78,14 @@ const MobileDropdown = ({ title, data }: {
     <div className="py-2">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between text-left py-3 px-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+        className="w-full flex items-center justify-between text-left py-3 px-4 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
       >
-        <span className="text-base font-medium text-gray-900">{title}</span>
-        <ChevronDown className={`h-4 w-4 text-gray-600 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <span className="text-base font-medium text-foreground">{title}</span>
+        <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
       
       {isOpen && (
-        <div className="mt-2 bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+        <div className="mt-2 bg-card border border-border rounded-lg p-4 shadow-sm">
           <div className="space-y-3">
             {data.map((item: NavbarItem, index: number) => (
               <div key={index}>
@@ -94,12 +96,12 @@ const MobileDropdown = ({ title, data }: {
                       {item.link ? (
                         <Link
                           to={item.link}
-                          className="font-semibold text-red-600 hover:text-red-700 transition-colors"
+                          className="font-semibold text-primary hover:text-primary/90 transition-colors"
                         >
                           {item.title}
                         </Link>
                       ) : (
-                        <h4 className="font-semibold text-red-600">{item.title}</h4>
+                        <h4 className="font-semibold text-primary">{item.title}</h4>
                       )}
                     </div>
                     <div className="pl-3 space-y-2">
@@ -113,12 +115,12 @@ const MobileDropdown = ({ title, data }: {
                           ) : subItem.link ? (
                             <button
                               onClick={() => navigate(subItem.link!)}
-                              className="block py-1 text-sm text-gray-600 hover:text-red-600 transition-colors"
+                              className="block py-1 text-sm text-muted-foreground hover:text-primary transition-colors"
                             >
                               {subItem.title}
                             </button>
                           ) : (
-                            <div className="py-1 text-sm text-gray-600">
+                            <div className="py-1 text-sm text-muted-foreground">
                               {subItem.title}
                             </div>
                           )}
@@ -129,12 +131,12 @@ const MobileDropdown = ({ title, data }: {
                 ) : item.link ? (
                   <Link
                     to={item.link}
-                    className="block py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                    className="block py-2 px-3 text-foreground hover:text-primary hover:bg-accent rounded transition-colors"
                   >
                     {item.title}
                   </Link>
                 ) : (
-                  <div className="py-2 px-3 text-gray-700">
+                  <div className="py-2 px-3 text-foreground">
                     {item.title}
                   </div>
                 )}
@@ -301,15 +303,15 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-sm">
-      {/* Main Header - White Background - Reduces size when scrolled */}
+    <header className="sticky top-0 z-50 bg-background border-b border-border shadow-sm">
+      {/* Main Header - Reduces size when scrolled */}
       <div className="container mx-auto px-4">
         <div className={`flex items-center justify-between transition-[height] duration-300 ease-in-out ${
           isScrolledDown ? 'h-16' : 'h-24'
         }`}>
           {/* Mobile Menu Button */}
           <button 
-            className="md:hidden"
+            className="md:hidden text-foreground hover:bg-accent rounded p-1 transition-colors"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -318,11 +320,13 @@ const Header = () => {
           {/* Logo */}
           <div className="flex items-center">
             <Link to="/">
-              <h1 className={`font-bold text-red-600 transition-[font-size] duration-300 ease-in-out cursor-pointer hover:text-red-700 ${
-                isScrolledDown ? 'text-lg' : 'text-2xl'
-              }`}>
-                Riders Moto Shop
-              </h1>
+              <img 
+                src={rmsLogo}
+                alt="Riders Moto Shop" 
+                className={`h-auto transition-all duration-300 ease-in-out cursor-pointer hover:opacity-80 ${
+                  isScrolledDown ? 'max-h-14' : 'max-h-20'
+                }`}
+              />
             </Link>
           </div>
 
@@ -330,12 +334,12 @@ const Header = () => {
           <div className={`hidden md:flex flex-1 mx-8 transition-all duration-300 ${
             isScrolledDown ? 'max-w-xl' : 'max-w-2xl'
           }`}>
-            <div className="flex w-full border border-gray-300 rounded-none shadow-sm overflow-hidden bg-white">
+            <div className="flex w-full border border-border rounded-none shadow-sm overflow-hidden bg-background">
               {/* Category Filter */}
               <select 
                 value={searchCategory}
                 onChange={(e) => setSearchCategory(e.target.value)}
-                className={`px-4 bg-gray-50 border-0 border-r border-gray-300 text-gray-700 focus:outline-none focus:ring-0 focus:border-r focus:border-gray-300 appearance-none cursor-pointer transition-all duration-300 ${
+                className={`px-4 bg-muted border-0 border-r border-border text-foreground focus:outline-none focus:ring-0 focus:border-r focus:border-border appearance-none cursor-pointer transition-all duration-300 ${
                   isScrolledDown ? 'py-1.5 text-xs h-9' : 'py-2.5 text-sm h-11'
                 }`}
               >
@@ -351,7 +355,7 @@ const Header = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="What are you looking for?"
-                  className={`rounded-none border-0 bg-white focus:border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-4 transition-all duration-300 ${
+                  className={`rounded-none border-0 bg-background focus:border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-4 transition-all duration-300 ${
                     isScrolledDown ? 'h-9 text-xs' : 'h-11 text-sm'
                   }`}
                 />
@@ -360,11 +364,11 @@ const Header = () => {
               {/* Search Button */}
               <Button 
                 onClick={handleSearch}
-                className={`bg-red-600 hover:bg-red-700 rounded-none flex items-center justify-center border-0 focus:ring-0 focus-visible:ring-0 transition-all duration-300 ${
+                className={`bg-primary hover:bg-primary/90 rounded-none flex items-center justify-center border-0 focus:ring-0 focus-visible:ring-0 transition-all duration-300 ${
                   isScrolledDown ? 'px-4 h-9 w-10' : 'px-5 h-11 w-12'
                 }`}
               >
-                <Search className={`text-white transition-all duration-300 ${
+                <Search className={`text-primary-foreground transition-all duration-300 ${
                   isScrolledDown ? 'h-4 w-4' : 'h-5 w-5'
                 }`} />
               </Button>
@@ -373,6 +377,11 @@ const Header = () => {
 
           {/* Actions */}
           <div className="flex items-center space-x-3">
+            {/* Theme Toggle - Desktop */}
+            <div className="hidden md:block">
+              <ThemeToggle />
+            </div>
+            
             {isAuthenticated ? (
               // Authenticated User Menu
               <div className="relative" data-user-menu>
@@ -380,7 +389,7 @@ const Header = () => {
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="hidden md:flex items-center space-x-2"
+                  className="hidden md:flex items-center space-x-2 text-foreground hover:bg-accent"
                 >
                   <UserCircle className="h-5 w-5" />
                   <span className="text-sm font-medium">
@@ -391,18 +400,18 @@ const Header = () => {
                 
                 {/* User Dropdown Menu */}
                 {isUserMenuOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                  <div className="absolute right-0 top-full mt-2 w-48 bg-card border border-border rounded-lg shadow-lg z-50">
                     <div className="py-2">
-                      <div className="px-4 py-2 border-b border-gray-100">
-                        <p className="text-sm font-medium text-gray-900">
+                      <div className="px-4 py-2 border-b border-border">
+                        <p className="text-sm font-medium text-foreground">
                           {user?.firstName} {user?.lastName}
                         </p>
-                        <p className="text-xs text-gray-500">{user?.email}</p>
+                        <p className="text-xs text-muted-foreground">{user?.email}</p>
                       </div>
                       
                       <Link
                         to="/profile"
-                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-accent"
                         onClick={() => setIsUserMenuOpen(false)}
                       >
                         <User className="h-4 w-4 mr-2" />
@@ -411,7 +420,7 @@ const Header = () => {
                       
                       <Link
                         to="/orders"
-                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-accent"
                         onClick={() => setIsUserMenuOpen(false)}
                       >
                         <ShoppingCart className="h-4 w-4 mr-2" />
@@ -420,7 +429,7 @@ const Header = () => {
                       
                       <button
                         onClick={handleLogout}
-                        className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        className="flex items-center w-full px-4 py-2 text-sm text-foreground hover:bg-accent"
                       >
                         <LogOut className="h-4 w-4 mr-2" />
                         Logout
@@ -434,7 +443,7 @@ const Header = () => {
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="hidden md:flex"
+                className="hidden md:flex text-foreground hover:bg-accent"
                 disabled={isLoading}
                 onClick={() => {
                   if (isLoading) return;
@@ -453,10 +462,10 @@ const Header = () => {
             )}
             
             <Link to="/cart">
-              <Button variant="ghost" size="sm" className="relative">
+              <Button variant="ghost" size="sm" className="relative text-foreground hover:bg-accent">
                 <ShoppingCart className="h-5 w-5" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full text-xs h-5 w-5 flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full text-xs h-5 w-5 flex items-center justify-center">
                     {totalItems > 99 ? '99+' : totalItems}
                   </span>
                 )}
@@ -466,8 +475,8 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Navigation - Desktop - Smaller, White Background - Full Width - Hide when scrolled down */}
-      <div className={`hidden md:flex items-center py-1.5 bg-white w-full transition-[transform,opacity,height] duration-300 ease-in-out ${
+      {/* Navigation - Desktop - Full Width - Hide when scrolled down */}
+      <div className={`hidden md:flex items-center py-1.5 bg-background border-t border-border w-full transition-[transform,opacity,height] duration-300 ease-in-out ${
         isScrolledDown ? '-translate-y-full opacity-0 h-0 overflow-hidden pointer-events-none' : 'translate-y-0 opacity-100'
       }`}>
         <div className="container mx-auto px-4">
@@ -476,13 +485,13 @@ const Header = () => {
               {navigationData.map((item, index) => (
                 <NavigationMenuItem key={index}>
                   {item.submenu ? (
-                    <NavigationMenuTrigger className="text-gray-900 hover:text-red-600 font-medium text-sm bg-transparent hover:bg-transparent focus:bg-transparent data-[active]:bg-transparent data-[state=open]:bg-transparent rounded-none px-3 py-1.5 h-auto">
+                    <NavigationMenuTrigger className="text-foreground hover:text-primary font-medium text-sm bg-transparent hover:bg-transparent focus:bg-transparent data-[active]:bg-transparent data-[state=open]:bg-transparent rounded-none px-3 py-1.5 h-auto">
                       {item.title}
                     </NavigationMenuTrigger>
                   ) : (
                     <Link 
                       to={item.link}
-                      className="text-gray-900 hover:text-red-600 transition-colors px-3 py-1.5 font-medium text-sm"
+                      className="text-foreground hover:text-primary transition-colors px-3 py-1.5 font-medium text-sm"
                     >
                       {item.title}
                     </Link>
@@ -490,24 +499,24 @@ const Header = () => {
                   
                   {item.submenu && (
                     <NavigationMenuContent>
-                      <div className="max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+                      <div className="max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent bg-popover">
                         {item.title === "Shop by Bike" ? (
-                          <div className="grid grid-cols-4 gap-8 p-6 w-[900px]">
+                          <div className="grid grid-cols-4 gap-8 p-6 w-[900px] bg-popover">
                             {item.submenu.map((brand) => (
                               <div key={brand.title} className="space-y-2">
-                                <h4 className="font-bold text-base text-red-600 uppercase">{brand.title}</h4>
+                                <h4 className="font-bold text-base text-primary uppercase">{brand.title}</h4>
                                 <div className="space-y-1">
                                   {brand.submenu?.map((model) => (
                                     <div key={model.title} className="group relative">
                                       <Link
                                         to={model.link}
-                                        className="block text-sm text-gray-900 hover:text-red-600 transition-colors py-0.5"
+                                        className="block text-sm text-popover-foreground hover:text-primary transition-colors py-0.5"
                                       >
                                         {model.title}
                                       </Link>
                                       {/* Show accessories submenu on hover - with gap for mouse movement */}
                                       {model.submenu && (
-                                        <div className="hidden group-hover:block absolute left-full top-0 ml-2 bg-white border border-gray-200 rounded shadow-md p-4 min-w-[280px] z-[100]">
+                                        <div className="hidden group-hover:block absolute left-full top-0 ml-2 bg-card border border-border rounded shadow-md p-4 min-w-[280px] z-[100]">
                                           {/* Invisible hover bridge to maintain hover when moving to nested menu */}
                                           <div className="absolute -left-2 top-0 w-2 h-full"></div>
                                           <div className="space-y-2 relative">
@@ -515,13 +524,13 @@ const Header = () => {
                                               <div key={accessoryCategory.title} className="group/accessory relative">
                                                 <Link
                                                   to={accessoryCategory.link}
-                                                  className="block text-sm font-semibold text-red-600 hover:text-red-700 transition-colors py-1 pr-3"
+                                                  className="block text-sm font-semibold text-primary hover:text-primary/90 transition-colors py-1 pr-3"
                                                 >
                                                   {accessoryCategory.title}
                                                 </Link>
                                                 {/* Show individual accessories on hover - positioned beside category */}
                                                 {accessoryCategory.submenu && (
-                                                  <div className="hidden group-hover/accessory:block absolute left-full top-0 -ml-1 bg-white border border-gray-200 rounded shadow-md p-3 min-w-[220px] z-[100]">
+                                                  <div className="hidden group-hover/accessory:block absolute left-full top-0 -ml-1 bg-card border border-border rounded shadow-md p-3 min-w-[220px] z-[100]">
                                                     {/* Invisible hover bridge */}
                                                     <div className="absolute -left-1 top-0 w-1 h-full"></div>
                                                     <div className="space-y-1 relative">
@@ -529,7 +538,7 @@ const Header = () => {
                                                         <Link
                                                           key={individualAccessory.title}
                                                           to={individualAccessory.link}
-                                                          className="block text-sm text-gray-600 hover:text-red-600 transition-colors py-1.5 px-2 rounded hover:bg-red-50"
+                                                          className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1.5 px-2 rounded hover:bg-accent"
                                                         >
                                                           {individualAccessory.title}
                                                         </Link>
@@ -555,11 +564,11 @@ const Header = () => {
                               return (
                                 <div key={category.title} className="group">
                                   {/* Category Header */}
-                                  <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-100">
-                                    <div className="p-2 bg-red-50 rounded-lg group-hover:bg-red-100 transition-colors">
-                                      <IconComponent className="h-5 w-5 text-red-600" />
+                                  <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border">
+                                    <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                                      <IconComponent className="h-5 w-5 text-primary" />
                                     </div>
-                                    <h4 className="font-bold text-base text-gray-900 group-hover:text-red-600 transition-colors">
+                                    <h4 className="font-bold text-base text-foreground group-hover:text-primary transition-colors">
                                       {category.title}
                                     </h4>
                                   </div>
@@ -570,7 +579,7 @@ const Header = () => {
                                       <Link
                                         key={accessoryItem.title}
                                         to={accessoryItem.link}
-                                        className="block text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg transition-all duration-200 group/item"
+                                        className="block text-sm text-muted-foreground hover:text-primary hover:bg-accent px-3 py-2 rounded-lg transition-all duration-200 group/item"
                                       >
                                         <span className="group-hover/item:translate-x-1 transition-transform inline-block">
                                           {accessoryItem.title}
@@ -588,7 +597,7 @@ const Header = () => {
                               <a
                                 key={scooter.title}
                                 href={scooter.link}
-                                className="block text-sm text-gray-600 hover:text-gray-900 transition-colors p-2 rounded hover:bg-gray-50"
+                                className="block text-sm text-muted-foreground hover:text-foreground transition-colors p-2 rounded hover:bg-accent"
                               >
                                 {scooter.title}
                               </a>
@@ -598,13 +607,13 @@ const Header = () => {
                           <div className="grid grid-cols-1 gap-4 p-6 w-[300px]">
                             {item.submenu.map((brand) => (
                               <div key={brand.title} className="space-y-2">
-                                <h4 className="font-semibold text-sm text-red-600">{brand.title}</h4>
+                                <h4 className="font-semibold text-sm text-primary">{brand.title}</h4>
                                 <div className="space-y-1">
                                   {brand.submenu?.map((model) => (
                                     <a
                                       key={model.title}
                                       href={model.link}
-                                      className="block text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                                      className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
                                     >
                                       {model.title}
                                     </a>
@@ -619,7 +628,7 @@ const Header = () => {
                               <a
                                 key={subItem.title}
                                 href={subItem.link}
-                                className="block text-sm text-gray-600 hover:text-gray-900 transition-colors p-2 rounded hover:bg-gray-50"
+                                className="block text-sm text-muted-foreground hover:text-foreground transition-colors p-2 rounded hover:bg-accent"
                               >
                                 {subItem.title}
                               </a>
@@ -643,18 +652,23 @@ const Header = () => {
             onClick={() => setIsMenuOpen(false)}
           >
             <div 
-              className="w-4/5 bg-white flex flex-col h-full"
+              className="w-4/5 bg-background flex flex-col h-full"
               onClick={(e) => e.stopPropagation()}
             >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 bg-white border-b border-gray-200 flex-shrink-0">
-              <button onClick={() => setIsMenuOpen(false)}>
-                <X className="h-6 w-6 text-gray-900" />
+            <div className="flex items-center justify-between p-4 bg-background border-b border-border flex-shrink-0">
+              <button 
+                onClick={() => setIsMenuOpen(false)}
+                className="text-foreground hover:bg-accent rounded p-1 transition-colors"
+              >
+                <X className="h-6 w-6" />
               </button>
               <Link to="/" onClick={() => setIsMenuOpen(false)}>
-                <h1 className="text-xl font-bold text-red-600 text-glow cursor-pointer hover:text-red-700">
-                  Riders Moto Shop
-                </h1>
+                <img 
+                  src={rmsLogo}
+                  alt="Riders Moto Shop" 
+                  className="h-10 cursor-pointer hover:opacity-90"
+                />
               </Link>
               <div className="w-6"></div>
             </div>
@@ -663,13 +677,13 @@ const Header = () => {
             <div className="flex-1 overflow-y-auto">
 
             {/* Search */}
-            <div className="px-4 py-4 bg-white border-b border-gray-100">
+            <div className="px-4 py-4 bg-background border-b border-border">
               <div className="flex w-full">
                 {/* Category Filter */}
                 <select 
                   value={searchCategory}
                   onChange={(e) => setSearchCategory(e.target.value)}
-                  className="px-3 py-3 bg-gray-50 border border-gray-200 rounded-l-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  className="px-3 py-3 bg-muted border border-border rounded-l-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
                 >
                   <option value="All">All</option>
                   <option value="Bikes">Bikes</option>
@@ -683,48 +697,53 @@ const Header = () => {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="What are you looking for?"
-                    className="rounded-none border-l-0 border-r-0 bg-white border-gray-200 focus:border-primary focus:ring-0 h-12"
+                    className="rounded-none border-l-0 border-r-0 bg-background border-border focus:border-primary focus:ring-0 h-12"
                   />
                 </div>
                 
                 {/* Search Button */}
                 <Button 
                   onClick={handleSearch}
-                  className="bg-red-600 hover:bg-red-700 rounded-l-none px-4 h-12"
+                  className="bg-primary hover:bg-primary/90 rounded-l-none px-4 h-12"
                 >
                   <Search className="h-4 w-4" />
                 </Button>
               </div>
             </div>
+            
+            {/* Theme Toggle - Mobile */}
+            <div className="px-4 py-2 border-b border-border md:hidden">
+              <ThemeToggle />
+            </div>
 
             {/* Auth Section - Mobile */}
             {isAuthenticated ? (
-              <div className="bg-white px-4 py-4 border-b border-gray-100">
+              <div className="bg-background px-4 py-4 border-b border-border">
                 <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">
+                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                    <span className="text-primary-foreground font-bold text-sm">
                       {user?.firstName?.[0]}{user?.lastName?.[0]}
                     </span>
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">
+                    <p className="font-medium text-foreground">
                       {user?.firstName} {user?.lastName}
                     </p>
-                    <p className="text-sm text-gray-500">{user?.email}</p>
+                    <p className="text-sm text-muted-foreground">{user?.email}</p>
                   </div>
                 </div>
                 
                 <div className="space-y-2">
                   <Link
                     to="/profile"
-                    className="block py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                    className="block py-2 px-3 text-foreground hover:text-primary hover:bg-accent rounded transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Profile
                   </Link>
                   <Link
                     to="/orders"
-                    className="block py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                    className="block py-2 px-3 text-foreground hover:text-primary hover:bg-accent rounded transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Orders
@@ -734,14 +753,14 @@ const Header = () => {
                       handleLogout();
                       setIsMenuOpen(false);
                     }}
-                    className="block w-full text-left py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                    className="block w-full text-left py-2 px-3 text-foreground hover:text-primary hover:bg-accent rounded transition-colors"
                   >
                     Logout
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="bg-white px-4 py-4 border-b border-gray-100">
+              <div className="bg-background px-4 py-4 border-b border-border">
                 <div className="space-y-2">
                   <button
                     disabled={isLoading}
@@ -756,7 +775,7 @@ const Header = () => {
                         window.location.href = '/login';
                       }
                     }}
-                    className="block w-full text-left py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="block w-full text-left py-2 px-3 text-foreground hover:text-primary hover:bg-accent rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Sign In
                   </button>
@@ -773,7 +792,7 @@ const Header = () => {
                         window.location.href = '/signup';
                       }
                     }}
-                    className="block w-full text-left py-2 px-3 text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="block w-full text-left py-2 px-3 text-primary hover:text-primary/90 hover:bg-accent rounded transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Create Account
                   </button>
@@ -782,22 +801,22 @@ const Header = () => {
             )}
 
             {/* Main Menu Items */}
-            <div className="bg-white px-4 py-4">
+            <div className="bg-background px-4 py-4">
 
               {navigationData.map((item, index) => (
-                <div key={index} className={`py-4 ${index > 0 ? 'border-t border-gray-100' : ''}`}>
+                <div key={index} className={`py-4 ${index > 0 ? 'border-t border-border' : ''}`}>
                   {item.submenu ? (
                     <button
                       onClick={() => {
                         if (item.title === "Shop by Bike") setIsShopByBikeOpen(!isShopByBikeOpen);
                         else if (item.title === "Shop by Accessories") setIsShopByAccessoriesOpen(!isShopByAccessoriesOpen);
                       }}
-                      className="w-full flex items-center justify-between text-left py-3 px-2 text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+                      className="w-full flex items-center justify-between text-left py-3 px-2 text-foreground hover:bg-accent rounded-lg transition-colors"
                     >
-                      <h2 className="text-lg font-semibold text-gray-900">
+                      <h2 className="text-lg font-semibold text-foreground">
                         {item.title}
                       </h2>
-                      <ChevronDown className={`h-5 w-5 text-gray-600 transition-transform ${
+                      <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${
                         (item.title === "Shop by Bike" && isShopByBikeOpen) ||
                         (item.title === "Shop by Accessories" && isShopByAccessoriesOpen) ? 'rotate-180' : ''
                       }`} />
@@ -805,7 +824,7 @@ const Header = () => {
                   ) : (
                     <Link 
                       to={item.link} 
-                      className="block py-3 px-2 text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+                      className="block py-3 px-2 text-foreground hover:bg-accent rounded-lg transition-colors"
                     >
                       <h3 className="text-lg font-semibold">{item.title}</h3>
                     </Link>
@@ -838,7 +857,7 @@ const Header = () => {
                           <a
                             key={scooter.title}
                             href={scooter.link}
-                            className="block py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                            className="block py-2 px-3 text-foreground hover:text-primary hover:bg-accent rounded transition-colors"
                           >
                             {scooter.title}
                           </a>
@@ -856,7 +875,7 @@ const Header = () => {
                           <a
                             key={subItem.title}
                             href={subItem.link}
-                            className="block py-2 px-3 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                            className="block py-2 px-3 text-foreground hover:text-primary hover:bg-accent rounded transition-colors"
                           >
                             {subItem.title}
                           </a>
@@ -872,7 +891,7 @@ const Header = () => {
             <div className="fixed bottom-4 right-4 z-50">
               <Button 
                 size="sm" 
-                className="rounded-full w-12 h-12 bg-gray-900 hover:bg-gray-800 text-white shadow-lg"
+                className="rounded-full w-12 h-12 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg"
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               >
                 <ChevronDown className="h-4 w-4 rotate-180" />

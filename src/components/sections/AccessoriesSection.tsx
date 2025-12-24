@@ -82,14 +82,14 @@ const accessories = [
 
 const AccessoriesSection = () => {
   return (
-    <section id="shop-accessories" className="mt-8 sm:mt-10 md:mt-12 pt-12 sm:pt-14 md:pt-16 pb-6 sm:pb-8 bg-white">
+    <section id="shop-accessories" className="mt-8 sm:mt-10 md:mt-12 pt-12 sm:pt-14 md:pt-16 pb-6 sm:pb-8 bg-background">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Clean Header */}
         <div className="text-center mb-4 sm:mb-5 md:mb-6">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1.5 sm:mb-2">
-            Shop by <span className="text-red-600">Accessories</span>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-1.5 sm:mb-2">
+            Shop by <span className="text-primary">Accessories</span>
           </h2>
-          <p className="text-xs sm:text-sm text-gray-600 max-w-2xl mx-auto px-2">
+          <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl mx-auto px-2">
             Premium motorcycle accessories for protection, performance, and style. 
             Upgrade your ride with our quality parts engineered for the ultimate riding experience.
           </p>
@@ -121,14 +121,14 @@ const AccessoriesSection = () => {
                     }}
                   />
                   {/* Fallback icon if image fails */}
-                  <div className="hidden w-10 h-10 bg-red-50 rounded flex items-center justify-center">
-                    <IconComponent className="w-5 h-5 text-red-600" />
+                  <div className="hidden w-10 h-10 bg-primary/10 rounded flex items-center justify-center">
+                    <IconComponent className="w-5 h-5 text-primary" />
                   </div>
                 </div>
 
                 {/* Accessory Name - Below image */}
                 <div className="text-center mt-0.5 sm:mt-1">
-                  <h3 className="text-[8px] sm:text-[9px] font-semibold text-gray-900 uppercase tracking-wide group-hover:text-red-600 transition-colors leading-tight">
+                  <h3 className="text-[8px] sm:text-[9px] font-semibold text-foreground uppercase tracking-wide group-hover:text-primary transition-colors leading-tight">
                     {accessory.name}
                   </h3>
                 </div>
@@ -142,7 +142,7 @@ const AccessoriesSection = () => {
           <Button 
             size="default" 
             variant="outline" 
-            className="bg-white border border-gray-300 text-gray-900 hover:bg-gray-50 px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-none font-medium text-sm sm:text-base"
+            className="bg-background border border-border text-foreground hover:bg-accent px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-none font-medium text-sm sm:text-base"
             onClick={() => {
               window.location.href = '/collections/accessories';
             }}
