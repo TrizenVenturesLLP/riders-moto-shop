@@ -330,33 +330,38 @@ const Header = () => {
             </Link>
           </div>
 
-          {/* Search Bar - Desktop */}
+          {/* Search Bar - Desktop - Enhanced Design */}
           <div className={`hidden md:flex flex-1 mx-8 transition-all duration-300 ${
             isScrolledDown ? 'max-w-xl' : 'max-w-2xl'
           }`}>
-            <div className="flex w-full border border-border rounded-none shadow-sm overflow-hidden bg-background">
+            <div className="flex w-full border-2 border-border hover:border-primary/50 focus-within:border-primary rounded-none overflow-hidden bg-card transition-all duration-300">
               {/* Category Filter */}
-              <select 
-                value={searchCategory}
-                onChange={(e) => setSearchCategory(e.target.value)}
-                className={`px-4 bg-muted border-0 border-r border-border text-foreground focus:outline-none focus:ring-0 focus:border-r focus:border-border appearance-none cursor-pointer transition-all duration-300 ${
-                  isScrolledDown ? 'py-1.5 text-xs h-9' : 'py-2.5 text-sm h-11'
-                }`}
-              >
-                <option value="All">All</option>
-                <option value="Bikes">Bikes</option>
-                <option value="Accessories">Accessories</option>
-              </select>
+              <div className="relative">
+                <select 
+                  value={searchCategory}
+                  onChange={(e) => setSearchCategory(e.target.value)}
+                  className={`px-3 pr-7 bg-muted/50 hover:bg-muted border-0 border-r-2 border-border text-foreground font-medium focus:outline-none focus:ring-0 appearance-none cursor-pointer transition-all duration-300 w-24 ${
+                    isScrolledDown ? 'py-1.5 text-xs h-9' : 'py-3 text-sm h-12'
+                  }`}
+                >
+                  <option value="All">All</option>
+                  <option value="Bikes">Bikes</option>
+                  <option value="Accessories">Accessories</option>
+                </select>
+                <ChevronDown className={`absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground transition-all duration-300 ${
+                  isScrolledDown ? 'h-3 w-3' : 'h-4 w-4'
+                }`} />
+              </div>
               
               {/* Search Input */}
-              <div className="relative flex-1">
+              <div className="relative flex-1 bg-background">
                 <Input
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="What are you looking for?"
-                  className={`rounded-none border-0 bg-background focus:border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-4 transition-all duration-300 ${
-                    isScrolledDown ? 'h-9 text-xs' : 'h-11 text-sm'
+                  className={`rounded-none border-0 bg-transparent focus:border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-4 font-normal placeholder:text-muted-foreground/60 transition-all duration-300 ${
+                    isScrolledDown ? 'h-9 text-xs' : 'h-12 text-sm'
                   }`}
                 />
               </div>
@@ -364,8 +369,8 @@ const Header = () => {
               {/* Search Button */}
               <Button 
                 onClick={handleSearch}
-                className={`bg-primary hover:bg-primary/90 rounded-none flex items-center justify-center border-0 focus:ring-0 focus-visible:ring-0 transition-all duration-300 ${
-                  isScrolledDown ? 'px-4 h-9 w-10' : 'px-5 h-11 w-12'
+                className={`bg-primary hover:bg-primary/90 active:bg-primary/80 rounded-none flex items-center justify-center border-0 focus:ring-0 focus-visible:ring-0 font-semibold transition-all duration-300 shadow-none ${
+                  isScrolledDown ? 'px-5 h-9 w-12' : 'px-6 h-12 w-14'
                 }`}
               >
                 <Search className={`text-primary-foreground transition-all duration-300 ${
@@ -461,16 +466,19 @@ const Header = () => {
               </Button>
             )}
             
-            <Link to="/cart">
-              <Button variant="ghost" size="sm" className="relative text-foreground hover:bg-accent">
-                <ShoppingCart className="h-5 w-5" />
-                {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full text-xs h-5 w-5 flex items-center justify-center">
-                    {totalItems > 99 ? '99+' : totalItems}
-                  </span>
-                )}
-              </Button>
-            </Link>
+            {/* Cart Icon - Only visible when logged in */}
+            {isAuthenticated && (
+              <Link to="/cart">
+                <Button variant="ghost" size="sm" className="relative text-foreground hover:bg-accent">
+                  <ShoppingCart className="h-5 w-5" />
+                  {totalItems > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full text-xs h-5 w-5 flex items-center justify-center">
+                      {totalItems > 99 ? '99+' : totalItems}
+                    </span>
+                  )}
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -678,35 +686,38 @@ const Header = () => {
 
             {/* Search */}
             <div className="px-4 py-4 bg-background border-b border-border">
-              <div className="flex w-full">
+              <div className="flex w-full border-2 border-border hover:border-primary/50 focus-within:border-primary rounded-none overflow-hidden bg-card transition-all duration-300">
                 {/* Category Filter */}
-                <select 
-                  value={searchCategory}
-                  onChange={(e) => setSearchCategory(e.target.value)}
-                  className="px-3 py-3 bg-muted border border-border rounded-l-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
-                >
-                  <option value="All">All</option>
-                  <option value="Bikes">Bikes</option>
-                  <option value="Accessories">Accessories</option>
-                </select>
+                <div className="relative">
+                  <select 
+                    value={searchCategory}
+                    onChange={(e) => setSearchCategory(e.target.value)}
+                    className="px-3 pr-7 py-3 bg-muted/50 hover:bg-muted border-0 border-r-2 border-border text-sm text-foreground font-medium focus:outline-none focus:ring-0 appearance-none cursor-pointer transition-all duration-300 h-12 w-24"
+                  >
+                    <option value="All">All</option>
+                    <option value="Bikes">Bikes</option>
+                    <option value="Accessories">Accessories</option>
+                  </select>
+                  <ChevronDown className="absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground h-4 w-4" />
+                </div>
                 
                 {/* Search Input */}
-                <div className="relative flex-1">
+                <div className="relative flex-1 bg-background">
                   <Input
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="What are you looking for?"
-                    className="rounded-none border-l-0 border-r-0 bg-background border-border focus:border-primary focus:ring-0 h-12"
+                    className="rounded-none border-0 bg-transparent focus:border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-4 font-normal placeholder:text-muted-foreground/60 h-12 text-sm"
                   />
                 </div>
                 
                 {/* Search Button */}
                 <Button 
                   onClick={handleSearch}
-                  className="bg-primary hover:bg-primary/90 rounded-l-none px-4 h-12"
+                  className="bg-primary hover:bg-primary/90 active:bg-primary/80 rounded-none px-5 h-12 w-14 flex items-center justify-center font-semibold shadow-none transition-all duration-300"
                 >
-                  <Search className="h-4 w-4" />
+                  <Search className="h-5 w-5 text-primary-foreground" />
                 </Button>
               </div>
             </div>
@@ -747,6 +758,20 @@ const Header = () => {
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Orders
+                  </Link>
+                  <Link
+                    to="/cart"
+                    className="block py-2 px-3 text-foreground hover:text-primary hover:bg-accent rounded transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span>Cart</span>
+                      {totalItems > 0 && (
+                        <span className="bg-primary text-primary-foreground rounded-full text-xs h-5 w-5 flex items-center justify-center">
+                          {totalItems > 99 ? '99+' : totalItems}
+                        </span>
+                      )}
+                    </div>
                   </Link>
                   <button
                     onClick={() => {

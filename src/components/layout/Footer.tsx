@@ -10,8 +10,8 @@ const Footer = () => {
     <footer className="bg-background border-t border-border">
       {/* Feature Section */}
       <div className="bg-muted border-b border-border">
-        <div className="container mx-auto px-4 sm:px-6 py-5 sm:py-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0 mt-0.5">
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
@@ -65,16 +65,16 @@ const Footer = () => {
 
       {/* Main Footer Content */}
       <div className="bg-background">
-        <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {/* Company Info */}
             <div className="lg:col-span-2">
               <img 
                 src={rmsLogo}
                 alt="Riders Moto Shop" 
-                className="h-12 mb-3 object-contain"
+                className="h-10 mb-2 object-contain"
               />
-              <p className="text-muted-foreground text-sm leading-relaxed max-w-md">
+              <p className="text-muted-foreground text-xs leading-relaxed max-w-md">
                 We are one of the leading motorcycle parts and accessories retailer 
                 with expertise in quality products and exceptional service. 
                 We drive excellence with our passionate and experienced team.
@@ -83,30 +83,30 @@ const Footer = () => {
 
             {/* Info Links */}
             <div>
-              <h3 className="text-sm font-semibold text-foreground mb-4 uppercase tracking-wide">Info</h3>
-              <ul className="space-y-2.5">
+              <h3 className="text-xs font-semibold text-foreground mb-3 uppercase tracking-wide">Info</h3>
+              <ul className="space-y-2">
                 <li>
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm inline-block">
+                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-xs inline-block">
                     About Us
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm inline-block">
+                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-xs inline-block">
                     Contact Us
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm inline-block">
+                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-xs inline-block">
                     FAQ
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm inline-block">
+                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-xs inline-block">
                     Store Locator
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm inline-block">
+                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-xs inline-block">
                     Blog
                   </a>
                 </li>
@@ -115,30 +115,30 @@ const Footer = () => {
 
             {/* Policy Links */}
             <div>
-              <h3 className="text-sm font-semibold text-foreground mb-4 uppercase tracking-wide">Policy</h3>
-              <ul className="space-y-2.5">
+              <h3 className="text-xs font-semibold text-foreground mb-3 uppercase tracking-wide">Policy</h3>
+              <ul className="space-y-2">
                 <li>
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm inline-block">
+                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-xs inline-block">
                     Privacy Policy
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm inline-block">
+                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-xs inline-block">
                     Return, Refund & Replacement Policy
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm inline-block">
+                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-xs inline-block">
                     Shipping Policy
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm inline-block">
+                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-xs inline-block">
                     Terms of Warranty
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm inline-block">
+                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-xs inline-block">
                     Terms & Conditions
                   </a>
                 </li>
@@ -150,8 +150,8 @@ const Footer = () => {
 
       {/* Bottom Section */}
       <div className="bg-foreground border-t border-border">
-        <div className="container mx-auto px-4 sm:px-6 py-4">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="container mx-auto px-4 sm:px-6 py-3">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
             {/* Copyright */}
             <div className="text-background text-xs sm:text-sm">
               © 2025, Riders Moto Shop. Built with passion for riders.

@@ -344,29 +344,6 @@ const BikePage = () => {
                 <List className="h-4 w-4" />
               </Button>
             </div>
-
-            <Button
-              variant={hasActiveFilters ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setShowFilters(!showFilters)}
-              className={hasActiveFilters ? 'bg-primary text-primary-foreground' : ''}
-            >
-              <Filter className="h-4 w-4 mr-2" />
-              Filters
-              {hasActiveFilters && (
-                <Badge variant="secondary" className="ml-2 h-5 px-1.5 text-xs">
-                  {[
-                    category && '1',
-                    productType && '1',
-                    searchParams.get('brand') && '1',
-                    (searchParams.get('minPrice') || searchParams.get('maxPrice')) && '1',
-                    searchParams.get('inStock') && '1',
-                    (sortBy && sortBy !== 'featured') && '1',
-                    searchQuery && '1'
-                  ].filter(Boolean).length}
-                </Badge>
-              )}
-            </Button>
           </div>
         </div>
 
@@ -381,7 +358,7 @@ const BikePage = () => {
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
                 }}
-                className="pl-10"
+                className="pl-10 border-2"
               />
             </div>
           </div>
@@ -391,7 +368,7 @@ const BikePage = () => {
               setSortBy(value);
               updateURL({ sort_by: value }); // Use sort_by to match reference sites
             }}>
-              <SelectTrigger className="w-48">
+              <SelectTrigger className="w-48 border-2">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
@@ -407,10 +384,9 @@ const BikePage = () => {
           </div>
         </div>
 
-        {/* Filters Sidebar */}
-        {showFilters && (
-          <Card className="mb-6">
-            <CardContent className="p-6">
+        {/* Filters Section - Always Visible */}
+        <Card className="mb-6">
+          <CardContent className="p-6">
               {/* Filter Header with Active Count */}
               <div className="flex items-center justify-between mb-4 pb-4 border-b border-border">
                 <div className="flex items-center space-x-2">
@@ -610,7 +586,6 @@ const BikePage = () => {
               </div>
             </CardContent>
           </Card>
-        )}
 
         {/* Products Grid */}
         {products.length > 0 ? (

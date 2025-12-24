@@ -32,7 +32,7 @@ export interface Product {
   }>;
 }
 
-const USE_MOCK_DATA = true;
+const USE_MOCK_DATA = false; // Changed to fetch from API
 
 export interface ProductsResponse {
   success: boolean;

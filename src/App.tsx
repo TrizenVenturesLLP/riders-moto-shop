@@ -25,6 +25,7 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import BikePage from "@/pages/BikePage";
 import Contact from "@/pages/Contact";
 import About from "@/pages/About";
+import LoginPromptModal from "@/components/LoginPromptModal";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => (
             <BrowserRouter>
             <div className="min-h-screen bg-background flex flex-col">
               <Header />
+              <LoginPromptModal />
               <main className="flex-1">
                 <Routes>
                   {/* Public Routes */}
