@@ -317,8 +317,8 @@ const Header = () => {
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
 
-          {/* Logo and Mobile Theme Toggle */}
-          <div className="flex items-center gap-3 md:gap-0">
+          {/* Logo */}
+          <div className="flex items-center">
             <Link to="/">
               <img 
                 src={rmsLogo}
@@ -328,10 +328,6 @@ const Header = () => {
                 }`}
               />
             </Link>
-            {/* Theme Toggle - Mobile Only */}
-            <div className="md:hidden">
-              <ThemeToggle />
-            </div>
           </div>
 
           {/* Search Bar - Desktop - Enhanced Design */}
@@ -465,8 +461,8 @@ const Header = () => {
               </Button>
             )}
             
-            {/* Theme Toggle - Desktop */}
-            <div className="hidden md:block">
+            {/* Theme Toggle - Mobile and Desktop */}
+            <div className="flex items-center">
               <ThemeToggle />
             </div>
             
@@ -672,10 +668,12 @@ const Header = () => {
               <button onClick={() => setIsMenuOpen(false)} className="text-foreground hover:bg-accent rounded p-1 transition-colors">
                 <X className="h-6 w-6" />
               </button>
-              <Link to="/" onClick={() => setIsMenuOpen(false)}>
-                <h1 className="text-xl font-bold text-primary text-glow cursor-pointer hover:text-primary/90">
-                  Riders Moto Shop
-                </h1>
+              <Link to="/" onClick={() => setIsMenuOpen(false)} className="flex items-center">
+                <img 
+                  src={rmsLogo}
+                  alt="Riders Moto Shop" 
+                  className="h-10 max-h-10 cursor-pointer hover:opacity-80 transition-opacity"
+                />
               </Link>
               <div className="w-6"></div>
             </div>
