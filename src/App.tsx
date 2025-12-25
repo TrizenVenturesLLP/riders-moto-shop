@@ -150,26 +150,3 @@ const App = () => (
 );
 
 export default App;
-
-                  element={
-                    <ProtectedRoute requireAuth={true}>
-                      <Orders />
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                {/* 404 Route */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </main>
-            <Footer />
-          </div>
-        </BrowserRouter>
-        </CartProvider>
-      </AuthProvider>
-    </TooltipProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
-);
-
-export default App;
