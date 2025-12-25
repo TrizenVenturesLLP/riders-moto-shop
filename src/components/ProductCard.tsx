@@ -296,7 +296,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode = 'grid' })
           {/* Subtitle - Smaller */}
           <div className="text-xs text-primary font-medium mb-1 uppercase line-clamp-1">
             {productSubtitle}
-          </div>
+        </div>
 
           {/* Brand - Smaller */}
           <div className="text-xs text-muted-foreground mb-1 uppercase tracking-wide font-medium">

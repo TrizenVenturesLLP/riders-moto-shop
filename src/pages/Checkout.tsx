@@ -390,64 +390,66 @@ const Checkout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background py-8">
-      <div className="container mx-auto px-4 max-w-6xl">
+    <div className="min-h-screen bg-background py-4 sm:py-6 md:py-8">
+      <div className="container mx-auto px-3 sm:px-4 max-w-6xl">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-4 sm:mb-6 md:mb-8">
           <Button
             variant="ghost"
             onClick={() => navigate('/cart')}
-            className="mb-4 text-muted-foreground hover:text-foreground"
+            className="mb-2 sm:mb-4 text-muted-foreground hover:text-foreground text-xs sm:text-sm"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
+            <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
             Back to Cart
           </Button>
           
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Checkout</h1>
-          <p className="text-sm md:text-base text-muted-foreground mt-1">Complete your order</p>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground">Checkout</h1>
+          <p className="text-xs sm:text-sm md:text-base text-muted-foreground mt-1">Complete your order</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           {/* Checkout Form */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             {/* Shipping Address */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <MapPin className="h-5 w-5 mr-2" />
+            <Card className="border-border">
+              <CardHeader className="p-3 sm:p-4 md:p-6">
+                <CardTitle className="flex items-center text-base sm:text-lg md:text-xl">
+                  <MapPin className="h-4 w-4 sm:h-5 sm:w-5 mr-1.5 sm:mr-2" />
                   Shipping Address
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-xs sm:text-sm mt-1">
                   Enter your delivery address details
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName">First Name *</Label>
+              <CardContent className="space-y-3 sm:space-y-4 p-3 sm:p-4 md:p-6 pt-0">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="firstName" className="text-xs sm:text-sm">First Name *</Label>
                     <Input
                       id="firstName"
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleInputChange}
                       placeholder="Enter your first name"
+                      className="text-sm sm:text-base h-9 sm:h-10"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName">Last Name *</Label>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="lastName" className="text-xs sm:text-sm">Last Name *</Label>
                     <Input
                       id="lastName"
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleInputChange}
                       placeholder="Enter your last name"
+                      className="text-sm sm:text-base h-9 sm:h-10"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email Address *</Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="email" className="text-xs sm:text-sm">Email Address *</Label>
                     <Input
                       id="email"
                       name="email"
@@ -455,135 +457,142 @@ const Checkout = () => {
                       value={formData.email}
                       onChange={handleInputChange}
                       placeholder="Enter your email"
+                      className="text-sm sm:text-base h-9 sm:h-10"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number *</Label>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="phone" className="text-xs sm:text-sm">Phone Number *</Label>
                     <Input
                       id="phone"
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
                       placeholder="Enter your phone number"
+                      className="text-sm sm:text-base h-9 sm:h-10"
                     />
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="address">Address *</Label>
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label htmlFor="address" className="text-xs sm:text-sm">Address *</Label>
                   <Input
                     id="address"
                     name="address"
                     value={formData.address}
                     onChange={handleInputChange}
                     placeholder="Enter your full address"
+                    className="text-sm sm:text-base h-9 sm:h-10"
                   />
                   {addressValidation.isValidating && (
-                    <div className="flex items-center text-sm text-primary">
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    <div className="flex items-center text-xs sm:text-sm text-primary">
+                      <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 animate-spin" />
                       {addressValidation.message}
                     </div>
                   )}
                   {addressValidation.isValid && !addressValidation.isValidating && (
-                    <div className="flex items-center text-sm text-green-600 dark:text-green-400">
-                      <CheckCircle className="h-4 w-4 mr-2" />
+                    <div className="flex items-center text-xs sm:text-sm text-green-600 dark:text-green-400">
+                      <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                       {addressValidation.message}
                     </div>
                   )}
                   {!addressValidation.isValid && !addressValidation.isValidating && addressValidation.message && (
-                    <div className="flex items-center text-sm text-destructive">
-                      <AlertCircle className="h-4 w-4 mr-2" />
+                    <div className="flex items-center text-xs sm:text-sm text-destructive">
+                      <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                       {addressValidation.message}
                     </div>
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="city">City *</Label>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="city" className="text-xs sm:text-sm">City *</Label>
                     <Input
                       id="city"
                       name="city"
                       value={formData.city}
                       onChange={handleInputChange}
                       placeholder="Enter your city"
+                      className="text-sm sm:text-base h-9 sm:h-10"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="state">State *</Label>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="state" className="text-xs sm:text-sm">State *</Label>
                     <Input
                       id="state"
                       name="state"
                       value={formData.state}
                       onChange={handleInputChange}
                       placeholder="Enter your state"
+                      className="text-sm sm:text-base h-9 sm:h-10"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="pincode">Pincode *</Label>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="pincode" className="text-xs sm:text-sm">Pincode *</Label>
                     <Input
                       id="pincode"
                       name="pincode"
                       value={formData.pincode}
                       onChange={handleInputChange}
                       placeholder="Enter pincode"
+                      className="text-sm sm:text-base h-9 sm:h-10"
                     />
                     {pincodeValidation.isValidating && (
-                      <div className="flex items-center text-sm text-primary">
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      <div className="flex items-center text-xs sm:text-sm text-primary">
+                        <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 animate-spin" />
                         {pincodeValidation.message}
                       </div>
                     )}
                     {pincodeValidation.isValid && !pincodeValidation.isValidating && (
-                      <div className="flex items-center text-sm text-green-600 dark:text-green-400">
-                        <CheckCircle className="h-4 w-4 mr-2" />
+                      <div className="flex items-center text-xs sm:text-sm text-green-600 dark:text-green-400">
+                        <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                         {pincodeValidation.message}
                       </div>
                     )}
                     {!pincodeValidation.isValid && !pincodeValidation.isValidating && pincodeValidation.message && (
-                      <div className="flex items-center text-sm text-destructive">
-                        <AlertCircle className="h-4 w-4 mr-2" />
+                      <div className="flex items-center text-xs sm:text-sm text-destructive">
+                        <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                         {pincodeValidation.message}
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="country">Country</Label>
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label htmlFor="country" className="text-xs sm:text-sm">Country</Label>
                   <Input
                     id="country"
                     name="country"
                     value={formData.country}
                     onChange={handleInputChange}
                     disabled
+                    className="text-sm sm:text-base h-9 sm:h-10"
                   />
                 </div>
               </CardContent>
             </Card>
 
             {/* Shipping Method */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Truck className="h-5 w-5 mr-2" />
+            <Card className="border-border">
+              <CardHeader className="p-3 sm:p-4 md:p-6">
+                <CardTitle className="flex items-center text-base sm:text-lg md:text-xl">
+                  <Truck className="h-4 w-4 sm:h-5 sm:w-5 mr-1.5 sm:mr-2" />
                   Shipping Method
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-xs sm:text-sm mt-1">
                   Choose your preferred delivery option
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-3 sm:space-y-4 p-3 sm:p-4 md:p-6 pt-0">
                 {isCalculatingShipping ? (
-                  <div className="flex items-center justify-center py-8">
-                    <Loader2 className="h-6 w-6 animate-spin mr-2" />
-                    <span>Calculating shipping rates...</span>
+                  <div className="flex items-center justify-center py-4 sm:py-6 md:py-8">
+                    <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 animate-spin mr-2" />
+                    <span className="text-xs sm:text-sm md:text-base">Calculating shipping rates...</span>
                   </div>
                 ) : shippingRates?.data?.shippingRates ? (
                   Object.entries(shippingRates.data.shippingRates).map(([key, rate]) => (
                     <div
                       key={key}
-                      className={`border rounded-lg p-4 cursor-pointer transition-colors ${
+                      className={`border rounded-lg p-2.5 sm:p-3 md:p-4 cursor-pointer transition-colors ${
                         selectedShipping === key
                           ? 'border-primary bg-primary/10'
                           : 'border-border hover:border-border/70'
@@ -591,7 +600,7 @@ const Checkout = () => {
                       onClick={() => setSelectedShipping(key)}
                     >
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
+                        <div className="flex items-center space-x-2 sm:space-x-3">
                           <input
                             type="radio"
                             name="shipping"
@@ -601,13 +610,13 @@ const Checkout = () => {
                             className="text-primary"
                           />
                           <div>
-                            <h4 className="font-medium">{rate.name}</h4>
-                            <p className="text-sm text-muted-foreground">{rate.estimatedDays}</p>
-                            <p className="text-xs text-muted-foreground/70">{rate.description}</p>
+                            <h4 className="font-medium text-sm sm:text-base">{rate.name}</h4>
+                            <p className="text-xs sm:text-sm text-muted-foreground">{rate.estimatedDays}</p>
+                            <p className="text-[10px] sm:text-xs text-muted-foreground/70">{rate.description}</p>
                           </div>
                         </div>
                         <div className="text-right">
-                          <span className="font-bold">
+                          <span className="font-bold text-sm sm:text-base">
                             {rate.cost === 0 ? 'Free' : `₹${rate.cost}`}
                           </span>
                         </div>
@@ -615,23 +624,23 @@ const Checkout = () => {
                     </div>
                   ))
                 ) : (
-                  <div className="text-center py-8 text-muted-foreground/70">
-                    <p>Please complete your address to see shipping options</p>
+                  <div className="text-center py-4 sm:py-6 md:py-8 text-muted-foreground/70">
+                    <p className="text-xs sm:text-sm md:text-base">Please complete your address to see shipping options</p>
                   </div>
                 )}
                 
                 {/* Show distance information if available */}
                 {shippingData?.data?.distance && (
-                  <div className="mt-4 p-3 bg-primary/10 rounded-lg border border-primary/20">
-                    <div className="flex items-center text-sm text-primary">
-                      <MapPin className="h-4 w-4 mr-2" />
+                  <div className="mt-3 sm:mt-4 p-2 sm:p-3 bg-primary/10 rounded-lg border border-primary/20">
+                    <div className="flex items-center text-xs sm:text-sm text-primary">
+                      <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                       <span>
                         Distance: {shippingData.data.distance.toFixed(1)} km
                         {shippingData.data.fallback && ' (estimated)'}
                       </span>
                     </div>
                     {shippingData.data.warning && (
-                      <p className="text-xs text-primary/80 mt-1">{shippingData.data.warning}</p>
+                      <p className="text-[10px] sm:text-xs text-primary/80 mt-1">{shippingData.data.warning}</p>
                     )}
                   </div>
                 )}
@@ -640,24 +649,24 @@ const Checkout = () => {
           </div>
 
           {/* Order Summary */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Order Summary Card */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Order Summary</CardTitle>
+            <Card className="border-border">
+              <CardHeader className="p-3 sm:p-4 md:p-6">
+                <CardTitle className="text-base sm:text-lg md:text-xl">Order Summary</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex justify-between">
+              <CardContent className="space-y-3 sm:space-y-4 p-3 sm:p-4 md:p-6 pt-0">
+                <div className="flex justify-between text-xs sm:text-sm">
                   <span className="text-muted-foreground">Subtotal ({totalItems} items)</span>
                   <span className="font-medium">₹{totalPrice.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between text-xs sm:text-sm">
                   <span className="text-muted-foreground">Shipping</span>
                   <span className="font-medium">
                     {isCalculatingShipping ? (
                       <div className="flex items-center">
-                        <Loader2 className="h-4 w-4 animate-spin mr-1" />
-                        <span className="text-sm">Calculating...</span>
+                        <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin mr-1" />
+                        <span className="text-xs sm:text-sm">Calculating...</span>
                       </div>
                     ) : shippingCost === 0 ? (
                       <span className="text-green-600 dark:text-green-400">Free</span>
@@ -666,12 +675,12 @@ const Checkout = () => {
                     )}
                   </span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between text-xs sm:text-sm">
                   <span className="text-muted-foreground">Tax (GST 18%)</span>
                   <span className="font-medium">₹{tax.toLocaleString()}</span>
                 </div>
                 <Separator />
-                <div className="flex justify-between text-lg font-bold">
+                <div className="flex justify-between text-sm sm:text-base md:text-lg font-bold">
                   <span>Total</span>
                   <span>₹{finalTotal.toLocaleString()}</span>
                 </div>
@@ -682,36 +691,36 @@ const Checkout = () => {
             <Button 
               onClick={handlePlaceOrder}
               disabled={isProcessing}
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3 text-lg"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-2.5 sm:py-3 text-sm sm:text-base md:text-lg rounded-none"
               size="lg"
             >
               {isProcessing ? (
                 <>
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                  Processing Order...
+                  <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white mr-2"></div>
+                  <span className="text-xs sm:text-sm md:text-base">Processing Order...</span>
                 </>
               ) : (
                 <>
-                  <CreditCard className="h-5 w-5 mr-2" />
-                  Place Order - ₹{finalTotal.toLocaleString()}
+                  <CreditCard className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                  <span className="text-xs sm:text-sm md:text-base">Place Order - ₹{finalTotal.toLocaleString()}</span>
                 </>
               )}
             </Button>
 
             {/* Trust Badges */}
-            <Card>
-              <CardContent className="p-4">
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                    <Shield className="h-4 w-4" />
+            <Card className="border-border">
+              <CardContent className="p-3 sm:p-4">
+                <div className="space-y-2 sm:space-y-3">
+                  <div className="flex items-center space-x-2 text-xs sm:text-sm text-muted-foreground">
+                    <Shield className="h-3 w-3 sm:h-4 sm:w-4" />
                     <span>Secure checkout with SSL encryption</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                    <CreditCard className="h-4 w-4" />
+                  <div className="flex items-center space-x-2 text-xs sm:text-sm text-muted-foreground">
+                    <CreditCard className="h-3 w-3 sm:h-4 sm:w-4" />
                     <span>Multiple payment options available</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                    <Truck className="h-4 w-4" />
+                  <div className="flex items-center space-x-2 text-xs sm:text-sm text-muted-foreground">
+                    <Truck className="h-3 w-3 sm:h-4 sm:w-4" />
                     <span>Fast and reliable delivery</span>
                   </div>
                 </div>

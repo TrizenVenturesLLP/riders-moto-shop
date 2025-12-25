@@ -267,74 +267,74 @@ const Payment = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8">
         {/* Header */}
-        <div className="flex items-center mb-6">
+        <div className="flex items-center mb-4 sm:mb-6">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => navigate('/checkout')}
-            className="mr-4"
+            className="mr-2 sm:mr-4 text-xs sm:text-sm"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
+            <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
             Back to Checkout
           </Button>
-          <h1 className="text-xl md:text-2xl font-bold text-foreground">Complete Payment</h1>
+          <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground">Complete Payment</h1>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
           {/* Payment Section */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Payment Method Card */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <CreditCard className="h-5 w-5 mr-2" />
+            <Card className="border-border">
+              <CardHeader className="p-3 sm:p-4 md:p-6">
+                <CardTitle className="flex items-center text-base sm:text-lg md:text-xl">
+                  <CreditCard className="h-4 w-4 sm:h-5 sm:w-5 mr-1.5 sm:mr-2" />
                   UPI Payment
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-xs sm:text-sm mt-1">
                   Pay securely using UPI apps like Google Pay, PhonePe, or Paytm
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-4 sm:space-y-6 p-3 sm:p-4 md:p-6 pt-0">
                 {/* UPI ID Display */}
-                <div className="bg-primary/10 p-4 rounded-lg border border-primary/20">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-primary font-medium">Pay to UPI ID</p>
-                      <p className="text-lg font-mono text-foreground">{paymentConfig.upiId}</p>
+                <div className="bg-primary/10 p-2.5 sm:p-3 md:p-4 rounded-lg border border-primary/20">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs sm:text-sm text-primary font-medium">Pay to UPI ID</p>
+                      <p className="text-sm sm:text-base md:text-lg font-mono text-foreground break-all">{paymentConfig.upiId}</p>
                     </div>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={copyUPIId}
-                      className="text-primary border-primary/30 hover:bg-primary/20"
+                      className="text-primary border-primary/30 hover:bg-primary/20 text-xs sm:text-sm px-2 sm:px-3 flex-shrink-0"
                     >
-                      <Copy className="h-4 w-4 mr-2" />
-                      Copy
+                      <Copy className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                      <span className="hidden sm:inline">Copy</span>
                     </Button>
                   </div>
                 </div>
 
                 {/* QR Code Section */}
-                <div className="text-center space-y-4">
-                  <div className="bg-card p-4 md:p-6 rounded-lg border-2 border-dashed border-border">
+                <div className="text-center space-y-3 sm:space-y-4">
+                  <div className="bg-card p-3 sm:p-4 md:p-6 rounded-lg border-2 border-dashed border-border">
                     {isGeneratingQR ? (
-                      <div className="flex flex-col items-center justify-center h-32">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2"></div>
-                        <p className="text-sm text-muted-foreground">Generating QR Code...</p>
+                      <div className="flex flex-col items-center justify-center h-24 sm:h-32">
+                        <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-primary mb-2"></div>
+                        <p className="text-xs sm:text-sm text-muted-foreground">Generating QR Code...</p>
                       </div>
                     ) : qrCodeImage ? (
                       <div className="flex flex-col items-center">
                         <img 
                           src={qrCodeImage} 
                           alt="UPI Payment QR Code" 
-                          className="w-32 h-32 mb-4 rounded-lg shadow-sm"
+                          className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mb-3 sm:mb-4 rounded-lg shadow-sm"
                         />
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-xs sm:text-sm text-muted-foreground">
                           {isMobile ? 'Tap "Pay Now" to open UPI app' : 'Scan this QR code with your UPI app'}
                         </p>
-                        <p className="text-xs text-muted-foreground/70 mt-2">
+                        <p className="text-[10px] sm:text-xs text-muted-foreground/70 mt-1 sm:mt-2">
                           Amount: ₹{paymentData.total}
                         </p>
                         <Button
@@ -342,7 +342,7 @@ const Payment = () => {
                           size="sm"
                           onClick={regenerateQRCode}
                           disabled={isGeneratingQR}
-                          className="mt-2 text-xs"
+                          className="mt-2 text-[10px] sm:text-xs px-2 sm:px-3"
                         >
                           {isGeneratingQR ? (
                             <>
@@ -358,56 +358,56 @@ const Payment = () => {
                         </Button>
                       </div>
                     ) : (
-                      <div className="flex flex-col items-center justify-center h-32">
-                        <QrCode className="h-16 w-16 mx-auto text-muted-foreground/40 mb-2" />
-                        <p className="text-sm text-muted-foreground">QR Code will appear here</p>
+                      <div className="flex flex-col items-center justify-center h-24 sm:h-32">
+                        <QrCode className="h-12 w-12 sm:h-16 sm:w-16 mx-auto text-muted-foreground/40 mb-2" />
+                        <p className="text-xs sm:text-sm text-muted-foreground">QR Code will appear here</p>
                       </div>
                     )}
                   </div>
                   
                   {/* Payment Instructions */}
-                  <div className="text-left space-y-2 text-sm text-muted-foreground">
+                  <div className="text-left space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-muted-foreground">
                     <div className="flex items-center">
-                      <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary rounded-full mr-2 sm:mr-3 flex-shrink-0"></div>
                       <span>Open your UPI app (Google Pay, PhonePe, Paytm)</span>
                     </div>
                     <div className="flex items-center">
-                      <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary rounded-full mr-2 sm:mr-3 flex-shrink-0"></div>
                       <span>Scan the QR code or enter UPI ID manually</span>
                     </div>
                     <div className="flex items-center">
-                      <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary rounded-full mr-2 sm:mr-3 flex-shrink-0"></div>
                       <span>Enter amount: ₹{paymentData.total}</span>
                     </div>
                     <div className="flex items-center">
-                      <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary rounded-full mr-2 sm:mr-3 flex-shrink-0"></div>
                       <span>Complete the payment</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Payment Buttons */}
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   <Button
                     onClick={handlePayNow}
                     disabled={paymentStatus === 'processing'}
-                    className="w-full bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white py-3 text-lg"
+                    className="w-full bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white py-2.5 sm:py-3 text-sm sm:text-base md:text-lg rounded-none"
                     size="lg"
                   >
                     {paymentStatus === 'processing' ? (
                       <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                        Processing...
+                        <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white mr-2"></div>
+                        <span className="text-xs sm:text-sm md:text-base">Processing...</span>
                       </>
                     ) : isMobile ? (
                       <>
-                        <Smartphone className="h-5 w-5 mr-2" />
-                        Pay Now - ₹{paymentData.total}
+                        <Smartphone className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                        <span className="text-xs sm:text-sm md:text-base">Pay Now - ₹{paymentData.total}</span>
                       </>
                     ) : (
                       <>
-                        <QrCode className="h-5 w-5 mr-2" />
-                        Show Payment Details
+                        <QrCode className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                        <span className="text-xs sm:text-sm md:text-base">Show Payment Details</span>
                       </>
                     )}
                   </Button>
@@ -416,16 +416,16 @@ const Payment = () => {
                     onClick={handlePaymentConfirmation}
                     disabled={paymentStatus === 'processing' || paymentStatus === 'completed'}
                     variant="outline"
-                    className="w-full"
+                    className="w-full text-xs sm:text-sm md:text-base rounded-none"
                   >
                     {paymentStatus === 'completed' ? (
                       <>
-                        <CheckCircle className="h-4 w-4 mr-2 text-green-600 dark:text-green-400" />
+                        <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-green-600 dark:text-green-400" />
                         Payment Completed
                       </>
                     ) : (
                       <>
-                        <CheckCircle className="h-4 w-4 mr-2" />
+                        <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                         I've Paid - Confirm Payment
                       </>
                     )}
@@ -433,8 +433,8 @@ const Payment = () => {
                 </div>
 
                 {/* Security Badge */}
-                <div className="flex items-center justify-center text-sm text-muted-foreground/70">
-                  <Shield className="h-4 w-4 mr-2" />
+                <div className="flex items-center justify-center text-xs sm:text-sm text-muted-foreground/70">
+                  <Shield className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
                   <span>Secure payment powered by UPI</span>
                 </div>
               </CardContent>
@@ -442,18 +442,18 @@ const Payment = () => {
 
             {/* Payment Status */}
             {paymentStatus !== 'pending' && (
-              <Card>
-                <CardContent className="pt-6">
-                  <div className="flex items-center space-x-3">
+              <Card className="border-border">
+                <CardContent className="p-3 sm:p-4 md:p-6">
+                  <div className="flex items-center space-x-2 sm:space-x-3">
                     {paymentStatus === 'processing' ? (
                       <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
-                        <span className="text-primary">Processing payment...</span>
+                        <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-primary"></div>
+                        <span className="text-xs sm:text-sm md:text-base text-primary">Processing payment...</span>
                       </>
                     ) : (
                       <>
-                        <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
-                        <span className="text-green-600 dark:text-green-400">Payment completed successfully!</span>
+                        <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 dark:text-green-400" />
+                        <span className="text-xs sm:text-sm md:text-base text-green-600 dark:text-green-400">Payment completed successfully!</span>
                       </>
                     )}
                   </div>
@@ -463,28 +463,28 @@ const Payment = () => {
           </div>
 
           {/* Order Summary */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Order Details */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Order Summary</CardTitle>
-                <CardDescription>Order ID: #{paymentData.orderId}</CardDescription>
+            <Card className="border-border">
+              <CardHeader className="p-3 sm:p-4 md:p-6">
+                <CardTitle className="text-base sm:text-lg md:text-xl">Order Summary</CardTitle>
+                <CardDescription className="text-xs sm:text-sm mt-1">Order ID: #{paymentData.orderId}</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-3 sm:space-y-4 p-3 sm:p-4 md:p-6 pt-0">
                 {/* Items */}
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {paymentData.items.map((item) => (
-                    <div key={item.id} className="flex items-center space-x-3">
+                    <div key={item.id} className="flex items-center space-x-2 sm:space-x-3">
                       <img
                         src={item.image}
                         alt={item.name}
-                        className="w-12 h-12 object-cover rounded-lg"
+                        className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg flex-shrink-0"
                       />
-                      <div className="flex-1">
-                        <p className="font-medium text-sm">{item.name}</p>
-                        <p className="text-xs text-muted-foreground/70">Qty: {item.quantity}</p>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-xs sm:text-sm truncate">{item.name}</p>
+                        <p className="text-[10px] sm:text-xs text-muted-foreground/70">Qty: {item.quantity}</p>
                       </div>
-                      <p className="font-medium">₹{item.price * item.quantity}</p>
+                      <p className="font-medium text-xs sm:text-sm flex-shrink-0">₹{item.price * item.quantity}</p>
                     </div>
                   ))}
                 </div>
@@ -492,21 +492,21 @@ const Payment = () => {
                 <Separator />
 
                 {/* Price Breakdown */}
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
+                <div className="space-y-1.5 sm:space-y-2">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span>Subtotal</span>
                     <span>₹{paymentData.amount}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span>Shipping</span>
                     <span>₹{paymentData.shippingCost}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span>Tax (GST 18%)</span>
                     <span>₹{paymentData.tax}</span>
                   </div>
                   <Separator />
-                  <div className="flex justify-between font-bold text-lg">
+                  <div className="flex justify-between font-bold text-sm sm:text-base md:text-lg">
                     <span>Total</span>
                     <span>₹{paymentData.total}</span>
                   </div>
@@ -515,12 +515,12 @@ const Payment = () => {
             </Card>
 
             {/* Shipping Address */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Shipping Address</CardTitle>
+            <Card className="border-border">
+              <CardHeader className="p-3 sm:p-4 md:p-6">
+                <CardTitle className="text-base sm:text-lg md:text-xl">Shipping Address</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-1 text-sm">
+              <CardContent className="p-3 sm:p-4 md:p-6 pt-0">
+                <div className="space-y-1 text-xs sm:text-sm">
                   <p className="font-medium">
                     {paymentData.shippingAddress.firstName} {paymentData.shippingAddress.lastName}
                   </p>
@@ -535,11 +535,11 @@ const Payment = () => {
             </Card>
 
             {/* Payment Help */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm">Need Help?</CardTitle>
+            <Card className="border-border">
+              <CardHeader className="p-3 sm:p-4 md:p-6">
+                <CardTitle className="text-xs sm:text-sm md:text-base">Need Help?</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2 text-sm text-muted-foreground">
+              <CardContent className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-muted-foreground p-3 sm:p-4 md:p-6 pt-0">
                 <p>• Make sure you have sufficient balance in your UPI app</p>
                 <p>• Keep your phone nearby for OTP verification</p>
                 <p>• Contact support if payment fails</p>
@@ -547,9 +547,9 @@ const Payment = () => {
                   variant="outline"
                   size="sm"
                   onClick={copyPaymentDetails}
-                  className="w-full mt-3"
+                  className="w-full mt-2 sm:mt-3 text-xs sm:text-sm rounded-none"
                 >
-                  <Download className="h-4 w-4 mr-2" />
+                  <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                   Copy Payment Details
                 </Button>
               </CardContent>

@@ -21,7 +21,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
   const displayedProducts = products.slice(0, 6);
   const hasMoreProducts = products.length > displayedProducts.length;
 
-  return (
+    return (
     <section className="py-12 bg-background">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Header - Always visible */}
@@ -101,9 +101,9 @@ const ProductGrid: React.FC<ProductGridProps> = ({
             {products.length > 6 && (
               <div className="text-center mt-10">
                 <Button variant="outline" className="rounded-none border-border">
-                  View All Products
-                </Button>
-              </div>
+              View All Products
+            </Button>
+          </div>
             )}
           </>
         )}

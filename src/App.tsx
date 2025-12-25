@@ -31,23 +31,23 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <TooltipProvider>
-        <AuthProvider>
-          <CartProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-            <div className="min-h-screen bg-background flex flex-col">
-              <Header />
+    <TooltipProvider>
+      <AuthProvider>
+        <CartProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+          <div className="min-h-screen bg-background flex flex-col">
+            <Header />
               <LoginPromptModal />
-              <main className="flex-1">
-                <Routes>
-                  {/* Public Routes */}
-                  <Route path="/" element={<Index />} />
+            <main className="flex-1">
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<Index />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/about" element={<About />} />
-                  <Route path="/products/:id" element={<ProductPage />} />
-                  <Route path="/search" element={<SearchResults />} />
+                <Route path="/products/:id" element={<ProductPage />} />
+                <Route path="/search" element={<SearchResults />} />
                   
                   {/* Unified Product Listing - handles all collection routes */}
                   {/* Bike model routes - for bike-specific product browsing */}
@@ -68,57 +68,57 @@ const App = () => (
                     element={<UnifiedProductListing />}
                   />
 
-                  <Route path="/cart" element={<Cart />} />
-                  <Route path="/checkout" element={<Checkout />} />
-                  <Route path="/payment" element={<Payment />} />
+                <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/payment" element={<Payment />} />
                   <Route
                     path="/order-confirmation/:orderId"
                     element={<OrderConfirmation />}
                   />
-
-                  {/* Auth Routes - Only accessible when not logged in */}
-                  <Route
-                    path="/login"
-                    element={
-                      <ProtectedRoute requireAuth={false}>
-                        <Login />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/signup"
-                    element={
-                      <ProtectedRoute requireAuth={false}>
-                        <Signup />
-                      </ProtectedRoute>
-                    }
-                  />
-
-                  {/* Protected Routes - Only accessible when logged in */}
-                  <Route
-                    path="/profile"
-                    element={
-                      <ProtectedRoute requireAuth={true}>
-                        <Profile />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/orders"
-                    element={
-                      <ProtectedRoute requireAuth={true}>
-                        <Orders />
-                      </ProtectedRoute>
-                    }
-                  />
-
-                  {/* 404 Route */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </main>
-              <Footer />
-            </div>
-          </BrowserRouter>
+                
+                {/* Auth Routes - Only accessible when not logged in */}
+                <Route 
+                  path="/login" 
+                  element={
+                    <ProtectedRoute requireAuth={false}>
+                      <Login />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/signup" 
+                  element={
+                    <ProtectedRoute requireAuth={false}>
+                      <Signup />
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                {/* Protected Routes - Only accessible when logged in */}
+                <Route 
+                  path="/profile" 
+                  element={
+                    <ProtectedRoute requireAuth={true}>
+                      <Profile />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/orders" 
+                  element={
+                    <ProtectedRoute requireAuth={true}>
+                      <Orders />
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                {/* 404 Route */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
+        </BrowserRouter>
         </CartProvider>
       </AuthProvider>
     </TooltipProvider>

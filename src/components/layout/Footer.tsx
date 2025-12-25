@@ -18,7 +18,7 @@ const Footer = () => {
                   <Truck className="text-primary" size={18} />
                 </div>
               </div>
-              <div>
+            <div>
                 <h4 className="font-semibold text-foreground text-sm mb-1">FREE SHIPPING</h4>
                 <p className="text-muted-foreground text-xs leading-relaxed">Free shipping on all orders</p>
               </div>
@@ -28,9 +28,9 @@ const Footer = () => {
               <div className="flex-shrink-0 mt-0.5">
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                   <Clock className="text-primary" size={18} />
-                </div>
-              </div>
-              <div>
+            </div>
+          </div>
+            <div>
                 <h4 className="font-semibold text-foreground text-sm mb-1">24/7 SUPPORT</h4>
                 <p className="text-muted-foreground text-xs leading-relaxed">Contact us anytime, anywhere</p>
               </div>
@@ -40,9 +40,9 @@ const Footer = () => {
               <div className="flex-shrink-0 mt-0.5">
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                   <Shield className="text-primary" size={18} />
-                </div>
-              </div>
-              <div>
+            </div>
+          </div>
+            <div>
                 <h4 className="font-semibold text-foreground text-sm mb-1">100% AUTHENTIC</h4>
                 <p className="text-muted-foreground text-xs leading-relaxed">Genuine parts with warranty</p>
               </div>
@@ -52,9 +52,9 @@ const Footer = () => {
               <div className="flex-shrink-0 mt-0.5">
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                   <CreditCard className="text-primary" size={18} />
-                </div>
-              </div>
-              <div>
+            </div>
+          </div>
+            <div>
                 <h4 className="font-semibold text-foreground text-sm mb-1">PAYMENT SECURE</h4>
                 <p className="text-muted-foreground text-xs leading-relaxed">We ensure secure payment</p>
               </div>
