@@ -3,7 +3,7 @@
 const PRODUCTION_API_URL = 'https://rmsadminbackend.llp.trizenventures.com/api/v1';
 const DEVELOPMENT_API_URL = 'http://localhost:3001/api/v1';
 
-// Determine API URL based on environment
+// Determine A  PI URL based on environment
 // In Vite: import.meta.env.DEV is true only when running `vite` (dev server)
 // import.meta.env.PROD is true when running `vite build` (production build)
 const API_BASE_URL = import.meta.env.VITE_API_URL || 

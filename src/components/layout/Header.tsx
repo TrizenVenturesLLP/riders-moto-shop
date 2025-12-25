@@ -317,8 +317,8 @@ const Header = () => {
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
 
-          {/* Logo */}
-          <div className="flex items-center">
+          {/* Logo and Mobile Theme Toggle */}
+          <div className="flex items-center gap-3 md:gap-0">
             <Link to="/">
               <img 
                 src={rmsLogo}
@@ -328,6 +328,10 @@ const Header = () => {
                 }`}
               />
             </Link>
+            {/* Theme Toggle - Mobile Only */}
+            <div className="md:hidden">
+              <ThemeToggle />
+            </div>
           </div>
 
           {/* Search Bar - Desktop - Enhanced Design */}
@@ -807,11 +811,6 @@ const Header = () => {
                 </div>
               </div>
             )}
-            
-            {/* Theme Toggle - Mobile */}
-            <div className="px-4 py-4 border-b border-border bg-background">
-              <ThemeToggle />
-            </div>
 
             {/* Main Menu Items */}
             <div className="bg-background px-4 py-4">
