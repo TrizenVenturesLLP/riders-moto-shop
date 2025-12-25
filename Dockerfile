@@ -13,6 +13,10 @@ RUN npm ci
 # Copy source code
 COPY . .
 
+# Set production environment variables for build
+ENV VITE_API_URL=https://rmsadminbackend.llp.trizenventures.com/api/v1
+ENV NODE_ENV=production
+
 # Build the application
 RUN npm run build
 
