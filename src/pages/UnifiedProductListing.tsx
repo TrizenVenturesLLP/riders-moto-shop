@@ -641,19 +641,3 @@ const UnifiedProductListing = () => {
 
 export default UnifiedProductListing;
 
-
-              disabled={pagination.currentPage === pagination.totalPages}
-              onClick={() => updateURL({ page: String(pagination.currentPage + 1) })}
-            >
-              Next
-            </Button>
-          </div>
-        )}
-
-      </div>
-    </div>
-  );
-};
-
-export default UnifiedProductListing;
-

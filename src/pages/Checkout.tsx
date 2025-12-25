@@ -750,19 +750,3 @@ const Checkout = () => {
 };
 
 export default Checkout;
-
-                  <div className="flex items-center space-x-2 text-xs sm:text-sm text-muted-foreground">
-                    <Truck className="h-3 w-3 sm:h-4 sm:w-4" />
-                    <span>Fast and reliable delivery</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default Checkout;

@@ -417,20 +417,3 @@ const ProductPage = () => {
 };
 
 export default ProductPage;
-
-                      'N/A'
-                    }
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-      </div>
-
-    </div>
-  );
-};
-
-export default ProductPage;

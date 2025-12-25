@@ -161,30 +161,3 @@ export const useCart = (): CartContextType => {
   }
   return context;
 };
-
-  const getCartItem = (productId: string) => {
-    return items.find(item => item.id === productId);
-  };
-
-  const value: CartContextType = {
-    items,
-    totalItems,
-    totalPrice,
-    addToCart,
-    removeFromCart,
-    updateQuantity,
-    clearCart,
-    isInCart,
-    getCartItem,
-  };
-
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
-};
-
-export const useCart = (): CartContextType => {
-  const context = useContext(CartContext);
-  if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider');
-  }
-  return context;
-};

@@ -578,19 +578,3 @@ const Payment = () => {
 };
 
 export default Payment;
-
-                  className="w-full mt-2 sm:mt-3 text-xs sm:text-sm rounded-none"
-                >
-                  <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
-                  Copy Payment Details
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default Payment;
