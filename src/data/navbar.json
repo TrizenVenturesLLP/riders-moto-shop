@@ -9,133 +9,133 @@
       "submenu": [
         {
           "title": "ROYAL ENFIELD",
-          "link": "/collections/royal-enfield",
+          "link": "/collections/bikes/royal-enfield",
           "submenu": [
             {
               "title": "Super Meteor 650",
-              "link": "/collections/super-meteor-650",
+              "link": "/collections/bikes/super-meteor-650",
               "submenu": [
                 {
                   "title": "TOURING ACCESSORIES",
-                  "link": "/collections/super-meteor-650?category=touring-accessories",
+                  "link": "/collections/bikes/super-meteor-650?category=touring-accessories",
                   "submenu": [
                     {
                       "title": "BACK REST",
-                      "link": "/collections/super-meteor-650?category=touring-accessories&productType=back-rest"
+                      "link": "/collections/bikes/super-meteor-650?category=touring-accessories&productType=back-rest"
                     },
                     {
                       "title": "TOPRACK SADDLE STAY",
-                      "link": "/collections/super-meteor-650?category=touring-accessories&productType=toprack-saddle-stay"
+                      "link": "/collections/bikes/super-meteor-650?category=touring-accessories&productType=toprack-saddle-stay"
                     },
                     {
                       "title": "TOP RACK",
-                      "link": "/collections/super-meteor-650?category=touring-accessories&productType=top-rack"
+                      "link": "/collections/bikes/super-meteor-650?category=touring-accessories&productType=top-rack"
                     },
                     {
                       "title": "LUGGAGE CARRIER",
-                      "link": "/collections/super-meteor-650?category=touring-accessories&productType=luggage-carrier"
+                      "link": "/collections/bikes/super-meteor-650?category=touring-accessories&productType=luggage-carrier"
                     },
                     {
                       "title": "TOP PLATE",
-                      "link": "/collections/super-meteor-650?category=touring-accessories&productType=top-plate"
+                      "link": "/collections/bikes/super-meteor-650?category=touring-accessories&productType=top-plate"
                     },
                     {
                       "title": "SADDLE STAY",
-                      "link": "/collections/super-meteor-650?category=touring-accessories&productType=saddle-stay"
+                      "link": "/collections/bikes/super-meteor-650?category=touring-accessories&productType=saddle-stay"
                     },
                     {
                       "title": "FOG LIGHT CLAMP",
-                      "link": "/collections/super-meteor-650?category=touring-accessories&productType=fog-light-clamp"
+                      "link": "/collections/bikes/super-meteor-650?category=touring-accessories&productType=fog-light-clamp"
                     },
                     {
                       "title": "GPS MOUNT",
-                      "link": "/collections/super-meteor-650?category=touring-accessories&productType=gps-mount"
+                      "link": "/collections/bikes/super-meteor-650?category=touring-accessories&productType=gps-mount"
                     }
                   ]
                 },
                 {
                   "title": "PROTECTION ACCESSORIES",
-                  "link": "/collections/super-meteor-650?category=protection-accessories",
+                  "link": "/collections/bikes/super-meteor-650?category=protection-accessories",
                   "submenu": [
                     {
                       "title": "CRASH GUARD",
-                      "link": "/collections/super-meteor-650?category=protection-accessories&productType=crash-guard"
+                      "link": "/collections/bikes/super-meteor-650?category=protection-accessories&productType=crash-guard"
                     },
                     {
                       "title": "FRAME SLIDER",
-                      "link": "/collections/super-meteor-650?category=protection-accessories&productType=frame-slider"
+                      "link": "/collections/bikes/super-meteor-650?category=protection-accessories&productType=frame-slider"
                     },
                     {
                       "title": "SUMP GUARD",
-                      "link": "/collections/super-meteor-650?category=protection-accessories&productType=sump-guard"
+                      "link": "/collections/bikes/super-meteor-650?category=protection-accessories&productType=sump-guard"
                     },
                     {
                       "title": "RADIATOR GUARD",
-                      "link": "/collections/super-meteor-650?category=protection-accessories&productType=radiator-guard"
+                      "link": "/collections/bikes/super-meteor-650?category=protection-accessories&productType=radiator-guard"
                     },
                     {
                       "title": "HEAD LIGHT GRILL",
-                      "link": "/collections/super-meteor-650?category=protection-accessories&productType=head-light-grill"
+                      "link": "/collections/bikes/super-meteor-650?category=protection-accessories&productType=head-light-grill"
                     },
                     {
                       "title": "CHAIN PROTECTOR",
-                      "link": "/collections/super-meteor-650?category=protection-accessories&productType=chain-protector"
+                      "link": "/collections/bikes/super-meteor-650?category=protection-accessories&productType=chain-protector"
                     },
                     {
                       "title": "SILENCER GUARD",
-                      "link": "/collections/super-meteor-650?category=protection-accessories&productType=silencer-guard"
+                      "link": "/collections/bikes/super-meteor-650?category=protection-accessories&productType=silencer-guard"
                     }
                   ]
                 },
                 {
                   "title": "PERFORMANCE ACCESSORIES",
-                  "link": "/collections/super-meteor-650?category=performance-accessories",
+                  "link": "/collections/bikes/super-meteor-650?category=performance-accessories",
                   "submenu": [
                     {
                       "title": "EXHAUST BEND PIPE",
-                      "link": "/collections/super-meteor-650?category=performance-accessories&productType=exhaust-bend-pipe"
+                      "link": "/collections/bikes/super-meteor-650?category=performance-accessories&productType=exhaust-bend-pipe"
                     },
                     {
                       "title": "SILENCER - SILVER",
-                      "link": "/collections/super-meteor-650?category=performance-accessories&productType=silencer---silver"
+                      "link": "/collections/bikes/super-meteor-650?category=performance-accessories&productType=silencer---silver"
                     },
                     {
                       "title": "SILENCER - BLACK",
-                      "link": "/collections/super-meteor-650?category=performance-accessories&productType=silencer---black"
+                      "link": "/collections/bikes/super-meteor-650?category=performance-accessories&productType=silencer---black"
                     }
                   ]
                 },
                 {
                   "title": "AUXILLARY ACCESSORIES",
-                  "link": "/collections/super-meteor-650?category=auxillary-accessories",
+                  "link": "/collections/bikes/super-meteor-650?category=auxillary-accessories",
                   "submenu": [
                     {
                       "title": "FOOT REST",
-                      "link": "/collections/super-meteor-650?category=auxillary-accessories&productType=foot-rest"
+                      "link": "/collections/bikes/super-meteor-650?category=auxillary-accessories&productType=foot-rest"
                     },
                     {
                       "title": "MASTER CYLINDER CAP",
-                      "link": "/collections/super-meteor-650?category=auxillary-accessories&productType=master-cylinder-cap"
+                      "link": "/collections/bikes/super-meteor-650?category=auxillary-accessories&productType=master-cylinder-cap"
                     },
                     {
                       "title": "PADDOCK STAND",
-                      "link": "/collections/super-meteor-650?category=auxillary-accessories&productType=paddock-stand"
+                      "link": "/collections/bikes/super-meteor-650?category=auxillary-accessories&productType=paddock-stand"
                     },
                     {
                       "title": "HANDLE BAR",
-                      "link": "/collections/super-meteor-650?category=auxillary-accessories&productType=handle-bar"
+                      "link": "/collections/bikes/super-meteor-650?category=auxillary-accessories&productType=handle-bar"
                     },
                     {
                       "title": "VISOR",
-                      "link": "/collections/super-meteor-650?category=auxillary-accessories&productType=visor"
+                      "link": "/collections/bikes/super-meteor-650?category=auxillary-accessories&productType=visor"
                     },
                     {
                       "title": "SIDE STAND BASE",
-                      "link": "/collections/super-meteor-650?category=auxillary-accessories&productType=side-stand-base"
+                      "link": "/collections/bikes/super-meteor-650?category=auxillary-accessories&productType=side-stand-base"
                     },
                     {
                       "title": "TAIL TIDY",
-                      "link": "/collections/super-meteor-650?category=auxillary-accessories&productType=tail-tidy"
+                      "link": "/collections/bikes/super-meteor-650?category=auxillary-accessories&productType=tail-tidy"
                     }
                   ]
                 }
@@ -143,129 +143,129 @@
             },
             {
               "title": "Himalayan 450",
-              "link": "/collections/himalayan-450",
+              "link": "/collections/bikes/himalayan-450",
               "submenu": [
                 {
                   "title": "TOURING ACCESSORIES",
-                  "link": "/collections/himalayan-450?category=touring-accessories",
+                  "link": "/collections/bikes/himalayan-450?category=touring-accessories",
                   "submenu": [
                     {
                       "title": "BACK REST",
-                      "link": "/collections/himalayan-450?category=touring-accessories&productType=back-rest"
+                      "link": "/collections/bikes/himalayan-450?category=touring-accessories&productType=back-rest"
                     },
                     {
                       "title": "TOPRACK SADDLE STAY",
-                      "link": "/collections/himalayan-450?category=touring-accessories&productType=toprack-saddle-stay"
+                      "link": "/collections/bikes/himalayan-450?category=touring-accessories&productType=toprack-saddle-stay"
                     },
                     {
                       "title": "TOP RACK",
-                      "link": "/collections/himalayan-450?category=touring-accessories&productType=top-rack"
+                      "link": "/collections/bikes/himalayan-450?category=touring-accessories&productType=top-rack"
                     },
                     {
                       "title": "LUGGAGE CARRIER",
-                      "link": "/collections/himalayan-450?category=touring-accessories&productType=luggage-carrier"
+                      "link": "/collections/bikes/himalayan-450?category=touring-accessories&productType=luggage-carrier"
                     },
                     {
                       "title": "TOP PLATE",
-                      "link": "/collections/himalayan-450?category=touring-accessories&productType=top-plate"
+                      "link": "/collections/bikes/himalayan-450?category=touring-accessories&productType=top-plate"
                     },
                     {
                       "title": "SADDLE STAY",
-                      "link": "/collections/himalayan-450?category=touring-accessories&productType=saddle-stay"
+                      "link": "/collections/bikes/himalayan-450?category=touring-accessories&productType=saddle-stay"
                     },
                     {
                       "title": "FOG LIGHT CLAMP",
-                      "link": "/collections/himalayan-450?category=touring-accessories&productType=fog-light-clamp"
+                      "link": "/collections/bikes/himalayan-450?category=touring-accessories&productType=fog-light-clamp"
                     },
                     {
                       "title": "GPS MOUNT",
-                      "link": "/collections/himalayan-450?category=touring-accessories&productType=gps-mount"
+                      "link": "/collections/bikes/himalayan-450?category=touring-accessories&productType=gps-mount"
                     }
                   ]
                 },
                 {
                   "title": "PROTECTION ACCESSORIES",
-                  "link": "/collections/himalayan-450?category=protection-accessories",
+                  "link": "/collections/bikes/himalayan-450?category=protection-accessories",
                   "submenu": [
                     {
                       "title": "CRASH GUARD",
-                      "link": "/collections/himalayan-450?category=protection-accessories&productType=crash-guard"
+                      "link": "/collections/bikes/himalayan-450?category=protection-accessories&productType=crash-guard"
                     },
                     {
                       "title": "FRAME SLIDER",
-                      "link": "/collections/himalayan-450?category=protection-accessories&productType=frame-slider"
+                      "link": "/collections/bikes/himalayan-450?category=protection-accessories&productType=frame-slider"
                     },
                     {
                       "title": "SUMP GUARD",
-                      "link": "/collections/himalayan-450?category=protection-accessories&productType=sump-guard"
+                      "link": "/collections/bikes/himalayan-450?category=protection-accessories&productType=sump-guard"
                     },
                     {
                       "title": "RADIATOR GUARD",
-                      "link": "/collections/himalayan-450?category=protection-accessories&productType=radiator-guard"
+                      "link": "/collections/bikes/himalayan-450?category=protection-accessories&productType=radiator-guard"
                     },
                     {
                       "title": "HEAD LIGHT GRILL",
-                      "link": "/collections/himalayan-450?category=protection-accessories&productType=head-light-grill"
+                      "link": "/collections/bikes/himalayan-450?category=protection-accessories&productType=head-light-grill"
                     },
                     {
                       "title": "CHAIN PROTECTOR",
-                      "link": "/collections/himalayan-450?category=protection-accessories&productType=chain-protector"
+                      "link": "/collections/bikes/himalayan-450?category=protection-accessories&productType=chain-protector"
                     },
                     {
                       "title": "SILENCER GUARD",
-                      "link": "/collections/himalayan-450?category=protection-accessories&productType=silencer-guard"
+                      "link": "/collections/bikes/himalayan-450?category=protection-accessories&productType=silencer-guard"
                     }
                   ]
                 },
                 {
                   "title": "PERFORMANCE ACCESSORIES",
-                  "link": "/collections/himalayan-450?category=performance-accessories",
+                  "link": "/collections/bikes/himalayan-450?category=performance-accessories",
                   "submenu": [
                     {
                       "title": "EXHAUST BEND PIPE",
-                      "link": "/collections/himalayan-450?category=performance-accessories&productType=exhaust-bend-pipe"
+                      "link": "/collections/bikes/himalayan-450?category=performance-accessories&productType=exhaust-bend-pipe"
                     },
                     {
                       "title": "SILENCER - SILVER",
-                      "link": "/collections/himalayan-450?category=performance-accessories&productType=silencer---silver"
+                      "link": "/collections/bikes/himalayan-450?category=performance-accessories&productType=silencer---silver"
                     },
                     {
                       "title": "SILENCER - BLACK",
-                      "link": "/collections/himalayan-450?category=performance-accessories&productType=silencer---black"
+                      "link": "/collections/bikes/himalayan-450?category=performance-accessories&productType=silencer---black"
                     }
                   ]
                 },
                 {
                   "title": "AUXILLARY ACCESSORIES",
-                  "link": "/collections/himalayan-450?category=auxillary-accessories",
+                  "link": "/collections/bikes/himalayan-450?category=auxillary-accessories",
                   "submenu": [
                     {
                       "title": "FOOT REST",
-                      "link": "/collections/himalayan-450?category=auxillary-accessories&productType=foot-rest"
+                      "link": "/collections/bikes/himalayan-450?category=auxillary-accessories&productType=foot-rest"
                     },
                     {
                       "title": "MASTER CYLINDER CAP",
-                      "link": "/collections/himalayan-450?category=auxillary-accessories&productType=master-cylinder-cap"
+                      "link": "/collections/bikes/himalayan-450?category=auxillary-accessories&productType=master-cylinder-cap"
                     },
                     {
                       "title": "PADDOCK STAND",
-                      "link": "/collections/himalayan-450?category=auxillary-accessories&productType=paddock-stand"
+                      "link": "/collections/bikes/himalayan-450?category=auxillary-accessories&productType=paddock-stand"
                     },
                     {
                       "title": "HANDLE BAR",
-                      "link": "/collections/himalayan-450?category=auxillary-accessories&productType=handle-bar"
+                      "link": "/collections/bikes/himalayan-450?category=auxillary-accessories&productType=handle-bar"
                     },
                     {
                       "title": "VISOR",
-                      "link": "/collections/himalayan-450?category=auxillary-accessories&productType=visor"
+                      "link": "/collections/bikes/himalayan-450?category=auxillary-accessories&productType=visor"
                     },
                     {
                       "title": "SIDE STAND BASE",
-                      "link": "/collections/himalayan-450?category=auxillary-accessories&productType=side-stand-base"
+                      "link": "/collections/bikes/himalayan-450?category=auxillary-accessories&productType=side-stand-base"
                     },
                     {
                       "title": "TAIL TIDY",
-                      "link": "/collections/himalayan-450?category=auxillary-accessories&productType=tail-tidy"
+                      "link": "/collections/bikes/himalayan-450?category=auxillary-accessories&productType=tail-tidy"
                     }
                   ]
                 }
@@ -533,129 +533,129 @@
             },
             {
               "title": "SCRAM 411",
-              "link": "/collections/scram-411",
+              "link": "/collections/bikes/scram-411",
               "submenu": [
                 {
                   "title": "TOURING ACCESSORIES",
-                  "link": "/collections/scram-411?category=touring-accessories",
+                  "link": "/collections/bikes/scram-411?category=touring-accessories",
                   "submenu": [
                     {
                       "title": "BACK REST",
-                      "link": "/collections/scram-411?category=touring-accessories&productType=back-rest"
+                      "link": "/collections/bikes/scram-411?category=touring-accessories&productType=back-rest"
                     },
                     {
                       "title": "TOPRACK SADDLE STAY",
-                      "link": "/collections/scram-411?category=touring-accessories&productType=toprack-saddle-stay"
+                      "link": "/collections/bikes/scram-411?category=touring-accessories&productType=toprack-saddle-stay"
                     },
                     {
                       "title": "TOP RACK",
-                      "link": "/collections/scram-411?category=touring-accessories&productType=top-rack"
+                      "link": "/collections/bikes/scram-411?category=touring-accessories&productType=top-rack"
                     },
                     {
                       "title": "LUGGAGE CARRIER",
-                      "link": "/collections/scram-411?category=touring-accessories&productType=luggage-carrier"
+                      "link": "/collections/bikes/scram-411?category=touring-accessories&productType=luggage-carrier"
                     },
                     {
                       "title": "TOP PLATE",
-                      "link": "/collections/scram-411?category=touring-accessories&productType=top-plate"
+                      "link": "/collections/bikes/scram-411?category=touring-accessories&productType=top-plate"
                     },
                     {
                       "title": "SADDLE STAY",
-                      "link": "/collections/scram-411?category=touring-accessories&productType=saddle-stay"
+                      "link": "/collections/bikes/scram-411?category=touring-accessories&productType=saddle-stay"
                     },
                     {
                       "title": "FOG LIGHT CLAMP",
-                      "link": "/collections/scram-411?category=touring-accessories&productType=fog-light-clamp"
+                      "link": "/collections/bikes/scram-411?category=touring-accessories&productType=fog-light-clamp"
                     },
                     {
                       "title": "GPS MOUNT",
-                      "link": "/collections/scram-411?category=touring-accessories&productType=gps-mount"
+                      "link": "/collections/bikes/scram-411?category=touring-accessories&productType=gps-mount"
                     }
                   ]
                 },
                 {
                   "title": "PROTECTION ACCESSORIES",
-                  "link": "/collections/scram-411?category=protection-accessories",
+                  "link": "/collections/bikes/scram-411?category=protection-accessories",
                   "submenu": [
                     {
                       "title": "CRASH GUARD",
-                      "link": "/collections/scram-411?category=protection-accessories&productType=crash-guard"
+                      "link": "/collections/bikes/scram-411?category=protection-accessories&productType=crash-guard"
                     },
                     {
                       "title": "FRAME SLIDER",
-                      "link": "/collections/scram-411?category=protection-accessories&productType=frame-slider"
+                      "link": "/collections/bikes/scram-411?category=protection-accessories&productType=frame-slider"
                     },
                     {
                       "title": "SUMP GUARD",
-                      "link": "/collections/scram-411?category=protection-accessories&productType=sump-guard"
+                      "link": "/collections/bikes/scram-411?category=protection-accessories&productType=sump-guard"
                     },
                     {
                       "title": "RADIATOR GUARD",
-                      "link": "/collections/scram-411?category=protection-accessories&productType=radiator-guard"
+                      "link": "/collections/bikes/scram-411?category=protection-accessories&productType=radiator-guard"
                     },
                     {
                       "title": "HEAD LIGHT GRILL",
-                      "link": "/collections/scram-411?category=protection-accessories&productType=head-light-grill"
+                      "link": "/collections/bikes/scram-411?category=protection-accessories&productType=head-light-grill"
                     },
                     {
                       "title": "CHAIN PROTECTOR",
-                      "link": "/collections/scram-411?category=protection-accessories&productType=chain-protector"
+                      "link": "/collections/bikes/scram-411?category=protection-accessories&productType=chain-protector"
                     },
                     {
                       "title": "SILENCER GUARD",
-                      "link": "/collections/scram-411?category=protection-accessories&productType=silencer-guard"
+                      "link": "/collections/bikes/scram-411?category=protection-accessories&productType=silencer-guard"
                     }
                   ]
                 },
                 {
                   "title": "PERFORMANCE ACCESSORIES",
-                  "link": "/collections/scram-411?category=performance-accessories",
+                  "link": "/collections/bikes/scram-411?category=performance-accessories",
                   "submenu": [
                     {
                       "title": "EXHAUST BEND PIPE",
-                      "link": "/collections/scram-411?category=performance-accessories&productType=exhaust-bend-pipe"
+                      "link": "/collections/bikes/scram-411?category=performance-accessories&productType=exhaust-bend-pipe"
                     },
                     {
                       "title": "SILENCER - SILVER",
-                      "link": "/collections/scram-411?category=performance-accessories&productType=silencer---silver"
+                      "link": "/collections/bikes/scram-411?category=performance-accessories&productType=silencer---silver"
                     },
                     {
                       "title": "SILENCER - BLACK",
-                      "link": "/collections/scram-411?category=performance-accessories&productType=silencer---black"
+                      "link": "/collections/bikes/scram-411?category=performance-accessories&productType=silencer---black"
                     }
                   ]
                 },
                 {
                   "title": "AUXILLARY ACCESSORIES",
-                  "link": "/collections/scram-411?category=auxillary-accessories",
+                  "link": "/collections/bikes/scram-411?category=auxillary-accessories",
                   "submenu": [
                     {
                       "title": "FOOT REST",
-                      "link": "/collections/scram-411?category=auxillary-accessories&productType=foot-rest"
+                      "link": "/collections/bikes/scram-411?category=auxillary-accessories&productType=foot-rest"
                     },
                     {
                       "title": "MASTER CYLINDER CAP",
-                      "link": "/collections/scram-411?category=auxillary-accessories&productType=master-cylinder-cap"
+                      "link": "/collections/bikes/scram-411?category=auxillary-accessories&productType=master-cylinder-cap"
                     },
                     {
                       "title": "PADDOCK STAND",
-                      "link": "/collections/scram-411?category=auxillary-accessories&productType=paddock-stand"
+                      "link": "/collections/bikes/scram-411?category=auxillary-accessories&productType=paddock-stand"
                     },
                     {
                       "title": "HANDLE BAR",
-                      "link": "/collections/scram-411?category=auxillary-accessories&productType=handle-bar"
+                      "link": "/collections/bikes/scram-411?category=auxillary-accessories&productType=handle-bar"
                     },
                     {
                       "title": "VISOR",
-                      "link": "/collections/scram-411?category=auxillary-accessories&productType=visor"
+                      "link": "/collections/bikes/scram-411?category=auxillary-accessories&productType=visor"
                     },
                     {
                       "title": "SIDE STAND BASE",
-                      "link": "/collections/scram-411?category=auxillary-accessories&productType=side-stand-base"
+                      "link": "/collections/bikes/scram-411?category=auxillary-accessories&productType=side-stand-base"
                     },
                     {
                       "title": "TAIL TIDY",
-                      "link": "/collections/scram-411?category=auxillary-accessories&productType=tail-tidy"
+                      "link": "/collections/bikes/scram-411?category=auxillary-accessories&productType=tail-tidy"
                     }
                   ]
                 }
@@ -663,7 +663,7 @@
             },
             {
               "title": "HUNTER 350",
-              "link": "/collections/hunter-350",
+              "link": "/collections/bikes/hunter-350",
               "submenu": [
                 {
                   "title": "TOURING ACCESSORIES",
@@ -793,7 +793,7 @@
             },
             {
               "title": "METEOR 350",
-              "link": "/collections/meteor-350",
+              "link": "/collections/bikes/meteor-350",
               "submenu": [
                 {
                   "title": "TOURING ACCESSORIES",
@@ -923,7 +923,7 @@
             },
             {
               "title": "CLASSIC 350 UPTO 2021",
-              "link": "/collections/classic-350-up-to-2021",
+              "link": "/collections/bikes/classic-350-up-to-2021",
               "submenu": [
                 {
                   "title": "TOURING ACCESSORIES",

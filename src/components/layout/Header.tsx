@@ -36,7 +36,7 @@ const CollapsibleAccessoryCategory = ({ title, accessories }: {
     <div>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between text-left py-2 px-2 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
+        className="w-full flex items-center justify-between text-left py-2 px-2 bg-muted rounded-lg hover:bg-accent transition-colors"
       >
         <h5 className="font-medium text-foreground">{title}</h5>
         <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isOpen ? 'rotate-180' : ''}`} />
@@ -78,7 +78,7 @@ const MobileDropdown = ({ title, data }: {
     <div className="py-2">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between text-left py-3 px-4 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
+        className="w-full flex items-center justify-between text-left py-3 px-4 bg-muted rounded-lg hover:bg-accent transition-colors"
       >
         <span className="text-base font-medium text-foreground">{title}</span>
         <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isOpen ? 'rotate-180' : ''}`} />
@@ -304,7 +304,7 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 bg-background border-b border-border shadow-sm">
-      {/* Main Header - Reduces size when scrolled */}
+      {/* Main Header - White Background - Reduces size when scrolled */}
       <div className="container mx-auto px-4">
         <div className={`flex items-center justify-between transition-[height] duration-300 ease-in-out ${
           isScrolledDown ? 'h-16' : 'h-24'
@@ -382,11 +382,6 @@ const Header = () => {
 
           {/* Actions */}
           <div className="flex items-center space-x-3">
-            {/* Theme Toggle - Desktop */}
-            <div className="hidden md:block">
-              <ThemeToggle />
-            </div>
-            
             {isAuthenticated ? (
               // Authenticated User Menu
               <div className="relative" data-user-menu>
@@ -394,7 +389,7 @@ const Header = () => {
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="hidden md:flex items-center space-x-2 text-foreground hover:bg-accent"
+                  className="hidden md:flex items-center space-x-2"
                 >
                   <UserCircle className="h-5 w-5" />
                   <span className="text-sm font-medium">
@@ -465,6 +460,11 @@ const Header = () => {
                 <User className="h-5 w-5" />
               </Button>
             )}
+            
+            {/* Theme Toggle - Desktop */}
+            <div className="hidden md:block">
+              <ThemeToggle />
+            </div>
             
             {/* Cart Icon - Only visible when logged in */}
             {isAuthenticated && (
@@ -665,18 +665,13 @@ const Header = () => {
             >
             {/* Header */}
             <div className="flex items-center justify-between p-4 bg-background border-b border-border flex-shrink-0">
-              <button 
-                onClick={() => setIsMenuOpen(false)}
-                className="text-foreground hover:bg-accent rounded p-1 transition-colors"
-              >
+              <button onClick={() => setIsMenuOpen(false)} className="text-foreground hover:bg-accent rounded p-1 transition-colors">
                 <X className="h-6 w-6" />
               </button>
               <Link to="/" onClick={() => setIsMenuOpen(false)}>
-                <img 
-                  src={rmsLogo}
-                  alt="Riders Moto Shop" 
-                  className="h-10 cursor-pointer hover:opacity-90"
-                />
+                <h1 className="text-xl font-bold text-primary text-glow cursor-pointer hover:text-primary/90">
+                  Riders Moto Shop
+                </h1>
               </Link>
               <div className="w-6"></div>
             </div>
@@ -686,45 +681,37 @@ const Header = () => {
 
             {/* Search */}
             <div className="px-4 py-4 bg-background border-b border-border">
-              <div className="flex w-full border-2 border-border hover:border-primary/50 focus-within:border-primary rounded-none overflow-hidden bg-card transition-all duration-300">
+              <div className="flex w-full">
                 {/* Category Filter */}
-                <div className="relative">
-                  <select 
-                    value={searchCategory}
-                    onChange={(e) => setSearchCategory(e.target.value)}
-                    className="px-3 pr-7 py-3 bg-muted/50 hover:bg-muted border-0 border-r-2 border-border text-sm text-foreground font-medium focus:outline-none focus:ring-0 appearance-none cursor-pointer transition-all duration-300 h-12 w-24"
-                  >
-                    <option value="All">All</option>
-                    <option value="Bikes">Bikes</option>
-                    <option value="Accessories">Accessories</option>
-                  </select>
-                  <ChevronDown className="absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground h-4 w-4" />
-                </div>
+                <select 
+                  value={searchCategory}
+                  onChange={(e) => setSearchCategory(e.target.value)}
+                  className="px-3 py-3 bg-muted/50 border border-border rounded-l-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
+                >
+                  <option value="All">All</option>
+                  <option value="Bikes">Bikes</option>
+                  <option value="Accessories">Accessories</option>
+                </select>
                 
                 {/* Search Input */}
-                <div className="relative flex-1 bg-background">
+                <div className="relative flex-1">
                   <Input
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="What are you looking for?"
-                    className="rounded-none border-0 bg-transparent focus:border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-4 font-normal placeholder:text-muted-foreground/60 h-12 text-sm"
+                    className="rounded-none border-l-0 border-r-0 bg-background border-border focus:border-primary focus:ring-0 h-12"
                   />
                 </div>
                 
                 {/* Search Button */}
                 <Button 
                   onClick={handleSearch}
-                  className="bg-primary hover:bg-primary/90 active:bg-primary/80 rounded-none px-5 h-12 w-14 flex items-center justify-center font-semibold shadow-none transition-all duration-300"
+                  className="bg-primary hover:bg-primary/90 rounded-l-none px-4 h-12"
                 >
-                  <Search className="h-5 w-5 text-primary-foreground" />
+                  <Search className="h-4 w-4 text-primary-foreground" />
                 </Button>
               </div>
-            </div>
-            
-            {/* Theme Toggle - Mobile */}
-            <div className="px-4 py-2 border-b border-border md:hidden">
-              <ThemeToggle />
             </div>
 
             {/* Auth Section - Mobile */}
@@ -759,20 +746,16 @@ const Header = () => {
                   >
                     Orders
                   </Link>
-                  <Link
-                    to="/cart"
-                    className="block py-2 px-3 text-foreground hover:text-primary hover:bg-accent rounded transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span>Cart</span>
-                      {totalItems > 0 && (
-                        <span className="bg-primary text-primary-foreground rounded-full text-xs h-5 w-5 flex items-center justify-center">
-                          {totalItems > 99 ? '99+' : totalItems}
-                        </span>
-                      )}
-                    </div>
-                  </Link>
+                  {/* Cart - Mobile - Only visible when logged in */}
+                  {isAuthenticated && (
+                    <Link
+                      to="/cart"
+                      className="block py-2 px-3 text-foreground hover:text-primary hover:bg-accent rounded transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Cart {totalItems > 0 && `(${totalItems})`}
+                    </Link>
+                  )}
                   <button
                     onClick={() => {
                       handleLogout();
@@ -817,13 +800,18 @@ const Header = () => {
                         window.location.href = '/signup';
                       }
                     }}
-                    className="block w-full text-left py-2 px-3 text-primary hover:text-primary/90 hover:bg-accent rounded transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="block w-full text-left py-2 px-3 text-primary hover:text-primary/90 hover:bg-primary/10 rounded transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Create Account
                   </button>
                 </div>
               </div>
             )}
+            
+            {/* Theme Toggle - Mobile */}
+            <div className="px-4 py-4 border-b border-border bg-background">
+              <ThemeToggle />
+            </div>
 
             {/* Main Menu Items */}
             <div className="bg-background px-4 py-4">
@@ -882,7 +870,7 @@ const Header = () => {
                           <a
                             key={scooter.title}
                             href={scooter.link}
-                            className="block py-2 px-3 text-foreground hover:text-primary hover:bg-accent rounded transition-colors"
+                            className="block py-2 px-3 text-muted-foreground hover:text-primary hover:bg-accent rounded transition-colors"
                           >
                             {scooter.title}
                           </a>
@@ -900,7 +888,7 @@ const Header = () => {
                           <a
                             key={subItem.title}
                             href={subItem.link}
-                            className="block py-2 px-3 text-foreground hover:text-primary hover:bg-accent rounded transition-colors"
+                            className="block py-2 px-3 text-muted-foreground hover:text-primary hover:bg-accent rounded transition-colors"
                           >
                             {subItem.title}
                           </a>
@@ -916,7 +904,7 @@ const Header = () => {
             <div className="fixed bottom-4 right-4 z-50">
               <Button 
                 size="sm" 
-                className="rounded-full w-12 h-12 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg"
+                className="rounded-full w-12 h-12 bg-gray-900 hover:bg-gray-800 text-white shadow-lg"
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               >
                 <ChevronDown className="h-4 w-4 rotate-180" />

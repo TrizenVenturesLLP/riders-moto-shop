@@ -9,7 +9,6 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ProductPage from "./pages/ProductPage";
-import ProductListing from "./pages/ProductListing";
 import SearchResults from "./pages/SearchResults";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -22,7 +21,7 @@ import OrderConfirmation from "./pages/OrderConfirmation";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
-import BikePage from "@/pages/BikePage";
+import UnifiedProductListing from "@/pages/UnifiedProductListing";
 import Contact from "@/pages/Contact";
 import About from "@/pages/About";
 import LoginPromptModal from "@/components/LoginPromptModal";
@@ -49,33 +48,25 @@ const App = () => (
                   <Route path="/about" element={<About />} />
                   <Route path="/products/:id" element={<ProductPage />} />
                   <Route path="/search" element={<SearchResults />} />
-                  {/* Bike model route must come before category route to avoid conflicts */}
+                  
+                  {/* Unified Product Listing - handles all collection routes */}
+                  {/* Bike model routes - for bike-specific product browsing */}
                   <Route
-                    path="/collections/:model"
-                    element={<BikePage />}
+                    path="/collections/bikes/:model"
+                    element={<UnifiedProductListing />}
                   />
-                  {/* Category route - comes after model route */}
+                  
+                  {/* Accessory/Category routes - for browsing by accessory type */}
                   <Route
-                    path="/collections/:category"
-                    element={<ProductListing />}
+                    path="/collections/accessories/:category"
+                    element={<UnifiedProductListing />}
                   />
-                  {/* Keep old routes for backward compatibility */}
-                  {/* <Route
-                    path="/bike/:model"
-                    element={<BikePage />}
-                  />
+                  
+                  {/* Generic collections route - fallback */}
                   <Route
-                    path="/bikes/:brand/:model"
-                    element={<BikePage />}
+                    path="/collections/:slug"
+                    element={<UnifiedProductListing />}
                   />
-                  <Route
-                    path="/bikes/:brand/:model/:category"
-                    element={<BikePage />}
-                  />
-                  <Route
-                    path="/bikes/:brand/:model/:category/:productType"
-                    element={<BikePage />}
-                  /> */}
 
                   <Route path="/cart" element={<Cart />} />
                   <Route path="/checkout" element={<Checkout />} />

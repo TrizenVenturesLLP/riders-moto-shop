@@ -10,7 +10,7 @@ const bikeSlides = [
     brand: 'Royal Enfield',
     tagline: 'Cruise in Style',
     image: '/shop_by_bikes_imgs/super-meteor-650.webp',
-    link: '/collections/super-meteor-650'
+    link: '/collections/bikes/super-meteor-650'
   },
   {
     id: 'himalayan-450',
@@ -18,7 +18,7 @@ const bikeSlides = [
     brand: 'Royal Enfield',
     tagline: 'Adventure Awaits',
     image: '/shop_by_bikes_imgs/himalayan-450.webp',
-    link: '/collections/himalayan-450'
+    link: '/collections/bikes/himalayan-450'
   },
   {
     id: 'classic-350',
@@ -26,7 +26,7 @@ const bikeSlides = [
     brand: 'Royal Enfield',
     tagline: 'Timeless Legend',
     image: '/shop_by_bikes_imgs/classic-350.webp',
-    link: '/collections/classic-350'
+    link: '/collections/bikes/classic-350'
   },
   {
     id: 'hunter-350',
@@ -34,7 +34,7 @@ const bikeSlides = [
     brand: 'Royal Enfield',
     tagline: 'Urban Explorer',
     image: '/shop_by_bikes_imgs/hunter-350.webp',
-    link: '/collections/hunter-350'
+    link: '/collections/bikes/hunter-350'
   },
   {
     id: 'interceptor-650',
@@ -42,7 +42,7 @@ const bikeSlides = [
     brand: 'Royal Enfield',
     tagline: 'Pure Performance',
     image: '/shop_by_bikes_imgs/interceptor-650.webp',
-    link: '/collections/interceptor-650'
+    link: '/collections/bikes/interceptor-650'
   }
 ];
 

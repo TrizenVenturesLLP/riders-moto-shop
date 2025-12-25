@@ -6,13 +6,14 @@ import AccessoriesSection from '@/components/sections/AccessoriesSection';
 import ProductGrid from '@/components/sections/ProductGrid';
 
 const Index = () => {
-  // Fetch featured products from API
+  // Fetch recent products from API (no featured filter since no products are marked as featured)
   const { data, isLoading, error } = useProducts({ 
-    featured: true,  // Only fetch featured products
-    limit: 12,       // Show more products (12 instead of 6)
+    limit: 12,       // Show 12 products
     sort: 'createdAt',
-    order: 'DESC'
+    order: 'DESC'    // Newest first
   });
+  
+  // Extract products from API response
   const products = (data as any)?.data?.products || [];
 
   return (

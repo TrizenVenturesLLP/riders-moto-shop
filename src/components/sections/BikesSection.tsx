@@ -9,56 +9,56 @@ const bikes = [
     name: 'SUPER METEOR 650',
     brand: 'Royal Enfield',
     image: '/shop_by_bikes_imgs/super-meteor-650.webp',
-    link: '/collections/super-meteor-650'
+    link: '/collections/bikes/super-meteor-650'
   },
   {
     id: 'himalayan-450',
     name: 'HIMALAYAN 450',
     brand: 'Royal Enfield',
     image: '/shop_by_bikes_imgs/himalayan-450.webp',
-    link: '/collections/himalayan-450'
+    link: '/collections/bikes/himalayan-450'
   },
   {
     id: 'classic-350',
     name: 'CLASSIC 350',
     brand: 'Royal Enfield',
     image: '/shop_by_bikes_imgs/classic-350.webp',
-    link: '/collections/classic-350'
+    link: '/collections/bikes/classic-350'
   },
   {
     id: 'hunter-350',
     name: 'HUNTER 350',
     brand: 'Royal Enfield',
     image: '/shop_by_bikes_imgs/hunter-350.webp',
-    link: '/collections/hunter-350'
+    link: '/collections/bikes/hunter-350'
   },
   {
     id: 'scram-411',
     name: 'SCRAM 411',
     brand: 'Royal Enfield',
     image: '/shop_by_bikes_imgs/scram-411.webp',
-    link: '/collections/scram-411'
+    link: '/collections/bikes/scram-411'
   },
   {
     id: 'meteor-350',
     name: 'METEOR 350',
     brand: 'Royal Enfield',
     image: '/shop_by_bikes_imgs/meteor-350.webp',
-    link: '/collections/meteor-350'
+    link: '/collections/bikes/meteor-350'
   },
   {
     id: 'continental-gt-650',
     name: 'CONTINENTAL GT 650',
     brand: 'Royal Enfield',
     image: '/shop_by_bikes_imgs/continental-gt-650.webp',
-    link: '/collections/continental-gt-650'
+    link: '/collections/bikes/continental-gt-650'
   },
   {
     id: 'interceptor-650',
     name: 'INTERCEPTOR 650',
     brand: 'Royal Enfield',
     image: '/shop_by_bikes_imgs/interceptor-650.webp',
-    link: '/collections/interceptor-650'
+    link: '/collections/bikes/interceptor-650'
   }
 ];
 

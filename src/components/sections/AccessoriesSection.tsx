@@ -22,61 +22,61 @@ const accessories = [
     id: 'sump-guard',
     name: 'SUMP GUARD',
     image: '/shop_by_accessories_imgs/Sump_Guard.webp',
-    link: '/collections/sump-guard'
+    link: '/collections/accessories/sump-guard'
   },
   {
     id: 'crash-guard',
     name: 'CRASH GUARD',
     image: '/shop_by_accessories_imgs/Crash_Guard.webp',
-    link: '/collections/crash-guard'
+    link: '/collections/accessories/crash-guard'
   },
   {
     id: 'foot-rest',
     name: 'FOOT REST',
     image: '/shop_by_accessories_imgs/Foot_Rest.webp',
-    link: '/collections/foot-rest'
+    link: '/collections/accessories/foot-rest'
   },
   {
     id: 'tail-tidy',
     name: 'TAIL TIDY',
     image: '/shop_by_accessories_imgs/Tail_Tidy.webp',
-    link: '/collections/tail-tidy'
+    link: '/collections/accessories/tail-tidy'
   },
   {
     id: 'radiator-guard',
     name: 'RADIATOR GUARD',
     image: '/shop_by_accessories_imgs/Radiator_Guard.webp',
-    link: '/collections/radiator-guard'
+    link: '/collections/accessories/radiator-guard'
   },
   {
     id: 'frame-slider',
     name: 'FRAME SLIDER',
     image: '/shop_by_accessories_imgs/Frame_Slider.webp',
-    link: '/collections/frame-slider'
+    link: '/collections/accessories/frame-slider'
   },
   {
     id: 'carrier',
     name: 'CARRIER',
     image: '/shop_by_accessories_imgs/Carrier.webp',
-    link: '/collections/carrier'
+    link: '/collections/accessories/carrier'
   },
   {
     id: 'saddle-stay',
     name: 'SADDLE STAY',
     image: '/shop_by_accessories_imgs/Saddle_Stay.webp',
-    link: '/collections/saddle-stay'
+    link: '/collections/accessories/saddle-stay'
   },
   {
     id: 'silencer-black',
     name: 'SILENCER BLACK',
     image: '/shop_by_accessories_imgs/Silencer_Black.webp',
-    link: '/collections/silencer-black'
+    link: '/collections/accessories/silencer-black'
   },
   {
     id: 'fluid-tank-cap',
     name: 'FLUID TANK CAP',
     image: '/shop_by_accessories_imgs/Fluid-tank-cap.webp',
-    link: '/collections/fluid-tank-cap'
+    link: '/collections/accessories/fluid-tank-cap'
   }
 ];
 

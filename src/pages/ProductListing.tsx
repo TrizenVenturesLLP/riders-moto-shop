@@ -21,8 +21,27 @@ import {
 // Note: Brand filtering is handled by the useFilteredProducts hook with fallback mechanism
 
 const ProductListing = () => {
-  const { brand, model, category } = useParams<{ brand?: string; model?: string; category?: string }>();
+  const params = useParams<{ brand?: string; model?: string; category?: string; slug?: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
+  
+  // Extract the identifier from either 'category' param (from /collections/accessories/:category) 
+  // or 'slug' param (from /collections/:slug)
+  const identifier = params.category || params.slug;
+  const { brand, model } = params;
+  
+  // Determine if this is a productType or category based on common accessory types
+  // Accessory types that are typically productTypes, not categories
+  const accessoryProductTypes = [
+    'crash-guard', 'sump-guard', 'frame-slider', 'radiator-guard',
+    'foot-rest', 'tail-tidy', 'carrier', 'saddle-stay', 
+    'silencer-black', 'fluid-tank-cap', 'head-light-grill',
+    'chain-protector', 'silencer-guard'
+  ];
+  
+  // Check if identifier is a productType or category
+  const isProductType = identifier && accessoryProductTypes.includes(identifier);
+  const category = isProductType ? undefined : identifier;
+  const productType = isProductType ? identifier : undefined;
   
   // State for filters and view
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -41,6 +60,7 @@ const ProductListing = () => {
     sort: sortBy === 'featured' ? 'createdAt' : sortBy,
     order: (sortBy === 'price-low' ? 'ASC' : 'DESC') as 'ASC' | 'DESC',
     category: category ? category.replace(/-/g, ' ') : undefined, // Convert kebab-case to space-separated
+    productType: productType ? productType.replace(/-/g, ' ') : undefined, // Convert kebab-case to space-separated
     brand: brand ? brand.replace(/-/g, ' ') : undefined, // Convert kebab-case to space-separated
     model: model ? model.replace(/-/g, ' ') : undefined, // Convert kebab-case to space-separated
     minPrice: priceRange.min ? parseFloat(priceRange.min) : undefined,
@@ -51,7 +71,7 @@ const ProductListing = () => {
   };
 
   // Debug logging
-  console.log('🔗 Route params:', { brand, model, category });
+  console.log('🔗 Route params:', { brand, model, identifier, category, productType });
   console.log('🔍 Filter params:', filterParams);
 
   // Fetch products
@@ -77,12 +97,15 @@ const ProductListing = () => {
 
   // Generate page title
   const getPageTitle = () => {
-    if (brand && model && category) {
-      return `${brand.toUpperCase()} ${model.toUpperCase()} ${category.toUpperCase()}`;
-    } else if (brand && category) {
-      return `${brand.toUpperCase()} ${category.toUpperCase()}`;
+    if (brand && model && (category || productType)) {
+      return `${brand.toUpperCase()} ${model.toUpperCase()} ${(category || productType || '').toUpperCase()}`;
+    } else if (brand && (category || productType)) {
+      return `${brand.toUpperCase()} ${(category || productType || '').toUpperCase()}`;
     } else if (category) {
       return category.toUpperCase();
+    } else if (productType) {
+      // Format productType nicely (e.g., "crash-guard" -> "CRASH GUARD")
+      return productType.replace(/-/g, ' ').toUpperCase();
     }
     return 'Products';
   };
@@ -103,6 +126,8 @@ const ProductListing = () => {
     
     if (category) {
       items.push({ label: category.toUpperCase(), href: '#' });
+    } else if (productType) {
+      items.push({ label: productType.replace(/-/g, ' ').toUpperCase(), href: '#' });
     }
     
     return items;

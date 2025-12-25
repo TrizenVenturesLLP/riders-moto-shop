@@ -62,6 +62,7 @@ interface FilteredProductsParams {
   sort?: string;
   order?: 'ASC' | 'DESC';
   category?: string;
+  productType?: string;
   brand?: string;
   model?: string;
   minPrice?: number;
@@ -223,6 +224,38 @@ const fetchAllProductsWithClientFiltering = async (params: FilteredProductsParam
     console.log(`📊 After category filter: ${products.length} products`);
   }
   
+  if (params.productType) {
+    const productTypeFilter = params.productType.toLowerCase();
+    console.log('🔧 Filtering by productType:', productTypeFilter);
+    products = products.filter((product: any) => {
+      const productType = product.productType?.slug?.toLowerCase() || product.productType?.name?.toLowerCase();
+      const productName = product.name?.toLowerCase() || '';
+      
+      // Convert kebab-case to space-separated for better matching
+      const productTypeSpaced = productTypeFilter.replace(/-/g, ' ');
+      const productTypeNoSpaces = productTypeFilter.replace(/-/g, '');
+      
+      // Check productType slug/name match
+      const productTypeMatch = productType === productTypeFilter || 
+                              productType === productTypeSpaced ||
+                              productType?.includes(productTypeFilter) ||
+                              productType?.includes(productTypeSpaced) ||
+                              productType?.includes(productTypeNoSpaces);
+      
+      // Check if product name contains productType keywords
+      const nameMatch = productName.includes(productTypeSpaced) || 
+                       productName.includes(productTypeNoSpaces) ||
+                       productName.includes(productTypeFilter) ||
+                       productName.includes(productTypeSpaced.replace(' ', '')) ||
+                       productName.includes(productTypeNoSpaces.replace(' ', ''));
+      
+      const matches = productTypeMatch || nameMatch;
+      if (matches) console.log('✅ ProductType match:', product.name, '->', { productTypeMatch, nameMatch, productType, productName });
+      return matches;
+    });
+    console.log(`📊 After productType filter: ${products.length} products`);
+  }
+  
   if (params.search) {
     const searchTerm = params.search.toLowerCase();
     products = products.filter((product: any) => 
@@ -254,7 +287,7 @@ const fetchAllProductsWithClientFiltering = async (params: FilteredProductsParam
   }
   
   // If no products found after filtering, let's try a more relaxed approach
-  if (paginatedProducts.length === 0 && (params.brand || params.model || params.category || params.search)) {
+  if (paginatedProducts.length === 0 && (params.brand || params.model || params.category || params.productType || params.search)) {
     console.log('⚠️ No products found with strict filtering, trying relaxed approach...');
     
     // Reset products and try more relaxed filtering
@@ -388,7 +421,7 @@ export const useFilteredProducts = (params: FilteredProductsParams = {}) => {
         console.log('🔍 API filtering result:', result);
         
         // If API returns 0 products, try client-side filtering as fallback
-        if (result.data.products.length === 0 && (params.brand || params.model || params.category)) {
+        if (result.data.products.length === 0 && (params.brand || params.model || params.category || params.productType)) {
           console.warn('⚠️ API returned 0 products, trying client-side filtering as fallback');
           return await fetchAllProductsWithClientFiltering(params);
         }
