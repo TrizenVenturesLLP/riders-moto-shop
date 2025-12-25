@@ -85,16 +85,41 @@ const fetchProducts = async (
   const url = `${API_BASE_URL}/products?${searchParams.toString()}`;
 
   console.log("🔍 Fetching products:", url);
+  console.log("🔍 API Base URL:", API_BASE_URL);
 
-  const response = await fetch(url);
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // Add credentials for CORS if needed
+      credentials: 'omit',
+    });
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error("❌ Product fetch failed:", errorText);
-    throw new Error("Failed to fetch products");
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("❌ Product fetch failed:", {
+        status: response.status,
+        statusText: response.statusText,
+        error: errorText,
+        url: url
+      });
+      throw new Error(`Failed to fetch products: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log("✅ Products fetched successfully:", data);
+    return data;
+  } catch (error: any) {
+    // Handle network errors (CORS, connection refused, etc.)
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      console.error("❌ Network error (CORS or connection issue):", error.message);
+      console.error("❌ API URL:", url);
+      throw new Error(`Network error: Unable to reach API at ${API_BASE_URL}. Please check CORS configuration and API availability.`);
+    }
+    throw error;
   }
-
-  return response.json();
 };
 
 const filterMockProducts = (params: UseProductsParams): ProductsResponse => {
@@ -183,7 +208,7 @@ const filterMockProducts = (params: UseProductsParams): ProductsResponse => {
   return {
     success: true,
     data: {
-      products: paginatedProducts,
+      products: paginatedProducts as unknown as Product[],
       pagination: {
         currentPage: page,
         totalPages: Math.ceil(filtered.length / limit),
