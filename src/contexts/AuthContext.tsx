@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { trackEvent } from '@/hooks/useAnalytics';
 
 interface User {
   id: string;
@@ -110,6 +111,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       setUser(mockUser);
       console.log('✅ Login successful (localStorage mode)');
+      
+      // Track login event
+      trackEvent('login', {
+        metadata: {
+          loginMethod: 'email',
+          rememberMe: rememberMe || false,
+        },
+      });
     } catch (error) {
       console.error('Login error:', error);
       throw new Error('Login failed. Please try again.');
@@ -169,6 +178,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       setUser(newUser);
       console.log('✅ Signup successful (localStorage mode)');
+      
+      // Track signup event
+      trackEvent('signup', {
+        metadata: {
+          bikeBrand: userData.bikeBrand,
+          bikeModel: userData.bikeModel,
+          source: 'web',
+        },
+      });
     } catch (error: any) {
       console.error('Signup error:', error);
       throw new Error(error.message || 'Signup failed. Please try again.');
@@ -235,6 +253,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isAuthenticated: !!user,
     isLoading,
     login,
+    signup,
+    logout,
+    updateProfile,
+    getActiveSessions,
+    logoutAllSessions,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
+
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+
     signup,
     logout,
     updateProfile,

@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import ProductCard from '@/components/ProductCard';
 import { useProducts, ProductsResponse } from '@/hooks/useProducts';
 import { mockProducts } from '@/mock/products';
+import { trackEvent } from '@/hooks/useAnalytics';
 import {
   Grid3X3,
   List,
@@ -148,7 +149,8 @@ const UnifiedProductListing = () => {
     sort: getSortField(sortBy),
     order: getSortOrder(sortBy),
     brand: searchParams.get('brand') || undefined,
-    model: model ? model.replace(/-/g, ' ') : undefined,
+    // Send model slug as-is (with hyphens) - backend will handle matching both slug and name formats
+    model: model || undefined,
     category: category ? category.replace(/-/g, ' ') : undefined,
     productType: productType || undefined, // Send as-is without converting hyphens
     minPrice: priceRange.min ? parseFloat(priceRange.min) : undefined,
@@ -166,6 +168,21 @@ const UnifiedProductListing = () => {
 
   const products = (data as ProductsResponse)?.data?.products || [];
   const pagination = (data as ProductsResponse)?.data?.pagination;
+
+  // Track bike page view
+  useEffect(() => {
+    if (isBikePage && model && !isLoading) {
+      trackEvent('bike_page_view', {
+        bikeModelSlug: model,
+        metadata: {
+          pageUrl: window.location.href,
+          productCount: products.length,
+          category: category || null,
+          productType: productType || null,
+        },
+      });
+    }
+  }, [isBikePage, model, isLoading, products.length, category, productType]);
 
   // Extract available options for filters (only for bike pages)
   // These depend on the products array, so they must be defined after products
@@ -609,6 +626,22 @@ const UnifiedProductListing = () => {
             <Button
               variant="outline"
               size="sm"
+              disabled={pagination.currentPage === pagination.totalPages}
+              onClick={() => updateURL({ page: String(pagination.currentPage + 1) })}
+            >
+              Next
+            </Button>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+};
+
+export default UnifiedProductListing;
+
+
               disabled={pagination.currentPage === pagination.totalPages}
               onClick={() => updateURL({ page: String(pagination.currentPage + 1) })}
             >

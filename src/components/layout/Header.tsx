@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Search, ShoppingCart, User, Menu, X, ChevronDown, Wrench, Shield, Zap, Settings, Headphones, Camera, Lock, Star, LogOut, UserCircle } from 'lucide-react';
+import { Search, ShoppingCart, User, Menu, X, ChevronDown, Wrench, Shield, Zap, Settings, Headphones, Camera, Lock, Star, LogOut, UserCircle, Loader2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/hooks/useCart';
+import { useBikeModels } from '@/hooks/useBikeModels';
+import { getProductTypesForCategory } from '@/config/productTypes';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -184,7 +186,78 @@ const Header = () => {
   // Debug authentication state
   console.log('Header - Auth state:', { isAuthenticated, isLoading, user: user?.email });
 
-  // Using static navigation data from JSON
+  // Fetch bike models dynamically
+  const { data: bikeModels = [], isLoading: isLoadingBikes } = useBikeModels({ isActive: true });
+
+  // Brand order from original navbar.json (Royal Enfield first, then others)
+  const brandOrder = [
+    'ROYAL ENFIELD',
+    'KTM',
+    'HONDA',
+    'HERO',
+    'TRIUMPH',
+    'YAMAHA',
+    'BAJAJ',
+    'TVS',
+    'SUZUKI',
+    'KAWASAKI',
+    'BENELLI',
+    'DUCATI'
+  ];
+
+  // Group bike models by brand
+  const bikesByBrand = useMemo(() => {
+    if (!bikeModels || bikeModels.length === 0) return {};
+    
+    const grouped = bikeModels.reduce((acc, bike) => {
+      const brandName = bike.brand?.name?.toUpperCase() || 'OTHER';
+      if (!acc[brandName]) {
+        acc[brandName] = {
+          brandId: bike.brand?.id,
+          brandSlug: bike.brand?.slug,
+          brandName: bike.brand?.name || 'Other', // Keep original case for display
+          bikes: []
+        };
+      }
+      acc[brandName].bikes.push(bike);
+      return acc;
+    }, {} as Record<string, { brandId?: string; brandSlug?: string; brandName: string; bikes: typeof bikeModels }>);
+
+    // Sort brands according to brandOrder, then alphabetically for others
+    const sortedEntries = Object.entries(grouped).sort(([a], [b]) => {
+      const indexA = brandOrder.indexOf(a);
+      const indexB = brandOrder.indexOf(b);
+      
+      // If both are in the order list, sort by their position
+      if (indexA !== -1 && indexB !== -1) {
+        return indexA - indexB;
+      }
+      // If only A is in the list, A comes first
+      if (indexA !== -1) return -1;
+      // If only B is in the list, B comes first
+      if (indexB !== -1) return 1;
+      // If neither is in the list, sort alphabetically
+      return a.localeCompare(b);
+    });
+
+    // Convert back to object with correct order
+    const ordered: typeof grouped = {};
+    sortedEntries.forEach(([key, value]) => {
+      ordered[key] = value;
+    });
+
+    return ordered;
+  }, [bikeModels]);
+
+  // Main categories for accessories (static for now, can be made dynamic later)
+  const accessoryCategories = [
+    { name: 'Touring Accessories', slug: 'touring-accessories' },
+    { name: 'Protection Accessories', slug: 'protection-accessories' },
+    { name: 'Performance Accessories', slug: 'performance-accessories' },
+    { name: 'Auxiliary Accessories', slug: 'auxiliary-accessories' },
+  ];
+
+  // Using static navigation data from JSON for non-bike items
 
   // Search functionality
   const handleSearch = () => {
@@ -506,64 +579,80 @@ const Header = () => {
                   )}
                   
                   {item.submenu && (
-                    <NavigationMenuContent>
-                      <div className="max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent bg-popover">
+                    <NavigationMenuContent className="overflow-visible">
+                      <div className="max-h-[70vh] overflow-y-auto overflow-x-visible scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent bg-popover">
                         {item.title === "Shop by Bike" ? (
-                          <div className="grid grid-cols-4 gap-8 p-6 w-[900px] bg-popover">
-                            {item.submenu.map((brand) => (
-                              <div key={brand.title} className="space-y-2">
-                                <h4 className="font-bold text-base text-primary uppercase">{brand.title}</h4>
-                                <div className="space-y-1">
-                                  {brand.submenu?.map((model) => (
-                                    <div key={model.title} className="group relative">
-                                      <Link
-                                        to={model.link}
-                                        className="block text-sm text-popover-foreground hover:text-primary transition-colors py-0.5"
-                                      >
-                                        {model.title}
-                                      </Link>
-                                      {/* Show accessories submenu on hover - with gap for mouse movement */}
-                                      {model.submenu && (
-                                        <div className="hidden group-hover:block absolute left-full top-0 ml-2 bg-card border border-border rounded shadow-md p-4 min-w-[280px] z-[100]">
-                                          {/* Invisible hover bridge to maintain hover when moving to nested menu */}
-                                          <div className="absolute -left-2 top-0 w-2 h-full"></div>
-                                          <div className="space-y-2 relative">
-                                            {model.submenu.map((accessoryCategory) => (
-                                              <div key={accessoryCategory.title} className="group/accessory relative">
-                                                <Link
-                                                  to={accessoryCategory.link}
-                                                  className="block text-sm font-semibold text-primary hover:text-primary/90 transition-colors py-1 pr-3"
-                                                >
-                                                  {accessoryCategory.title}
-                                                </Link>
-                                                {/* Show individual accessories on hover - positioned beside category */}
-                                                {accessoryCategory.submenu && (
-                                                  <div className="hidden group-hover/accessory:block absolute left-full top-0 -ml-1 bg-card border border-border rounded shadow-md p-3 min-w-[220px] z-[100]">
-                                                    {/* Invisible hover bridge */}
-                                                    <div className="absolute -left-1 top-0 w-1 h-full"></div>
-                                                    <div className="space-y-1 relative">
-                                                      {accessoryCategory.submenu.map((individualAccessory) => (
-                                                        <Link
-                                                          key={individualAccessory.title}
-                                                          to={individualAccessory.link}
-                                                          className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1.5 px-2 rounded hover:bg-accent"
-                                                        >
-                                                          {individualAccessory.title}
-                                                        </Link>
-                                                      ))}
-                                                    </div>
-                                                  </div>
-                                                )}
-                                              </div>
-                                            ))}
-                                          </div>
-                                        </div>
-                                      )}
-                                    </div>
-                                  ))}
-                                </div>
+                          <div className="grid grid-cols-4 gap-8 p-6 w-[1400px] max-w-[calc(100vw-80px)] mx-auto bg-popover">
+                            {isLoadingBikes ? (
+                              <div className="col-span-4 flex items-center justify-center py-8">
+                                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                                <span className="ml-2 text-sm text-muted-foreground">Loading bikes...</span>
                               </div>
-                            ))}
+                            ) : Object.keys(bikesByBrand).length === 0 ? (
+                              <div className="col-span-4 text-center py-8 text-sm text-muted-foreground">
+                                No bikes available
+                              </div>
+                            ) : (
+                              Object.entries(bikesByBrand).map(([brandKey, brandData], brandIndex) => {
+                                // Determine if this brand is in the last column (4th column, index 3, 7, 11, etc.)
+                                const isLastColumn = brandIndex % 4 === 3;
+                                
+                                return (
+                                  <div key={brandKey} className="space-y-2">
+                                    <h4 className="font-bold text-base text-primary uppercase">{brandData.brandName}</h4>
+                                    <div className="space-y-1">
+                                      {brandData.bikes
+                                        .sort((a, b) => a.name.localeCompare(b.name))
+                                        .map((bike) => (
+                                          <div key={bike.id} className="group/bike relative">
+                                            <Link
+                                              to={`/collections/bikes/${bike.slug}`}
+                                              className="block text-sm text-popover-foreground hover:text-primary transition-colors py-0.5 truncate"
+                                              title={bike.name}
+                                            >
+                                              {bike.name}
+                                            </Link>
+                                            {/* Show categories submenu on hover - position right after the text */}
+                                            <div className={`invisible group-hover/bike:visible absolute ${isLastColumn ? 'right-full mr-2' : 'left-full ml-2'} top-0 bg-card border border-border rounded shadow-lg p-4 min-w-[280px] z-[200] whitespace-normal`}>
+                                              <div className="space-y-2">
+                                                {accessoryCategories.map((category) => {
+                                                  const productTypes = getProductTypesForCategory(category.slug);
+                                                  return (
+                                                    <div key={category.slug} className="group/category relative">
+                                                      <Link
+                                                        to={`/collections/bikes/${bike.slug}?category=${category.slug}`}
+                                                        className="block text-sm font-semibold text-primary hover:text-primary/90 transition-colors py-1"
+                                                      >
+                                                        {category.name}
+                                                      </Link>
+                                                      {/* Show product types on hover - position right after the category text */}
+                                                      {productTypes.length > 0 && (
+                                                        <div className={`invisible group-hover/category:visible absolute ${isLastColumn ? 'right-full mr-2' : 'left-full ml-2'} top-0 bg-card border border-border rounded shadow-lg p-3 min-w-[220px] z-[300]`}>
+                                                          <div className="space-y-1">
+                                                            {productTypes.map((productType) => (
+                                                              <Link
+                                                                key={productType.slug}
+                                                                to={`/collections/bikes/${bike.slug}?category=${category.slug}&productType=${productType.slug}`}
+                                                                className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1.5 px-2 rounded hover:bg-accent whitespace-nowrap"
+                                                              >
+                                                                {productType.label}
+                                                              </Link>
+                                                            ))}
+                                                          </div>
+                                                        </div>
+                                                      )}
+                                                    </div>
+                                                  );
+                                                })}
+                                              </div>
+                                            </div>
+                                          </div>
+                                        ))}
+                                    </div>
+                                  </div>
+                                );
+                              })
+                            )}
                           </div>
                         ) : item.title === "Shop by Accessories" ? (
                           <div className="grid grid-cols-3 gap-8 p-8 w-[900px]">
@@ -846,14 +935,45 @@ const Header = () => {
                       (item.title === "Shop by Accessories" && !isShopByAccessoriesOpen) ? 'hidden' : ''
                     }`}>
                       {item.title === "Shop by Bike" ? (
-                        item.submenu.map((brand) => (
-                          <div key={brand.title} className="py-2">
-                            <MobileDropdown 
-                              title={brand.title} 
-                              data={brand.submenu || []}
-                            />
+                        isLoadingBikes ? (
+                          <div className="flex items-center justify-center py-8">
+                            <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                            <span className="ml-2 text-sm text-muted-foreground">Loading bikes...</span>
                           </div>
-                        ))
+                        ) : Object.keys(bikesByBrand).length === 0 ? (
+                          <div className="text-center py-8 text-sm text-muted-foreground">
+                            No bikes available
+                          </div>
+                        ) : (
+                          Object.entries(bikesByBrand).map(([brandKey, brandData]) => (
+                              <div key={brandKey} className="py-2">
+                                <MobileDropdown 
+                                  title={brandData.brandName}
+                                  data={brandData.bikes
+                                    .sort((a, b) => a.name.localeCompare(b.name))
+                                    .map((bike) => {
+                                      const bikeMenuItems = accessoryCategories.map((cat) => {
+                                        const productTypes = getProductTypesForCategory(cat.slug);
+                                        return {
+                                          title: cat.name,
+                                          link: `/collections/bikes/${bike.slug}?category=${cat.slug}`,
+                                          submenu: productTypes.map((pt) => ({
+                                            title: pt.label,
+                                            link: `/collections/bikes/${bike.slug}?category=${cat.slug}&productType=${pt.slug}`
+                                          }))
+                                        };
+                                      });
+                                      
+                                      return {
+                                        title: bike.name,
+                                        link: `/collections/bikes/${bike.slug}`,
+                                        submenu: bikeMenuItems
+                                      };
+                                    })}
+                                />
+                              </div>
+                            ))
+                        )
                       ) : item.title === "Shop by Accessories" ? (
                         item.submenu.map((category) => (
                           <MobileDropdown 

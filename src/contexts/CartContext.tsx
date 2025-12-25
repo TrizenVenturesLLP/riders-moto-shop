@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { trackEvent } from '@/hooks/useAnalytics';
 
 export interface CartItem {
   id: string;
@@ -65,18 +66,44 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         const maxQuantity = existingItem.maxQuantity || 10; // Default max quantity
         
         if (newQuantity <= maxQuantity) {
-          return prevItems.map(item =>
+          const updatedItems = prevItems.map(item =>
             item.id === product.id
               ? { ...item, quantity: newQuantity }
               : item
           );
+          
+          // Track add to cart event
+          trackEvent('add_to_cart', {
+            productId: product.id,
+            metadata: {
+              quantity: newQuantity,
+              price: product.price,
+              cartValue: updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+              itemCount: updatedItems.reduce((sum, item) => sum + item.quantity, 0),
+            },
+          });
+          
+          return updatedItems;
         } else {
           // If max quantity reached, don't add more
           return prevItems;
         }
       } else {
         // Add new item to cart
-        return [...prevItems, { ...product, quantity: 1 }];
+        const updatedItems = [...prevItems, { ...product, quantity: 1 }];
+        
+        // Track add to cart event
+        trackEvent('add_to_cart', {
+          productId: product.id,
+          metadata: {
+            quantity: 1,
+            price: product.price,
+            cartValue: updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+            itemCount: updatedItems.reduce((sum, item) => sum + item.quantity, 0),
+          },
+        });
+        
+        return updatedItems;
       }
     });
   };
@@ -107,6 +134,33 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const isInCart = (productId: string) => {
     return items.some(item => item.id === productId);
   };
+
+  const getCartItem = (productId: string) => {
+    return items.find(item => item.id === productId);
+  };
+
+  const value: CartContextType = {
+    items,
+    totalItems,
+    totalPrice,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+    isInCart,
+    getCartItem,
+  };
+
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+};
+
+export const useCart = (): CartContextType => {
+  const context = useContext(CartContext);
+  if (context === undefined) {
+    throw new Error('useCart must be used within a CartProvider');
+  }
+  return context;
+};
 
   const getCartItem = (productId: string) => {
     return items.find(item => item.id === productId);

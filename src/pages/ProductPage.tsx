@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { useProductWithFallback } from '@/hooks/useProductWithFallback';
 import { useCart } from '@/hooks/useCart';
+import { trackEvent } from '@/hooks/useAnalytics';
 import { toast } from 'sonner';
 import {
   ShoppingCart,
@@ -76,6 +77,22 @@ const ProductPage = () => {
   
   // Cart functionality
   const { addToCart, isInCart, getCartItem } = useCart();
+
+  // Track product view
+  useEffect(() => {
+    if (productData?.data?.product) {
+      const product = productData.data.product;
+      trackEvent('product_view', {
+        productId: product.id,
+        categoryId: product.category?.id,
+        metadata: {
+          pageUrl: window.location.href,
+          referrer: document.referrer || 'direct',
+          source: source, // API or mock
+        },
+      });
+    }
+  }, [productData?.data?.product?.id, source]);
 
   if (isLoading) {
     return (
@@ -384,6 +401,23 @@ const ProductPage = () => {
                   <p className="text-xs sm:text-sm font-medium text-foreground">
                     {product.dimensions ? 
                       `${product.dimensions.length || 'N/A'} x ${product.dimensions.width || 'N/A'} x ${product.dimensions.height || 'N/A'} cm` : 
+                      'N/A'
+                    }
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+      </div>
+
+    </div>
+  );
+};
+
+export default ProductPage;
+
                       'N/A'
                     }
                   </p>

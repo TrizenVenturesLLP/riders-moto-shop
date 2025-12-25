@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/hooks/useCart';
 import { useAuth } from '@/hooks/useAuth';
+import { trackEvent } from '@/hooks/useAnalytics';
 import { 
   ArrowLeft, 
   ShoppingBag, 
@@ -50,6 +51,21 @@ const Checkout = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Track checkout started on mount
+  useEffect(() => {
+    trackEvent('checkout_started', {
+      metadata: {
+        cartValue: totalPrice,
+        itemCount: totalItems,
+        items: items.map(item => ({
+          productId: item.id,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+      },
+    });
+  }, []); // Only track once on mount
 
   const [formData, setFormData] = useState<AddressFormData>({
     firstName: user?.firstName || '',
@@ -719,6 +735,22 @@ const Checkout = () => {
                     <CreditCard className="h-3 w-3 sm:h-4 sm:w-4" />
                     <span>Multiple payment options available</span>
                   </div>
+                  <div className="flex items-center space-x-2 text-xs sm:text-sm text-muted-foreground">
+                    <Truck className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <span>Fast and reliable delivery</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Checkout;
+
                   <div className="flex items-center space-x-2 text-xs sm:text-sm text-muted-foreground">
                     <Truck className="h-3 w-3 sm:h-4 sm:w-4" />
                     <span>Fast and reliable delivery</span>

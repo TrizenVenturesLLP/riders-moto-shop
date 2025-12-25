@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/hooks/useCart';
 import { useAuth } from '@/hooks/useAuth';
+import { trackEvent } from '@/hooks/useAnalytics';
 import paymentService from '@/services/paymentService';
 import { 
   ArrowLeft,
@@ -181,6 +182,21 @@ const Payment = () => {
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       setPaymentStatus('completed');
+      
+      // Track purchase completed
+      trackEvent('purchase_completed', {
+        metadata: {
+          orderId: paymentData.orderId,
+          orderTotal: paymentData.total,
+          itemCount: paymentData.items.reduce((sum, item) => sum + item.quantity, 0),
+          products: paymentData.items.map(item => ({
+            productId: item.id,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+          paymentMethod: 'upi',
+        },
+      });
       
       // Clear cart and redirect to order confirmation
       clearCart();
@@ -547,6 +563,22 @@ const Payment = () => {
                   variant="outline"
                   size="sm"
                   onClick={copyPaymentDetails}
+                  className="w-full mt-2 sm:mt-3 text-xs sm:text-sm rounded-none"
+                >
+                  <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+                  Copy Payment Details
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Payment;
+
                   className="w-full mt-2 sm:mt-3 text-xs sm:text-sm rounded-none"
                 >
                   <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
