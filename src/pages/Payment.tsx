@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/hooks/useCart';
 import { useAuth } from '@/hooks/useAuth';
 import { trackEvent } from '@/hooks/useAnalytics';
+import { API_BASE_URL } from '@/config/api';
 import paymentService from '@/services/paymentService';
 import { 
   ArrowLeft,
@@ -18,7 +19,10 @@ import {
   Shield,
   Download,
   Copy,
-  ExternalLink
+  ExternalLink,
+  Upload,
+  X,
+  Image as ImageIcon
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -57,13 +61,16 @@ const Payment = () => {
 
   const [paymentData, setPaymentData] = useState<PaymentData | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [paymentStatus, setPaymentStatus] = useState<'pending' | 'processing' | 'completed'>('pending');
+  const [paymentStatus, setPaymentStatus] = useState<'pending' | 'processing' | 'uploaded'>('pending');
   const [paymentConfig, setPaymentConfig] = useState({
     upiId: '7013038373@okbizaxis',
     businessName: 'RidersMotoShop'
   });
   const [qrCodeImage, setQrCodeImage] = useState<string>('');
   const [isGeneratingQR, setIsGeneratingQR] = useState(false);
+  const [screenshot, setScreenshot] = useState<File | null>(null);
+  const [screenshotPreview, setScreenshotPreview] = useState<string>('');
+  const [isUploading, setIsUploading] = useState(false);
 
   // Detect if user is on mobile and load payment config
   useEffect(() => {
@@ -158,7 +165,7 @@ const Payment = () => {
         setPaymentStatus('pending');
         toast({
           title: "Payment App Opened",
-          description: "Complete the payment in your UPI app and click 'I've Paid' below.",
+          description: "Complete the payment in your UPI app and upload the screenshot below.",
         });
       }, 1000);
     } else {
@@ -170,53 +177,112 @@ const Payment = () => {
     }
   };
 
-  // Handle manual payment confirmation
-  const handlePaymentConfirmation = async () => {
+  // Handle screenshot upload
+  const handleScreenshotUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid file",
+        description: "Please upload an image file (JPEG, PNG, WebP, or GIF)",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please upload an image under 5MB",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setScreenshot(file);
+    
+    // Create preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setScreenshotPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Remove screenshot
+  const removeScreenshot = () => {
+    setScreenshot(null);
+    setScreenshotPreview('');
+  };
+
+  // Submit payment with screenshot
+  const handlePaymentSubmission = async () => {
     if (!paymentData) return;
 
+    if (!screenshot) {
+      toast({
+        title: "Screenshot required",
+        description: "Please upload a payment screenshot to proceed",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsUploading(true);
+    setPaymentStatus('processing');
+
     try {
-      setPaymentStatus('processing');
+      // Upload screenshot to backend
+      const formData = new FormData();
+      formData.append('screenshot', screenshot);
       
-      // Here you would typically send payment confirmation to backend
-      // For now, we'll simulate the process
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      setPaymentStatus('completed');
-      
-      // Track purchase completed
-      trackEvent('purchase_completed', {
+      const response = await fetch(`${API_BASE_URL}/orders/${paymentData.orderId}/payment-screenshot`, {
+        method: 'POST',
+        credentials: 'include', // Include cookies
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Failed to upload screenshot');
+      }
+
+      // Track event: payment_screenshot_uploaded (not purchase_completed yet)
+      trackEvent('payment_screenshot_uploaded', {
         metadata: {
           orderId: paymentData.orderId,
           orderTotal: paymentData.total,
           itemCount: paymentData.items.reduce((sum, item) => sum + item.quantity, 0),
-          products: paymentData.items.map(item => ({
-            productId: item.id,
-            quantity: item.quantity,
-            price: item.price,
-          })),
-          paymentMethod: 'upi',
         },
       });
+
+      setPaymentStatus('uploaded');
       
-      // Clear cart and redirect to order confirmation
+      // Clear cart
       clearCart();
       
       toast({
-        title: "Payment Confirmed!",
-        description: "Your order has been placed successfully.",
+        title: "Screenshot Uploaded!",
+        description: "Your payment is under verification. You'll be notified once verified.",
       });
 
-      // Redirect to order confirmation
-      navigate(`/order-confirmation/${paymentData.orderId}`);
+      // Redirect to order status page
+      navigate(`/orders/${paymentData.orderId}`);
       
-    } catch (error) {
-      console.error('Payment confirmation error:', error);
+    } catch (error: any) {
+      console.error('Screenshot upload error:', error);
       setPaymentStatus('pending');
       toast({
-        title: "Payment Failed",
-        description: "Please try again or contact support.",
+        title: "Upload Failed",
+        description: error.message || "Please try again or contact support.",
         variant: "destructive",
       });
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -428,24 +494,70 @@ const Payment = () => {
                     )}
                   </Button>
 
-                  <Button
-                    onClick={handlePaymentConfirmation}
-                    disabled={paymentStatus === 'processing' || paymentStatus === 'completed'}
-                    variant="outline"
-                    className="w-full text-xs sm:text-sm md:text-base rounded-none"
-                  >
-                    {paymentStatus === 'completed' ? (
-                      <>
-                        <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-green-600 dark:text-green-400" />
-                        Payment Completed
-                      </>
+                  {/* Screenshot Upload Section */}
+                  <div className="space-y-2 sm:space-y-3">
+                    {!screenshotPreview ? (
+                      <label className="flex flex-col items-center justify-center w-full h-32 sm:h-40 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <Upload className="h-6 w-6 sm:h-8 sm:w-8 text-muted-foreground mb-2" />
+                          <p className="mb-1 text-xs sm:text-sm text-muted-foreground">
+                            <span className="font-semibold">Click to upload</span> payment screenshot
+                          </p>
+                          <p className="text-[10px] sm:text-xs text-muted-foreground/70">
+                            PNG, JPG, WEBP or GIF (MAX. 5MB)
+                          </p>
+                        </div>
+                        <input
+                          type="file"
+                          className="hidden"
+                          accept="image/*"
+                          onChange={handleScreenshotUpload}
+                          disabled={isUploading}
+                        />
+                      </label>
                     ) : (
-                      <>
-                        <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
-                        I've Paid - Confirm Payment
-                      </>
+                      <div className="relative border border-border rounded-lg p-2 sm:p-3">
+                        <img
+                          src={screenshotPreview}
+                          alt="Payment screenshot preview"
+                          className="w-full h-auto max-h-48 sm:max-h-64 object-contain rounded"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={removeScreenshot}
+                          className="absolute top-2 right-2 h-6 w-6 sm:h-8 sm:w-8 p-0 bg-background/80 hover:bg-background"
+                        >
+                          <X className="h-3 w-3 sm:h-4 sm:w-4" />
+                        </Button>
+                      </div>
                     )}
-                  </Button>
+
+                    <Button
+                      onClick={handlePaymentSubmission}
+                      disabled={!screenshot || isUploading || paymentStatus === 'uploaded'}
+                      variant="outline"
+                      className="w-full text-xs sm:text-sm md:text-base rounded-none"
+                    >
+                      {isUploading ? (
+                        <>
+                          <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-primary mr-2"></div>
+                          Uploading...
+                        </>
+                      ) : paymentStatus === 'uploaded' ? (
+                        <>
+                          <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-green-600 dark:text-green-400" />
+                          Screenshot Uploaded
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+                          Upload Screenshot & Submit
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </div>
 
                 {/* Security Badge */}
@@ -464,14 +576,21 @@ const Payment = () => {
                     {paymentStatus === 'processing' ? (
                       <>
                         <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-primary"></div>
-                        <span className="text-xs sm:text-sm md:text-base text-primary">Processing payment...</span>
+                        <span className="text-xs sm:text-sm md:text-base text-primary">Uploading screenshot...</span>
                       </>
-                    ) : (
+                    ) : paymentStatus === 'uploaded' ? (
                       <>
                         <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 dark:text-green-400" />
-                        <span className="text-xs sm:text-sm md:text-base text-green-600 dark:text-green-400">Payment completed successfully!</span>
+                        <div className="flex-1">
+                          <p className="text-xs sm:text-sm md:text-base text-green-600 dark:text-green-400 font-medium">
+                            Screenshot uploaded successfully!
+                          </p>
+                          <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">
+                            Your payment is under verification. You'll be notified once verified.
+                          </p>
+                        </div>
                       </>
-                    )}
+                    ) : null}
                   </div>
                 </CardContent>
               </Card>

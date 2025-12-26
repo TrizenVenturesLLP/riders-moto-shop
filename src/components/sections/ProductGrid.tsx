@@ -97,13 +97,15 @@ const ProductGrid: React.FC<ProductGridProps> = ({
               </div>
             </div>
 
-            {/* View All Button */}
-            {products.length > 6 && (
+            {/* View All Button - Always show when products exist */}
+            {products.length > 0 && (
               <div className="text-center mt-6 sm:mt-8 md:mt-10">
-                <Button variant="outline" className="rounded-none border-border text-xs sm:text-sm">
-              View All Products
-            </Button>
-          </div>
+                <Link to="/products">
+                  <Button variant="outline" className="rounded-none border-border text-xs sm:text-sm">
+                    View All Products
+                  </Button>
+                </Link>
+              </div>
             )}
           </>
         )}

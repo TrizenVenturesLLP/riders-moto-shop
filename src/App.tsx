@@ -27,6 +27,8 @@ import UnifiedProductListing from "@/pages/UnifiedProductListing";
 import Contact from "@/pages/Contact";
 import About from "@/pages/About";
 import AllBikes from "@/pages/AllBikes";
+import FeaturedProducts from "@/pages/FeaturedProducts";
+import Apparels from "@/pages/Apparels";
 import LoginPromptModal from "@/components/LoginPromptModal";
 
 const queryClient = new QueryClient();
@@ -69,6 +71,8 @@ const App = () => (
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/all-bikes" element={<AllBikes />} />
+                  <Route path="/products" element={<FeaturedProducts />} />
+                  <Route path="/apparels" element={<Apparels />} />
                 <Route path="/products/:id" element={<ProductPage />} />
                 <Route path="/search" element={<SearchResults />} />
                   

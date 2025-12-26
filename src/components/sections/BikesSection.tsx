@@ -51,7 +51,7 @@ const BikesSection = () => {
               className="group cursor-pointer"
             >
               {/* Bike Image Container - Fixed aspect ratio for consistent sizing */}
-              <div className="relative aspect-[5/3] w-full overflow-hidden bg-muted/30">
+              <div className="relative aspect-[5/3] w-full overflow-hidden bg-muted/30 rounded-sm">
                 {bike.image ? (
                   <img 
                     src={bike.image} 

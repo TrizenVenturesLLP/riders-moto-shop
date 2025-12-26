@@ -272,6 +272,8 @@ const Header = () => {
         navigate('/collections/bikes');
       } else if (searchCategory === 'Accessories') {
         navigate('/collections/accessories');
+      } else if (searchCategory === 'Apparels') {
+        navigate('/apparels');
       }
     }
   };
@@ -420,6 +422,7 @@ const Header = () => {
                   <option value="All">All</option>
                   <option value="Bikes">Bikes</option>
                   <option value="Accessories">Accessories</option>
+                  <option value="Apparels">Apparels</option>
                 </select>
                 <ChevronDown className={`absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground transition-all duration-300 ${
                   isScrolledDown ? 'h-3 w-3' : 'h-4 w-4'
@@ -737,6 +740,15 @@ const Header = () => {
                   )}
                 </NavigationMenuItem>
               ))}
+              {/* Apparels Link */}
+              <NavigationMenuItem>
+                <Link 
+                  to="/apparels"
+                  className="text-foreground hover:text-primary transition-colors px-3 py-1.5 font-medium text-sm"
+                >
+                  Apparels
+                </Link>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </div>
@@ -782,6 +794,7 @@ const Header = () => {
                   <option value="All">All</option>
                   <option value="Bikes">Bikes</option>
                   <option value="Accessories">Accessories</option>
+                  <option value="Apparels">Apparels</option>
                 </select>
                 
                 {/* Search Input */}
@@ -1015,6 +1028,17 @@ const Header = () => {
                   )}
                 </div>
               ))}
+              
+              {/* Apparels Link - Mobile */}
+              <div className="py-4 border-t border-border">
+                <Link 
+                  to="/apparels" 
+                  className="block py-3 px-2 text-foreground hover:bg-accent rounded-lg transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <h3 className="text-lg font-semibold">Apparels</h3>
+                </Link>
+              </div>
             </div>
             
             {/* Scroll to Top Button */}

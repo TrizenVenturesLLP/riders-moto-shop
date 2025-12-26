@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { trackEvent } from '@/hooks/useAnalytics';
+import { useAuth } from '@/hooks/useAuth';
 
 export interface CartItem {
   id: string;
@@ -33,6 +34,7 @@ interface CartProviderProps {
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const { user } = useAuth();
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -73,13 +75,22 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
           );
           
           // Track add to cart event
+          const userBikeBrand = user?.bikeBrand || null;
+          const userBikeModel = user?.bikeModel || null;
+          const userBikeModelSlug = userBikeModel 
+            ? userBikeModel.toLowerCase().replace(/\s+/g, '-')
+            : null;
+          
           trackEvent('add_to_cart', {
             productId: product.id,
+            bikeModelSlug: userBikeModelSlug || undefined,
             metadata: {
               quantity: newQuantity,
               price: product.price,
               cartValue: updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
               itemCount: updatedItems.reduce((sum, item) => sum + item.quantity, 0),
+              userBikeBrand,
+              userBikeModel,
             },
           });
           
@@ -93,13 +104,22 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         const updatedItems = [...prevItems, { ...product, quantity: 1 }];
         
         // Track add to cart event
+        const userBikeBrand = user?.bikeBrand || null;
+        const userBikeModel = user?.bikeModel || null;
+        const userBikeModelSlug = userBikeModel 
+          ? userBikeModel.toLowerCase().replace(/\s+/g, '-')
+          : null;
+        
         trackEvent('add_to_cart', {
           productId: product.id,
+          bikeModelSlug: userBikeModelSlug || undefined,
           metadata: {
             quantity: 1,
             price: product.price,
             cartValue: updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
             itemCount: updatedItems.reduce((sum, item) => sum + item.quantity, 0),
+            userBikeBrand,
+            userBikeModel,
           },
         });
         

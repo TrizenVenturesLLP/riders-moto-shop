@@ -6,8 +6,9 @@ import AccessoriesSection from '@/components/sections/AccessoriesSection';
 import ProductGrid from '@/components/sections/ProductGrid';
 
 const Index = () => {
-  // Fetch recent products from API (no featured filter since no products are marked as featured)
+  // Fetch only featured products from API
   const { data, isLoading, error } = useProducts({ 
+    featured: true,  // Only fetch featured products
     limit: 12,       // Show 12 products
     sort: 'createdAt',
     order: 'DESC'    // Newest first

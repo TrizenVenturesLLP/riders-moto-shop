@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/hooks/useCart';
 import { useAuth } from '@/hooks/useAuth';
 import { trackEvent } from '@/hooks/useAnalytics';
+import { API_BASE_URL } from '@/config/api';
 import { 
   ArrowLeft, 
   ShoppingBag, 
@@ -174,6 +175,19 @@ const Checkout = () => {
           const ratesResponse = await shippingService.getShippingRates(fullAddress, totalPrice);
           setShippingRates(ratesResponse);
           
+          // Track checkout step completed with geographic data
+          trackEvent('checkout_step_completed', {
+            metadata: {
+              step: 'address_validation',
+              city: formData.city,
+              state: formData.state,
+              pincode: formData.pincode,
+              country: formData.country,
+              shippingCost: pincodeResponse.data.shippingCost,
+              distance: pincodeResponse.data.distance,
+            },
+          });
+          
           return; // Success, no need to try address validation
         } else {
           setPincodeValidation({ 
@@ -211,6 +225,17 @@ const Checkout = () => {
         });
         // Auto-calculate shipping when address is valid
         await calculateShipping();
+        
+        // Track checkout step completed with geographic data
+        trackEvent('checkout_step_completed', {
+          metadata: {
+            step: 'address_validation',
+            city: formData.city,
+            state: formData.state,
+            pincode: formData.pincode,
+            country: formData.country,
+          },
+        });
       } else {
         setAddressValidation({ 
           isValid: false, 
@@ -348,19 +373,61 @@ const Checkout = () => {
     setIsProcessing(true);
 
     try {
-      // Simulate order processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Create order in backend
+      const orderResponse = await fetch(`${API_BASE_URL}/orders`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Include cookies for authentication
+        body: JSON.stringify({
+          items: items.map(item => ({
+            productId: item.id,
+            quantity: item.quantity,
+          })),
+          shippingAddress: {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            phone: formData.phone,
+            address1: formData.address,
+            city: formData.city,
+            state: formData.state,
+            postalCode: formData.pincode,
+            country: formData.country,
+          },
+          billingAddress: {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            phone: formData.phone,
+            address1: formData.address,
+            city: formData.city,
+            state: formData.state,
+            postalCode: formData.pincode,
+            country: formData.country,
+          },
+          paymentMethod: 'upi',
+          notes: `Shipping: ${selectedShipping}`,
+        }),
+      });
 
-      // Generate order ID
-      const orderId = `ORD-${Date.now()}`;
+      if (!orderResponse.ok) {
+        const errorData = await orderResponse.json();
+        throw new Error(errorData.message || 'Failed to create order');
+      }
+
+      const orderResult = await orderResponse.json();
+      const order = orderResult.data.order;
       
       // Prepare payment data
       const paymentData = {
-        orderId,
-        amount: totalPrice,
-        shippingCost,
-        tax,
-        total: finalTotal,
+        orderId: order.id,
+        orderNumber: order.orderNumber,
+        amount: parseFloat(order.subtotal || totalPrice),
+        shippingCost: parseFloat(order.shippingAmount || shippingCost),
+        tax: parseFloat(order.taxAmount || tax),
+        total: parseFloat(order.totalAmount || finalTotal),
         items: items.map(item => ({
           id: item.id,
           name: item.name,
@@ -376,11 +443,11 @@ const Checkout = () => {
         state: { paymentData } 
       });
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Order placement error:', error);
       toast({
         title: "Order Failed",
-        description: "There was an error processing your order. Please try again.",
+        description: error.message || "There was an error processing your order. Please try again.",
         variant: "destructive",
       });
     } finally {

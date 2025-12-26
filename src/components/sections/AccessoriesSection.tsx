@@ -108,12 +108,12 @@ const AccessoriesSection = () => {
                 }}
               >
                 {/* Product Image Container - Wider, no top/bottom spacing */}
-                <div className="relative aspect-[5/3] flex items-center justify-center">
+                <div className="relative aspect-[5/3] w-full overflow-hidden rounded-sm bg-muted/30">
                   {/* Actual product image */}
                   <img 
                     src={accessory.image} 
                     alt={accessory.name}
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-cover object-center"
                     onError={(e) => {
                       // Fallback to icon if image fails to load
                       (e.target as HTMLImageElement).style.display = 'none';

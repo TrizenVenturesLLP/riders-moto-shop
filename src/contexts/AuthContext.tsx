@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { trackEvent } from '@/hooks/useAnalytics';
+import { API_BASE_URL } from '@/config/api';
 
 interface User {
   id: string;
@@ -38,36 +39,43 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://rmsadminbackend.llp.trizenventures.com/api/v1';
-
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check for existing session on mount (localStorage-based for testing)
+  // Check for existing session on mount
   useEffect(() => {
-    const checkAuthStatus = () => {
+    const checkAuthStatus = async () => {
       try {
-        const savedUser = localStorage.getItem('user_data');
-        const savedToken = localStorage.getItem('auth_token');
-        
-        if (savedUser && savedToken) {
-          try {
-            const userData = JSON.parse(savedUser);
-            setUser(userData);
-            console.log('✅ Restored user from localStorage');
-          } catch (e) {
-            console.error('Failed to parse user data:', e);
-            localStorage.removeItem('user_data');
-            localStorage.removeItem('auth_token');
+        // Verify token by fetching user profile (cookies sent automatically)
+        const response = await fetch(`${API_BASE_URL}/customer/auth/me`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include', // Include httpOnly cookies
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.data?.user) {
+            setUser(result.data.user);
+            // Store user data in localStorage for analytics (userId needed)
+            localStorage.setItem('user_data', JSON.stringify(result.data.user));
+            console.log('✅ Restored user from cookie');
+          } else {
             setUser(null);
+            localStorage.removeItem('user_data');
           }
         } else {
+          // Token invalid or expired
           setUser(null);
+          localStorage.removeItem('user_data');
         }
       } catch (error) {
         console.error('Auth check failed:', error);
         setUser(null);
+        localStorage.removeItem('user_data');
       } finally {
         setIsLoading(false);
       }
@@ -79,38 +87,41 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (email: string, password: string, rememberMe: boolean = false): Promise<void> => {
     setIsLoading(true);
     try {
-      // DISABLED: API call for testing - using localStorage instead
-      // const response = await fetch(`${API_BASE_URL}/customer/auth/login`, {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   credentials: 'include',
-      //   body: JSON.stringify({ email, password, rememberMe }),
-      // });
-
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      // For testing: Accept any email/password combination
-      // In production, this would validate against backend
-      const mockUser: User = {
-        id: `user_${Date.now()}`,
-        firstName: email.split('@')[0].split('.')[0] || 'John',
-        lastName: email.split('@')[0].split('.')[1] || 'Doe',
-        email: email,
-        role: 'customer',
-        createdAt: new Date().toISOString(),
-      };
-
-      // Store in localStorage
-      const token = `demo_token_${Date.now()}`;
-      localStorage.setItem('auth_token', token);
-      if (rememberMe) {
-        localStorage.setItem('refresh_token', `demo_refresh_${Date.now()}`);
-      }
-      localStorage.setItem('user_data', JSON.stringify(mockUser));
+      console.log('🔐 Attempting login to:', `${API_BASE_URL}/customer/auth/login`);
       
-      setUser(mockUser);
-      console.log('✅ Login successful (localStorage mode)');
+      const response = await fetch(`${API_BASE_URL}/customer/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // Include httpOnly cookies
+        body: JSON.stringify({ email, password, rememberMe }),
+      });
+
+      console.log('📡 Login response status:', response.status, response.statusText);
+
+      // Check if response is JSON before parsing
+      const contentType = response.headers.get('content-type');
+      let result;
+      
+      if (contentType && contentType.includes('application/json')) {
+        result = await response.json();
+      } else {
+        const text = await response.text();
+        console.error('❌ Non-JSON response:', text);
+        throw new Error('Invalid response from server');
+      }
+
+      if (!response.ok || !result.success) {
+        console.error('❌ Login failed:', result);
+        throw new Error(result.message || 'Login failed. Please try again.');
+      }
+
+      // Tokens are in httpOnly cookies, just store user data
+      const userData = result.data.user;
+      setUser(userData);
+      // Store user data in localStorage for analytics (userId needed)
+      localStorage.setItem('user_data', JSON.stringify(userData));
+      
+      console.log('✅ Login successful, user:', userData.email);
       
       // Track login event
       trackEvent('login', {
@@ -119,9 +130,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           rememberMe: rememberMe || false,
         },
       });
-    } catch (error) {
-      console.error('Login error:', error);
-      throw new Error('Login failed. Please try again.');
+    } catch (error: any) {
+      console.error('❌ Login error:', error);
+      // Provide more specific error messages
+      if (error.message) {
+        throw new Error(error.message);
+      } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        throw new Error('Network error: Could not connect to server. Please check your connection.');
+      } else {
+        throw new Error('Login failed. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -137,47 +155,41 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }): Promise<void> => {
     setIsLoading(true);
     try {
-      // DISABLED: API call for testing - using localStorage instead
-      // const response = await fetch(`${API_BASE_URL}/customer/auth/register`, {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   credentials: 'include',
-      //   body: JSON.stringify(userData),
-      // });
+      console.log('🔐 Attempting signup to:', `${API_BASE_URL}/customer/auth/register`);
+      
+      const response = await fetch(`${API_BASE_URL}/customer/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // Include httpOnly cookies
+        body: JSON.stringify(userData),
+      });
 
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 800));
+      console.log('📡 Signup response status:', response.status, response.statusText);
 
-      // Check if user already exists (in localStorage for testing)
-      const existingUsers = JSON.parse(localStorage.getItem('demo_users') || '[]');
-      if (existingUsers.some((u: any) => u.email === userData.email)) {
-        throw new Error('User already exists with this email');
+      // Check if response is JSON before parsing
+      const contentType = response.headers.get('content-type');
+      let result;
+      
+      if (contentType && contentType.includes('application/json')) {
+        result = await response.json();
+      } else {
+        const text = await response.text();
+        console.error('❌ Non-JSON response:', text);
+        throw new Error('Invalid response from server');
       }
 
-      // Create new user
-      const newUser: User = {
-        id: `user_${Date.now()}`,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        email: userData.email,
-        bikeBrand: userData.bikeBrand,
-        bikeModel: userData.bikeModel,
-        role: 'customer',
-        createdAt: new Date().toISOString(),
-      };
+      if (!response.ok || !result.success) {
+        console.error('❌ Signup failed:', result);
+        throw new Error(result.message || 'Signup failed. Please try again.');
+      }
 
-      // Store in localStorage
-      const token = `demo_token_${Date.now()}`;
-      localStorage.setItem('auth_token', token);
-      localStorage.setItem('refresh_token', `demo_refresh_${Date.now()}`);
+      // Tokens are in httpOnly cookies, just store user data
+      const newUser = result.data.user;
+      setUser(newUser);
+      // Store user data in localStorage for analytics (userId needed)
       localStorage.setItem('user_data', JSON.stringify(newUser));
       
-      // Also store in demo_users list for duplicate checking
-      existingUsers.push({ email: userData.email, id: newUser.id });
-      localStorage.setItem('demo_users', JSON.stringify(existingUsers));
-      
-      setUser(newUser);
-      console.log('✅ Signup successful (localStorage mode)');
+      console.log('✅ Signup successful, user:', newUser.email);
       
       // Track signup event
       trackEvent('signup', {
@@ -188,8 +200,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         },
       });
     } catch (error: any) {
-      console.error('Signup error:', error);
-      throw new Error(error.message || 'Signup failed. Please try again.');
+      console.error('❌ Signup error:', error);
+      // Provide more specific error messages
+      if (error.message) {
+        throw new Error(error.message);
+      } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        throw new Error('Network error: Could not connect to server. Please check your connection.');
+      } else {
+        throw new Error('Signup failed. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -197,21 +216,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = async (): Promise<void> => {
     try {
-      // DISABLED: API call for testing
-      // await fetch(`${API_BASE_URL}/customer/auth/logout`, {
-      //   method: 'POST',
-      //   credentials: 'include',
-      // });
+      // Call logout endpoint to clear httpOnly cookies
+      await fetch(`${API_BASE_URL}/customer/auth/logout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // Include cookies
+      });
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error('Logout API call failed:', error);
+      // Continue with local logout even if API fails
     }
     
     // Clear local storage
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('refresh_token');
     localStorage.removeItem('user_data');
     setUser(null);
-    console.log('✅ Logout successful (localStorage mode)');
+    console.log('✅ Logout successful');
   };
 
   const getActiveSessions = async (): Promise<any[]> => {
@@ -231,18 +250,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     setIsLoading(true);
     try {
-      // DISABLED: API call for testing - using localStorage instead
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
+      const response = await fetch(`${API_BASE_URL}/customer/auth/profile`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // Cookies sent automatically
+        body: JSON.stringify(userData),
+      });
 
-      // Update user data locally
-      const updatedUser = { ...user, ...userData };
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Profile update failed. Please try again.');
+      }
+
+      // Update user data
+      const updatedUser = result.data.user;
       setUser(updatedUser);
+      // Update localStorage for analytics
       localStorage.setItem('user_data', JSON.stringify(updatedUser));
-      console.log('✅ Profile updated successfully (localStorage mode)');
-    } catch (error) {
+      console.log('✅ Profile updated successfully');
+    } catch (error: any) {
       console.error('Profile update error:', error);
-      throw new Error('Profile update failed. Please try again.');
+      throw new Error(error.message || 'Profile update failed. Please try again.');
     } finally {
       setIsLoading(false);
     }

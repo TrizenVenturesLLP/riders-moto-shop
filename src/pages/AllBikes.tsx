@@ -1,10 +1,45 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useMemo } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useBikeModels } from '@/hooks/useBikeModels';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const AllBikes = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { data: bikeModels, isLoading, error } = useBikeModels({ isActive: true });
+
+  // Get pagination params from URL
+  const currentPage = parseInt(searchParams.get('page') || '1');
+  const itemsPerPage = parseInt(searchParams.get('limit') || '10');
+
+  // Calculate pagination
+  const totalBikes = bikeModels.length;
+  const totalPages = Math.ceil(totalBikes / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  // Get paginated bikes
+  const paginatedBikes = useMemo(() => {
+    return bikeModels.slice(startIndex, endIndex);
+  }, [bikeModels, startIndex, endIndex]);
+
+  // Handle page change
+  const handlePageChange = (newPage: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', String(newPage));
+    setSearchParams(params, { replace: true });
+    // Scroll to top when page changes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Handle items per page change
+  const handleItemsPerPageChange = (newLimit: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('limit', newLimit);
+    params.set('page', '1'); // Reset to page 1 when changing items per page
+    setSearchParams(params, { replace: true });
+  };
 
   if (isLoading) {
     return (
@@ -46,9 +81,34 @@ const AllBikes = () => {
           </p>
         </div>
 
+        {/* Items Per Page Selector */}
+        <div className="flex justify-between items-center mb-4 sm:mb-6">
+          <div className="text-sm text-muted-foreground">
+            Showing {startIndex + 1}-{Math.min(endIndex, totalBikes)} of {totalBikes} bikes
+          </div>
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-muted-foreground">Show:</label>
+            <Select
+              value={String(itemsPerPage)}
+              onValueChange={handleItemsPerPageChange}
+            >
+              <SelectTrigger className="w-20 h-9 bg-background border-border">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="20">20</SelectItem>
+                <SelectItem value="30">30</SelectItem>
+                <SelectItem value="50">50</SelectItem>
+                <SelectItem value="100">100</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
         {/* Grid Layout - 4 columns (4 images per row) */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-2.5 md:gap-3 max-w-7xl mx-auto">
-          {bikeModels.map((bike) => (
+          {paginatedBikes.map((bike) => (
             <Link
               key={bike.id}
               to={`/collections/bikes/${bike.slug}`}
@@ -88,8 +148,67 @@ const AllBikes = () => {
           ))}
         </div>
 
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8 sm:mt-10 md:mt-12">
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+                className="gap-1"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Previous
+              </Button>
+              
+              <div className="flex items-center gap-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                  // Show first page, last page, current page, and pages around current
+                  if (
+                    page === 1 ||
+                    page === totalPages ||
+                    (page >= currentPage - 1 && page <= currentPage + 1)
+                  ) {
+                    return (
+                      <Button
+                        key={page}
+                        variant={currentPage === page ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => handlePageChange(page)}
+                        className="min-w-[40px]"
+                      >
+                        {page}
+                      </Button>
+                    );
+                  } else if (page === currentPage - 2 || page === currentPage + 2) {
+                    return <span key={page} className="px-2 text-muted-foreground">...</span>;
+                  }
+                  return null;
+                })}
+              </div>
+
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+                className="gap-1"
+              >
+                Next
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+            
+            <div className="text-sm text-muted-foreground">
+              Page {currentPage} of {totalPages}
+            </div>
+          </div>
+        )}
+
         {/* Back to Home Link */}
-        <div className="text-center mt-8 sm:mt-10 md:mt-12">
+        <div className="text-center mt-6 sm:mt-8">
           <Link to="/" className="text-sm text-muted-foreground hover:text-primary transition-colors">
             ← Back to Home
           </Link>

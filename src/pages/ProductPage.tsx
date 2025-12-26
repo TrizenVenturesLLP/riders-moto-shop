@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { useProductWithFallback } from '@/hooks/useProductWithFallback';
 import { useCart } from '@/hooks/useCart';
+import { useAuth } from '@/hooks/useAuth';
 import { trackEvent } from '@/hooks/useAnalytics';
 import { toast } from 'sonner';
 import {
@@ -77,22 +78,45 @@ const ProductPage = () => {
   
   // Cart functionality
   const { addToCart, isInCart, getCartItem } = useCart();
+  
+  // Get user data for analytics
+  const { user } = useAuth();
 
   // Track product view
   useEffect(() => {
     if (productData?.data?.product) {
       const product = productData.data.product;
+      
+      // Get user bike preferences
+      const userBikeBrand = user?.bikeBrand || null;
+      const userBikeModel = user?.bikeModel || null;
+      
+      // Check product compatibility with user's bike
+      // compatibleModels is an array of bike model slugs
+      const compatibleModels = (product as any).compatibleModels || [];
+      const userBikeModelSlug = userBikeModel 
+        ? userBikeModel.toLowerCase().replace(/\s+/g, '-')
+        : null;
+      const isCompatibleWithUserBike = userBikeModelSlug 
+        ? compatibleModels.includes(userBikeModelSlug)
+        : null;
+      
       trackEvent('product_view', {
         productId: product.id,
         categoryId: product.category?.id,
+        bikeModelSlug: userBikeModelSlug || undefined,
         metadata: {
           pageUrl: window.location.href,
           referrer: document.referrer || 'direct',
           source: source, // API or mock
+          userBikeBrand,
+          userBikeModel,
+          isCompatibleWithUserBike,
+          productCompatibleModels: compatibleModels,
         },
       });
     }
-  }, [productData?.data?.product?.id, source]);
+  }, [productData?.data?.product?.id, source, user?.bikeBrand, user?.bikeModel]);
 
   if (isLoading) {
     return (

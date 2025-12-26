@@ -1,72 +1,117 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useHeroCarousel } from '@/hooks/useHeroCarousel';
 import { Link } from 'react-router-dom';
+import { useHeroCarousel } from '@/hooks/useHeroCarousel';
 
-const HeroSection = () => {
-  const { data: carouselData, isLoading } = useHeroCarousel();
-  
+const ApparelsHeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-
-  // Transform carousel items into slides format
-  const carouselSlides = useMemo(() => {
-    if (!carouselData?.data?.carouselItems) return [];
+  
+  // Fetch apparels hero carousel from backend
+  const { data: carouselData, isLoading } = useHeroCarousel('apparels');
+  
+  // Use backend data if available, otherwise fallback to static slides
+  const apparelsCarouselSlides = useMemo(() => {
+    if (carouselData?.data?.carouselItems && carouselData.data.carouselItems.length > 0) {
+      return carouselData.data.carouselItems.map((item) => ({
+        id: item.id,
+        title: item.title,
+        subtitle: item.subtitle || '',
+        image: item.image,
+        link: item.link || '/collections/apparels',
+        buttonText: item.buttonText || 'Shop Now',
+      }));
+    }
     
-    return carouselData.data.carouselItems.map((item) => ({
-      id: item.id,
-      title: item.title,
-      subtitle: item.subtitle || '',
-      image: item.image,
-      link: item.link || (item.bikeModel ? `/collections/bikes/${item.bikeModel.slug}` : '#'),
-      buttonText: item.buttonText || 'Shop Now',
-    }));
+    // Fallback static slides
+    return [
+  {
+    id: 'apparels-1',
+    title: 'Premium Motorcycle Gear',
+    subtitle: 'Ride in Style & Safety',
+    image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=1920&h=1080&fit=crop&q=80',
+    link: '/collections/apparels',
+    buttonText: 'Shop Now',
+  },
+  {
+    id: 'apparels-2',
+    title: 'Racing Apparel Collection',
+    subtitle: 'Professional Grade Protection',
+    image: 'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=1920&h=1080&fit=crop&q=80',
+    link: '/collections/apparels',
+    buttonText: 'Explore Collection',
+  },
+  {
+    id: 'apparels-3',
+    title: 'Touring Gear Essentials',
+    subtitle: 'Comfort for Long Rides',
+    image: 'https://images.unsplash.com/photo-1558980664-1db506751751?w=1920&h=1080&fit=crop&q=80',
+    link: '/collections/apparels',
+    buttonText: 'Shop Now',
+  },
+  {
+    id: 'apparels-4',
+    title: 'Urban Riding Apparel',
+    subtitle: 'Style Meets Functionality',
+    image: 'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=1920&h=1080&fit=crop&q=80',
+    link: '/collections/apparels',
+    buttonText: 'Shop Now',
+  },
+  ];
   }, [carouselData]);
 
   // Auto-play carousel - always running
   useEffect(() => {
-    if (carouselSlides.length === 0) return;
+    if (apparelsCarouselSlides.length === 0) return;
     
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
+      setCurrentSlide((prev) => (prev + 1) % apparelsCarouselSlides.length);
     }, 5000); // Change slide every 5 seconds
 
     return () => clearInterval(interval);
-  }, [carouselSlides.length]);
+  }, [apparelsCarouselSlides.length]);
 
   const nextSlide = () => {
-    if (carouselSlides.length === 0) return;
-    setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
+    if (apparelsCarouselSlides.length === 0) return;
+    setCurrentSlide((prev) => (prev + 1) % apparelsCarouselSlides.length);
   };
 
   const prevSlide = () => {
-    if (carouselSlides.length === 0) return;
-    setCurrentSlide((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
+    if (apparelsCarouselSlides.length === 0) return;
+    setCurrentSlide((prev) => (prev - 1 + apparelsCarouselSlides.length) % apparelsCarouselSlides.length);
   };
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
   };
 
-  // Show loading state
-  if (isLoading || carouselSlides.length === 0) {
+  if (isLoading) {
     return (
       <section className="relative h-[450px] sm:h-[500px] md:h-[550px] flex items-center justify-center overflow-hidden bg-muted">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-sm text-muted-foreground">Loading hero carousel...</p>
         </div>
       </section>
     );
   }
 
-  const currentSlideData = carouselSlides[currentSlide];
+  if (apparelsCarouselSlides.length === 0) {
+    return (
+      <section className="relative h-[450px] sm:h-[500px] md:h-[550px] flex items-center justify-center overflow-hidden bg-muted">
+        <div className="text-center">
+          <p className="text-sm text-muted-foreground">No apparel banners available.</p>
+        </div>
+      </section>
+    );
+  }
+
+  const currentSlideData = apparelsCarouselSlides[currentSlide];
 
   return (
     <section className="relative h-[450px] sm:h-[500px] md:h-[550px] flex flex-col overflow-hidden">
       {/* Background Image Carousel */}
       <div className="absolute inset-0">
-        {carouselSlides.map((slide, index) => (
+        {apparelsCarouselSlides.map((slide, index) => (
           <div
             key={slide.id}
             className={`absolute inset-0 transition-opacity duration-1000 ${
@@ -79,10 +124,10 @@ const HeroSection = () => {
               className="w-full h-full object-cover object-center"
               onError={(e) => {
                 // Fallback to placeholder
-                (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&h=1080&fit=crop';
+                (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=1920&h=1080&fit=crop&q=80';
               }}
             />
-            <div className="absolute inset-0 bg-black/50" />
+            <div className="absolute inset-0 bg-black/40" />
           </div>
         ))}
       </div>
@@ -111,7 +156,7 @@ const HeroSection = () => {
 
         {/* Carousel Indicators */}
         <div className="flex justify-center gap-2 mb-4 sm:mb-6">
-          {carouselSlides.map((_, index) => (
+          {apparelsCarouselSlides.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
@@ -142,4 +187,5 @@ const HeroSection = () => {
   );
 };
 
-export default HeroSection;
+export default ApparelsHeroSection;
+
