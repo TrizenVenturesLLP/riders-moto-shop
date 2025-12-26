@@ -1,307 +1,58 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { Search, ShoppingCart, User, Menu, X, ChevronDown, Wrench, Shield, Zap, Settings, Headphones, Camera, Lock, Star, LogOut, UserCircle, Loader2, Heart } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import { useCart } from '@/hooks/useCart';
-import { scrollToTop } from '@/hooks/useScrollToTop';
-import { useBikeModels } from '@/hooks/useBikeModels';
-import { getProductTypesForCategory } from '@/config/productTypes';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ThemeToggle } from '@/components/ThemeToggle';
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from '@/components/ui/navigation-menu';
-import navbarData from '@/data/navbar.json';
-import mobileMenuBg from '@/assets/mobile-menu-bg.jpg';
-import rmsLogo from '@/assets/rms-logo.jpg';
-import { NavbarItem } from '@/types/navbar';
-
-// Collapsible Accessory Category Component
-const CollapsibleAccessoryCategory = ({ title, accessories }: {
-  title: string;
-  accessories: NavbarItem[];
-}) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
-
-  const handleAccessoryClick = (accessory: NavbarItem) => {
-    if (accessory.link) {
-      navigate(accessory.link);
-    }
-  };
-
-  return (
-    <div>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between text-left py-2 px-2 bg-muted rounded-lg hover:bg-accent transition-colors"
-      >
-        <h5 className="font-medium text-foreground">{title}</h5>
-        <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-      </button>
-      
-      {isOpen && (
-        <div className="mt-2 pl-3 space-y-1">
-          {accessories.map((accessory, accIndex: number) => (
-            <div key={accIndex}>
-              {accessory.link ? (
-                <button
-                  onClick={() => handleAccessoryClick(accessory)}
-                  className="block w-full text-left py-1 text-xs text-muted-foreground hover:text-primary transition-colors"
-                >
-                  {accessory.title}
-                </button>
-              ) : (
-                <div className="py-1 text-xs text-muted-foreground/60">
-                  {accessory.title}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
-// Mobile Dropdown Component
-const MobileDropdown = ({ title, data }: {
-  title: string;
-  data: NavbarItem[];
-}) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
-
-  return (
-    <div className="py-2">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between text-left py-3 px-4 bg-muted rounded-lg hover:bg-accent transition-colors"
-      >
-        <span className="text-base font-medium text-foreground">{title}</span>
-        <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-      </button>
-      
-      {isOpen && (
-        <div className="mt-2 bg-card border border-border rounded-lg p-4 shadow-sm">
-          <div className="space-y-3">
-            {data.map((item: NavbarItem, index: number) => (
-              <div key={index}>
-                {/* If item has submenu, show clickable title + expandable submenu */}
-                {item.submenu ? (
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      {item.link ? (
-                        <Link
-                          to={item.link}
-                          className="font-semibold text-primary hover:text-primary/90 transition-colors"
-                        >
-                          {item.title}
-                        </Link>
-                      ) : (
-                        <h4 className="font-semibold text-primary">{item.title}</h4>
-                      )}
-                    </div>
-                    <div className="pl-3 space-y-2">
-                      {item.submenu.map((subItem: NavbarItem, subIndex: number) => (
-                        <div key={subIndex}>
-                          {subItem.submenu ? (
-                            <CollapsibleAccessoryCategory 
-                              title={subItem.title}
-                              accessories={subItem.submenu}
-                            />
-                          ) : subItem.link ? (
-                            <button
-                              onClick={() => navigate(subItem.link!)}
-                              className="block py-1 text-sm text-muted-foreground hover:text-primary transition-colors"
-                            >
-                              {subItem.title}
-                            </button>
-                          ) : (
-                            <div className="py-1 text-sm text-muted-foreground">
-                              {subItem.title}
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ) : item.link ? (
-                  <Link
-                    to={item.link}
-                    className="block py-2 px-3 text-foreground hover:text-primary hover:bg-accent rounded transition-colors"
-                  >
-                    {item.title}
-                  </Link>
-                ) : (
-                  <div className="py-2 px-3 text-foreground">
-                    {item.title}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Menu, X } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useCart } from "@/hooks/useCart";
+import { HeaderLogo } from "./header/HeaderLogo";
+import HeaderSearch from "./header/HeaderSearch";
+import { HeaderActions } from "./header/HeaderActions";
+import { MobileMenu } from "./header/Navigation/MobileMenu";
+import { DesktopNavigation } from "./header/Navigation/DesktopNavigation";
+import { useHeaderScroll } from "./header/hooks/useHeaderScroll";
+import { useBikesByBrand } from "./header/hooks/useBikesByBrand";
+import { useHeaderSearch } from "./header/hooks/useHeaderSearch";
+import navbarData from "@/data/navbar.json";
 
 // Navigation data from JSON
 const navigationData = navbarData.navbar;
 
-// Helper function to get appropriate icon for accessory categories
-const getAccessoryIcon = (categoryTitle: string) => {
-  const title = categoryTitle.toLowerCase();
-  if (title.includes('protection') || title.includes('safety') || title.includes('guard')) return Shield;
-  if (title.includes('performance') || title.includes('exhaust') || title.includes('engine')) return Zap;
-  if (title.includes('tool') || title.includes('maintenance') || title.includes('repair')) return Wrench;
-  if (title.includes('audio') || title.includes('sound') || title.includes('speaker')) return Headphones;
-  if (title.includes('camera') || title.includes('recording') || title.includes('dash')) return Camera;
-  if (title.includes('security') || title.includes('alarm') || title.includes('lock')) return Lock;
-  if (title.includes('premium') || title.includes('luxury') || title.includes('special')) return Star;
-  return Settings; // Default icon
-};
-
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isShopByBikeOpen, setIsShopByBikeOpen] = useState(false);
-  const [isShopByAccessoriesOpen, setIsShopByAccessoriesOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [isScrolledDown, setIsScrolledDown] = useState(false);
-  const lastScrollYRef = useRef(0);
-  const tickingRef = useRef(false);
-  
-  // Search state
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchCategory, setSearchCategory] = useState('All');
   const navigate = useNavigate();
-  const { user, isAuthenticated, logout, isLoading } = useAuth();
-  const { totalItems } = useCart();
+  const { logout } = useAuth();
 
-  // Debug authentication state
-  console.log('Header - Auth state:', { isAuthenticated, isLoading, user: user?.email });
-
-  // Fetch bike models dynamically
-  const { data: bikeModels = [], isLoading: isLoadingBikes } = useBikeModels({ isActive: true });
-
-  // Brand order from original navbar.json (Royal Enfield first, then others)
-  const brandOrder = [
-    'ROYAL ENFIELD',
-    'KTM',
-    'HONDA',
-    'HERO',
-    'TRIUMPH',
-    'YAMAHA',
-    'BAJAJ',
-    'TVS',
-    'SUZUKI',
-    'KAWASAKI',
-    'BENELLI',
-    'DUCATI'
-  ];
-
-  // Group bike models by brand
-  const bikesByBrand = useMemo(() => {
-    if (!bikeModels || bikeModels.length === 0) return {};
-    
-    const grouped = bikeModels.reduce((acc, bike) => {
-      const brandName = bike.brand?.name?.toUpperCase() || 'OTHER';
-      if (!acc[brandName]) {
-        acc[brandName] = {
-          brandId: bike.brand?.id,
-          brandSlug: bike.brand?.slug,
-          brandName: bike.brand?.name || 'Other', // Keep original case for display
-          bikes: []
-        };
-      }
-      acc[brandName].bikes.push(bike);
-      return acc;
-    }, {} as Record<string, { brandId?: string; brandSlug?: string; brandName: string; bikes: typeof bikeModels }>);
-
-    // Sort brands according to brandOrder, then alphabetically for others
-    const sortedEntries = Object.entries(grouped).sort(([a], [b]) => {
-      const indexA = brandOrder.indexOf(a);
-      const indexB = brandOrder.indexOf(b);
-      
-      // If both are in the order list, sort by their position
-      if (indexA !== -1 && indexB !== -1) {
-        return indexA - indexB;
-      }
-      // If only A is in the list, A comes first
-      if (indexA !== -1) return -1;
-      // If only B is in the list, B comes first
-      if (indexB !== -1) return 1;
-      // If neither is in the list, sort alphabetically
-      return a.localeCompare(b);
-    });
-
-    // Convert back to object with correct order
-    const ordered: typeof grouped = {};
-    sortedEntries.forEach(([key, value]) => {
-      ordered[key] = value;
-    });
-
-    return ordered;
-  }, [bikeModels]);
+  // Use custom hooks
+  const { isScrolledDown } = useHeaderScroll();
+  const { bikesByBrand, isLoading: isLoadingBikes } = useBikesByBrand();
 
   // Main categories for accessories (static for now, can be made dynamic later)
   const accessoryCategories = [
-    { name: 'Touring Accessories', slug: 'touring-accessories' },
-    { name: 'Protection Accessories', slug: 'protection-accessories' },
-    { name: 'Performance Accessories', slug: 'performance-accessories' },
-    { name: 'Auxiliary Accessories', slug: 'auxiliary-accessories' },
+    { name: "Touring Accessories", slug: "touring-accessories" },
+    { name: "Protection Accessories", slug: "protection-accessories" },
+    { name: "Performance Accessories", slug: "performance-accessories" },
+    { name: "Auxiliary Accessories", slug: "auxiliary-accessories" },
   ];
 
   // Using static navigation data from JSON for non-bike items
 
-  // Search functionality
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      // Navigate to search results with query and category
-      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}&category=${encodeURIComponent(searchCategory)}`);
-    } else {
-      // If no search query, navigate based on category
-      if (searchCategory === 'All') {
-        navigate('/collections/all');
-      } else if (searchCategory === 'Bikes') {
-        navigate('/collections/bikes');
-      } else if (searchCategory === 'Accessories') {
-        navigate('/collections/accessories');
-      } else if (searchCategory === 'Apparels') {
-        navigate('/apparels');
-      }
-    }
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
-  };
-
   const handleLogout = () => {
     logout();
     setIsUserMenuOpen(false);
-    navigate('/');
+    navigate("/");
   };
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (isMenuOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
-    
+
     // Cleanup function to restore scroll on component unmount
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [isMenuOpen]);
 
@@ -310,784 +61,69 @@ const Header = () => {
     const handleClickOutside = (event: MouseEvent) => {
       if (isUserMenuOpen) {
         const target = event.target as Element;
-        if (!target.closest('[data-user-menu]')) {
+        if (!target.closest("[data-user-menu]")) {
           setIsUserMenuOpen(false);
         }
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isUserMenuOpen]);
 
-  // Handle scroll - hide blue bar and reduce top bar size when scrolling down
-  useEffect(() => {
-    let timeoutId: NodeJS.Timeout | null = null;
-    let lastKnownScrollY = 0;
-    
-    const handleScroll = () => {
-      // Clear any pending timeout
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-      
-      // Debounce scroll events to prevent rapid state changes
-      timeoutId = setTimeout(() => {
-        const currentScrollY = window.scrollY;
-        const scrollDelta = currentScrollY - lastKnownScrollY;
-        
-        // Only show bottom bar when at absolute top (0px or very close to 0)
-        setIsScrolledDown((prev) => {
-          // Only show when at absolute top (within 5px)
-          if (currentScrollY <= 5) {
-            if (prev === false) return prev; // Already showing, no change needed
-            lastKnownScrollY = currentScrollY;
-            return false;
-          }
-          
-          // Any scroll down - hide immediately
-          if (scrollDelta > 0) {
-            if (prev === true) return prev; // Already hidden, no change needed
-            lastKnownScrollY = currentScrollY;
-            return true;
-          }
-          
-          // Scrolling up but not at top - keep hidden
-          if (scrollDelta < 0 && currentScrollY > 5) {
-            if (prev === true) return prev; // Already hidden, no change needed
-            lastKnownScrollY = currentScrollY;
-            return true;
-          }
-          
-          // No change needed
-          return prev;
-        });
-        
-        lastKnownScrollY = currentScrollY;
-      }, 50); // 50ms debounce to prevent rapid updates
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-    };
-  }, []);
-
   return (
-    <header className="sticky top-0 z-50 bg-background border-b border-border shadow-sm">
+    <header className="sticky top-0 z-50 bg-background border-b border-border">
       {/* Main Header - White Background - Reduces size when scrolled */}
-      <div className="container mx-auto px-4">
-        <div className={`flex items-center justify-between transition-[height] duration-300 ease-in-out ${
-          isScrolledDown ? 'h-16' : 'h-24'
-        }`}>
+      <div className="container mx-auto px-4 relative">
+        <div
+          className={`flex items-center justify-between transition-[height] duration-300 ease-in-out ${
+            isScrolledDown ? "h-16" : "h-20"
+          }`}
+        >
           {/* Mobile Menu Button */}
-          <button 
+          <button
             className="md:hidden text-foreground hover:bg-accent rounded p-1 transition-colors"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {isMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
           </button>
 
           {/* Logo */}
-          <div className="flex items-center">
-            <Link to="/">
-              <img 
-                src={rmsLogo}
-                alt="Riders Moto Shop" 
-                className={`h-auto transition-all duration-300 ease-in-out cursor-pointer hover:opacity-80 ${
-                  isScrolledDown ? 'max-h-14' : 'max-h-20'
-                }`}
-              />
-            </Link>
-          </div>
+          <HeaderLogo isScrolledDown={isScrolledDown} />
 
-          {/* Search Bar - Desktop - Enhanced Design */}
-          <div className={`hidden md:flex flex-1 mx-8 transition-all duration-300 ${
-            isScrolledDown ? 'max-w-xl' : 'max-w-2xl'
-          }`}>
-            <div className="flex w-full border-2 border-border hover:border-primary/50 focus-within:border-primary rounded-none overflow-hidden bg-card transition-all duration-300">
-              {/* Category Filter */}
-              <div className="relative">
-                <select 
-                  value={searchCategory}
-                  onChange={(e) => setSearchCategory(e.target.value)}
-                  className={`px-3 pr-7 bg-muted/50 hover:bg-muted border-0 border-r-2 border-border text-foreground font-medium focus:outline-none focus:ring-0 appearance-none cursor-pointer transition-all duration-300 w-24 ${
-                    isScrolledDown ? 'py-1.5 text-xs h-9' : 'py-3 text-sm h-12'
-                  }`}
-                >
-                  <option value="All">All</option>
-                  <option value="Bikes">Bikes</option>
-                  <option value="Accessories">Accessories</option>
-                  <option value="Apparels">Apparels</option>
-                </select>
-                <ChevronDown className={`absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground transition-all duration-300 ${
-                  isScrolledDown ? 'h-3 w-3' : 'h-4 w-4'
-                }`} />
-              </div>
-              
-              {/* Search Input */}
-              <div className="relative flex-1 bg-background">
-                <Input
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="What are you looking for?"
-                  className={`rounded-none border-0 bg-transparent focus:border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-4 font-normal placeholder:text-muted-foreground/60 transition-all duration-300 ${
-                    isScrolledDown ? 'h-9 text-xs' : 'h-12 text-sm'
-                  }`}
-                />
-              </div>
-              
-              {/* Search Button */}
-              <Button 
-                onClick={handleSearch}
-                className={`bg-primary hover:bg-primary/90 active:bg-primary/80 rounded-none flex items-center justify-center border-0 focus:ring-0 focus-visible:ring-0 font-semibold transition-all duration-300 shadow-none ${
-                  isScrolledDown ? 'px-5 h-9 w-12' : 'px-6 h-12 w-14'
-                }`}
-              >
-                <Search className={`text-primary-foreground transition-all duration-300 ${
-                  isScrolledDown ? 'h-4 w-4' : 'h-5 w-5'
-                }`} />
-              </Button>
-            </div>
-          </div>
+          {/* Search Bar - Desktop */}
+          <HeaderSearch isScrolledDown={isScrolledDown} />
 
           {/* Actions */}
-          <div className="flex items-center space-x-3">
-            {isAuthenticated ? (
-              // Authenticated User Menu
-              <div className="relative" data-user-menu>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="hidden md:flex items-center space-x-2"
-                >
-                  <UserCircle className="h-5 w-5" />
-                  <span className="text-sm font-medium">
-                    {user?.firstName}
-                  </span>
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-                
-                {/* User Dropdown Menu */}
-                {isUserMenuOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-56 bg-card border border-border rounded-lg shadow-lg z-50">
-                    <div className="py-2">
-                      <div className="px-4 py-2 border-b border-border">
-                        <p className="text-sm font-medium text-foreground truncate">
-                          {user?.firstName} {user?.lastName}
-                        </p>
-                        <p className="text-xs text-muted-foreground truncate" title={user?.email}>{user?.email}</p>
-                      </div>
-                      
-                      <Link
-                        to="/profile"
-                        className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-accent"
-                        onClick={() => setIsUserMenuOpen(false)}
-                      >
-                        <User className="h-4 w-4 mr-2" />
-                        Profile
-                      </Link>
-                      
-                      <Link
-                        to="/orders"
-                        className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-accent"
-                        onClick={() => setIsUserMenuOpen(false)}
-                      >
-                        <ShoppingCart className="h-4 w-4 mr-2" />
-                        Orders
-                      </Link>
-                      
-                      <Link
-                        to="/wishlist"
-                        className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-accent"
-                        onClick={() => setIsUserMenuOpen(false)}
-                      >
-                        <Heart className="h-4 w-4 mr-2" />
-                        Wishlist
-                      </Link>
-                      
-                      <button
-                        onClick={handleLogout}
-                        className="flex items-center w-full px-4 py-2 text-sm text-foreground hover:bg-accent"
-                      >
-                        <LogOut className="h-4 w-4 mr-2" />
-                        Logout
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              // Non-authenticated User Button with Dropdown
-              <div className="relative hidden md:block" data-user-menu>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="text-foreground hover:bg-accent flex items-center space-x-2"
-                  disabled={isLoading}
-                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                >
-                  <User className="h-5 w-5" />
-                  <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
-                </Button>
-                
-                {/* Guest User Dropdown Menu */}
-                {isUserMenuOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-56 bg-card border border-border rounded-lg shadow-lg z-50">
-                    <div className="py-2">
-                      <div className="px-4 py-2 border-b border-border">
-                        <p className="text-sm font-medium text-foreground">Guest</p>
-                        <p className="text-xs text-muted-foreground">Sign in to access your account</p>
-                      </div>
-                      
-                      <Link
-                        to="/wishlist"
-                        className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-accent"
-                        onClick={() => setIsUserMenuOpen(false)}
-                      >
-                        <Heart className="h-4 w-4 mr-2" />
-                        Wishlist
-                      </Link>
-                      
-                      <Link
-                        to="/login"
-                        className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-accent"
-                        onClick={() => setIsUserMenuOpen(false)}
-                      >
-                        <User className="h-4 w-4 mr-2" />
-                        Login
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-            
-            {/* Theme Toggle - Mobile and Desktop */}
-            <div className="flex items-center">
-              <ThemeToggle />
-            </div>
-            
-            {/* Cart Icon - Only visible when logged in */}
-            {isAuthenticated && (
-              <Link to="/cart">
-                <Button variant="ghost" size="sm" className="relative text-foreground hover:bg-accent">
-                  <ShoppingCart className="h-5 w-5" />
-                  {totalItems > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full text-xs h-5 w-5 flex items-center justify-center">
-                      {totalItems > 99 ? '99+' : totalItems}
-                    </span>
-                  )}
-                </Button>
-              </Link>
-            )}
-          </div>
+          <HeaderActions
+            isUserMenuOpen={isUserMenuOpen}
+            setIsUserMenuOpen={setIsUserMenuOpen}
+            onLogout={handleLogout}
+          />
         </div>
       </div>
 
-      {/* Navigation - Desktop - Full Width - Hide when scrolled down */}
-      <div className={`hidden md:flex items-center py-1.5 bg-background border-t border-border w-full transition-[transform,opacity,height] duration-300 ease-in-out ${
-        isScrolledDown ? '-translate-y-full opacity-0 h-0 overflow-hidden pointer-events-none' : 'translate-y-0 opacity-100'
-      }`}>
-        <div className="container mx-auto px-4">
-          <NavigationMenu>
-            <NavigationMenuList className="flex space-x-6">
-              {navigationData.map((item, index) => (
-                <NavigationMenuItem key={index}>
-                  {item.submenu ? (
-                    <NavigationMenuTrigger className="text-foreground hover:text-primary focus:text-foreground data-[active]:text-foreground data-[state=open]:text-foreground font-medium text-sm bg-transparent hover:bg-transparent focus:bg-transparent data-[active]:bg-transparent data-[state=open]:bg-transparent rounded-none px-3 py-1.5 h-auto">
-                      {item.title}
-                    </NavigationMenuTrigger>
-                  ) : (
-                    <Link 
-                      to={item.link}
-                      className="text-foreground hover:text-primary transition-colors px-3 py-1.5 font-medium text-sm"
-                    >
-                      {item.title}
-                    </Link>
-                  )}
-                  
-                  {item.submenu && (
-                    <NavigationMenuContent className="overflow-visible">
-                      <div className="max-h-[70vh] overflow-y-auto overflow-x-visible scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent bg-popover">
-                        {item.title === "Shop by Bike" ? (
-                          <div className="grid grid-cols-4 gap-6 p-4 w-[900px] max-w-[calc(100vw-80px)] mx-auto bg-popover">
-                            {isLoadingBikes ? (
-                              <div className="col-span-4 flex items-center justify-center py-8">
-                                <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                                <span className="ml-2 text-sm text-muted-foreground">Loading bikes...</span>
-                              </div>
-                            ) : Object.keys(bikesByBrand).length === 0 ? (
-                              <div className="col-span-4 text-center py-8 text-sm text-muted-foreground">
-                                No bikes available
-                              </div>
-                            ) : (
-                              Object.entries(bikesByBrand).map(([brandKey, brandData], brandIndex) => {
-                                // Determine if this brand is in the last column (4th column, index 3, 7, 11, etc.)
-                                const isLastColumn = brandIndex % 4 === 3;
-                                
-                                return (
-                                  <div key={brandKey} className="space-y-1.5">
-                                    <h4 className="font-bold text-sm text-primary uppercase">{brandData.brandName}</h4>
-                                    <div className="space-y-0.5">
-                                      {brandData.bikes
-                                        .sort((a, b) => a.name.localeCompare(b.name))
-                                        .map((bike) => (
-                                          <div key={bike.id} className="group/bike relative">
-                                            <Link
-                                              to={`/collections/bikes/${bike.slug}`}
-                                              className="block text-sm text-popover-foreground hover:text-primary transition-colors py-0.5 truncate"
-                                              title={bike.name}
-                                            >
-                                              {bike.name}
-                                            </Link>
-                                            {/* Show categories submenu on hover - position right after the text, closer to the item */}
-                                            <div className={`invisible group-hover/bike:visible absolute ${isLastColumn ? 'right-full mr-1' : 'left-full ml-1'} top-0 bg-card border border-border rounded shadow-lg p-3 min-w-[240px] max-w-[280px] z-[200] whitespace-normal`}>
-                                              <div className="space-y-1.5">
-                                                {accessoryCategories.map((category) => {
-                                                  const productTypes = getProductTypesForCategory(category.slug);
-                                                  return (
-                                                    <div key={category.slug} className="group/category relative">
-                                                      <Link
-                                                        to={`/collections/bikes/${bike.slug}?category=${category.slug}`}
-                                                        className="block text-sm font-semibold text-primary hover:text-primary/90 transition-colors py-0.5"
-                                                      >
-                                                        {category.name}
-                                                      </Link>
-                                                      {/* Show product types on hover - position right after the category text, closer and prevent overlap */}
-                                                      {productTypes.length > 0 && (
-                                                        <div className={`invisible group-hover/category:visible absolute ${isLastColumn ? 'right-full mr-1' : 'left-full ml-1'} top-0 bg-card border border-border rounded shadow-lg p-2 min-w-[200px] max-w-[240px] z-[300] max-h-[400px] overflow-y-auto`}>
-                                                          <div className="space-y-0.5">
-                                                            {productTypes.map((productType) => (
-                                                              <Link
-                                                                key={productType.slug}
-                                                                to={`/collections/bikes/${bike.slug}?category=${category.slug}&productType=${productType.slug}`}
-                                                                className="block text-xs text-muted-foreground hover:text-primary transition-colors py-1 px-2 rounded hover:bg-accent whitespace-nowrap"
-                                                              >
-                                                                {productType.label}
-                                                              </Link>
-                                                            ))}
-                                                          </div>
-                                                        </div>
-                                                      )}
-                                                    </div>
-                                                  );
-                                                })}
-                                              </div>
-                                            </div>
-                                          </div>
-                                        ))}
-                                    </div>
-                                  </div>
-                                );
-                              })
-                            )}
-                          </div>
-                        ) : item.title === "Shop by Accessories" ? (
-                          <div className="grid grid-cols-3 gap-8 p-8 w-[900px]">
-                            {item.submenu.map((category) => {
-                              const IconComponent = getAccessoryIcon(category.title);
-                              return (
-                                <div key={category.title} className="group">
-                                  {/* Category Header */}
-                                  <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border">
-                                    <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
-                                      <IconComponent className="h-5 w-5 text-primary" />
-                                    </div>
-                                    <h4 className="font-bold text-base text-foreground group-hover:text-primary transition-colors">
-                                      {category.title}
-                                    </h4>
-                                  </div>
-                                  
-                                  {/* Accessory Items */}
-                                  <div className="space-y-2">
-                                    {category.submenu?.map((accessoryItem) => (
-                                      <Link
-                                        key={accessoryItem.title}
-                                        to={accessoryItem.link}
-                                        className="block text-sm text-muted-foreground hover:text-primary hover:bg-accent px-3 py-2 rounded-lg transition-all duration-200 group/item"
-                                      >
-                                        <span className="group-hover/item:translate-x-1 transition-transform inline-block">
-                                          {accessoryItem.title}
-                                        </span>
-                                      </Link>
-                                    ))}
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        ) : item.title === "Scooters" ? (
-                          <div className="grid grid-cols-2 gap-4 p-6 w-[400px]">
-                            {item.submenu.map((scooter) => (
-                              <a
-                                key={scooter.title}
-                                href={scooter.link}
-                                className="block text-sm text-muted-foreground hover:text-foreground transition-colors p-2 rounded hover:bg-accent"
-                              >
-                                {scooter.title}
-                              </a>
-                            ))}
-                          </div>
-                        ) : item.title === "EV Bikes" ? (
-                          <div className="grid grid-cols-1 gap-4 p-6 w-[300px]">
-                            {item.submenu.map((brand) => (
-                              <div key={brand.title} className="space-y-2">
-                                <h4 className="font-semibold text-sm text-primary">{brand.title}</h4>
-                                <div className="space-y-1">
-                                  {brand.submenu?.map((model) => (
-                                    <a
-                                      key={model.title}
-                                      href={model.link}
-                                      className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
-                                    >
-                                      {model.title}
-                                    </a>
-                                  ))}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <div className="grid grid-cols-1 gap-2 p-6 w-[300px]">
-                            {item.submenu.map((subItem) => (
-                              <a
-                                key={subItem.title}
-                                href={subItem.link}
-                                className="block text-sm text-muted-foreground hover:text-foreground transition-colors p-2 rounded hover:bg-accent"
-                              >
-                                {subItem.title}
-                              </a>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </NavigationMenuContent>
-                  )}
-                </NavigationMenuItem>
-              ))}
-              {/* Apparels Link */}
-              <NavigationMenuItem>
-                <Link 
-                  to="/apparels"
-                  className="text-foreground hover:text-primary transition-colors px-3 py-1.5 font-medium text-sm"
-                >
-                  Apparels
-                </Link>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-        </div>
-      </div>
+      {/* Navigation - Desktop */}
+      <DesktopNavigation
+        navigationData={navigationData}
+        bikesByBrand={bikesByBrand}
+        isLoadingBikes={isLoadingBikes}
+        accessoryCategories={accessoryCategories}
+        isScrolledDown={isScrolledDown}
+      />
 
       {/* Mobile Menu Overlay */}
-        {isMenuOpen && (
-          <div 
-            className="fixed inset-0 bg-black/50 z-[9999] md:hidden flex justify-start"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            <div 
-              className="w-4/5 bg-background flex flex-col h-full"
-              onClick={(e) => e.stopPropagation()}
-            >
-            {/* Header */}
-            <div className="flex items-center justify-between p-4 bg-background border-b border-border flex-shrink-0">
-              <button onClick={() => setIsMenuOpen(false)} className="text-foreground hover:bg-accent rounded p-1 transition-colors">
-                <X className="h-6 w-6" />
-              </button>
-              <Link to="/" onClick={() => setIsMenuOpen(false)} className="flex items-center">
-                <img 
-                  src={rmsLogo}
-                  alt="Riders Moto Shop" 
-                  className="h-10 max-h-10 cursor-pointer hover:opacity-80 transition-opacity"
-                />
-              </Link>
-              <div className="w-6"></div>
-            </div>
-
-            {/* Content Container - Scrollable */}
-            <div className="flex-1 overflow-y-auto">
-
-            {/* Search */}
-            <div className="px-4 py-4 bg-background border-b border-border">
-              <div className="flex w-full">
-                {/* Category Filter */}
-                <select 
-                  value={searchCategory}
-                  onChange={(e) => setSearchCategory(e.target.value)}
-                  className="px-3 py-3 bg-muted/50 border border-border rounded-l-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
-                >
-                  <option value="All">All</option>
-                  <option value="Bikes">Bikes</option>
-                  <option value="Accessories">Accessories</option>
-                  <option value="Apparels">Apparels</option>
-                </select>
-                
-                {/* Search Input */}
-                <div className="relative flex-1">
-                  <Input
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    placeholder="What are you looking for?"
-                    className="rounded-none border-l-0 border-r-0 bg-background border-border focus:border-primary focus:ring-0 h-12"
-                  />
-                </div>
-                
-                {/* Search Button */}
-                <Button 
-                  onClick={handleSearch}
-                  className="bg-primary hover:bg-primary/90 rounded-l-none px-4 h-12"
-                >
-                  <Search className="h-4 w-4 text-primary-foreground" />
-                </Button>
-              </div>
-            </div>
-
-            {/* Auth Section - Mobile */}
-            {isAuthenticated ? (
-              <div className="bg-background px-4 py-4 border-b border-border">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
-                    <span className="text-primary-foreground font-bold text-sm">
-                      {user?.firstName?.[0]}{user?.lastName?.[0]}
-                    </span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-foreground">
-                      {user?.firstName} {user?.lastName}
-                    </p>
-                    <p className="text-sm text-muted-foreground">{user?.email}</p>
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Link
-                    to="/profile"
-                    className="block py-2 px-3 text-foreground hover:text-primary hover:bg-accent rounded transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Profile
-                  </Link>
-                  <Link
-                    to="/orders"
-                    className="block py-2 px-3 text-foreground hover:text-primary hover:bg-accent rounded transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Orders
-                  </Link>
-                  {/* Cart - Mobile - Only visible when logged in */}
-                  {isAuthenticated && (
-                    <Link
-                      to="/cart"
-                      className="block py-2 px-3 text-foreground hover:text-primary hover:bg-accent rounded transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Cart {totalItems > 0 && `(${totalItems})`}
-                    </Link>
-                  )}
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setIsMenuOpen(false);
-                    }}
-                    className="block w-full text-left py-2 px-3 text-foreground hover:text-primary hover:bg-accent rounded transition-colors"
-                  >
-                    Logout
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="bg-background px-4 py-4 border-b border-border">
-                <div className="space-y-2">
-                  <button
-                    disabled={isLoading}
-                    onClick={() => {
-                      if (isLoading) return;
-                      console.log('Mobile Sign In clicked');
-                      setIsMenuOpen(false);
-                      try {
-                        navigate('/login');
-                      } catch (error) {
-                        console.error('Navigation error:', error);
-                        window.location.href = '/login';
-                      }
-                    }}
-                    className="block w-full text-left py-2 px-3 text-foreground hover:text-primary hover:bg-accent rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Sign In
-                  </button>
-                  <button
-                    disabled={isLoading}
-                    onClick={() => {
-                      if (isLoading) return;
-                      console.log('Mobile Create Account clicked');
-                      setIsMenuOpen(false);
-                      try {
-                        navigate('/signup');
-                      } catch (error) {
-                        console.error('Navigation error:', error);
-                        window.location.href = '/signup';
-                      }
-                    }}
-                    className="block w-full text-left py-2 px-3 text-primary hover:text-primary/90 hover:bg-primary/10 rounded transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Create Account
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Main Menu Items */}
-            <div className="bg-background px-4 py-4">
-
-              {navigationData.map((item, index) => (
-                <div key={index} className={`py-4 ${index > 0 ? 'border-t border-border' : ''}`}>
-                  {item.submenu ? (
-                    <button
-                      onClick={() => {
-                        if (item.title === "Shop by Bike") setIsShopByBikeOpen(!isShopByBikeOpen);
-                        else if (item.title === "Shop by Accessories") setIsShopByAccessoriesOpen(!isShopByAccessoriesOpen);
-                      }}
-                      className="w-full flex items-center justify-between text-left py-3 px-2 text-foreground hover:bg-accent rounded-lg transition-colors"
-                    >
-                      <h2 className="text-lg font-semibold text-foreground">
-                        {item.title}
-                      </h2>
-                      <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${
-                        (item.title === "Shop by Bike" && isShopByBikeOpen) ||
-                        (item.title === "Shop by Accessories" && isShopByAccessoriesOpen) ? 'rotate-180' : ''
-                      }`} />
-                    </button>
-                  ) : (
-                    <Link 
-                      to={item.link} 
-                      className="block py-3 px-2 text-foreground hover:bg-accent rounded-lg transition-colors"
-                    >
-                      <h3 className="text-lg font-semibold">{item.title}</h3>
-                    </Link>
-                  )}
-                  
-                  {item.submenu && (
-                    <div className={`mt-4 space-y-1 ${
-                      (item.title === "Shop by Bike" && !isShopByBikeOpen) ||
-                      (item.title === "Shop by Accessories" && !isShopByAccessoriesOpen) ? 'hidden' : ''
-                    }`}>
-                      {item.title === "Shop by Bike" ? (
-                        isLoadingBikes ? (
-                          <div className="flex items-center justify-center py-8">
-                            <Loader2 className="h-5 w-5 animate-spin text-primary" />
-                            <span className="ml-2 text-sm text-muted-foreground">Loading bikes...</span>
-                          </div>
-                        ) : Object.keys(bikesByBrand).length === 0 ? (
-                          <div className="text-center py-8 text-sm text-muted-foreground">
-                            No bikes available
-                          </div>
-                        ) : (
-                          Object.entries(bikesByBrand).map(([brandKey, brandData]) => (
-                              <div key={brandKey} className="py-2">
-                                <MobileDropdown 
-                                  title={brandData.brandName}
-                                  data={brandData.bikes
-                                    .sort((a, b) => a.name.localeCompare(b.name))
-                                    .map((bike) => {
-                                      const bikeMenuItems = accessoryCategories.map((cat) => {
-                                        const productTypes = getProductTypesForCategory(cat.slug);
-                                        return {
-                                          title: cat.name,
-                                          link: `/collections/bikes/${bike.slug}?category=${cat.slug}`,
-                                          submenu: productTypes.map((pt) => ({
-                                            title: pt.label,
-                                            link: `/collections/bikes/${bike.slug}?category=${cat.slug}&productType=${pt.slug}`
-                                          }))
-                                        };
-                                      });
-                                      
-                                      return {
-                                        title: bike.name,
-                                        link: `/collections/bikes/${bike.slug}`,
-                                        submenu: bikeMenuItems
-                                      };
-                                    })}
-                                />
-                              </div>
-                            ))
-                        )
-                      ) : item.title === "Shop by Accessories" ? (
-                        item.submenu.map((category) => (
-                          <MobileDropdown 
-                            key={category.title}
-                            title={category.title} 
-                            data={category.submenu || []}
-                          />
-                        ))
-                      ) : item.title === "Scooters" ? (
-                        item.submenu.map((scooter) => (
-                          <a
-                            key={scooter.title}
-                            href={scooter.link}
-                            className="block py-2 px-3 text-muted-foreground hover:text-primary hover:bg-accent rounded transition-colors"
-                          >
-                            {scooter.title}
-                          </a>
-                        ))
-                      ) : item.title === "EV Bikes" ? (
-                        item.submenu.map((brand) => (
-                          <MobileDropdown 
-                            key={brand.title}
-                            title={brand.title} 
-                            data={brand.submenu || []}
-                          />
-                        ))
-                      ) : (
-                        item.submenu.map((subItem) => (
-                          <a
-                            key={subItem.title}
-                            href={subItem.link}
-                            className="block py-2 px-3 text-muted-foreground hover:text-primary hover:bg-accent rounded transition-colors"
-                          >
-                            {subItem.title}
-                          </a>
-                        ))
-                      )}
-                    </div>
-                  )}
-                </div>
-              ))}
-              
-              {/* Apparels Link - Mobile */}
-              <div className="py-4 border-t border-border">
-                <Link 
-                  to="/apparels" 
-                  className="block py-3 px-2 text-foreground hover:bg-accent rounded-lg transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <h3 className="text-lg font-semibold">Apparels</h3>
-                </Link>
-              </div>
-            </div>
-            
-            {/* Scroll to Top Button */}
-            <div className="fixed bottom-4 right-4 z-50">
-              <Button 
-                size="sm" 
-                className="rounded-full w-12 h-12 bg-gray-900 hover:bg-gray-800 text-white shadow-lg"
-                onClick={() => scrollToTop()}
-              >
-                <ChevronDown className="h-4 w-4 rotate-180" />
-              </Button>
-            </div>
-            </div>
-            </div>
-          </div>
-        )}
+      <MobileMenu
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        onLogout={handleLogout}
+      />
     </header>
   );
 };

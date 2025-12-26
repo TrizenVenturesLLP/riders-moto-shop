@@ -56,7 +56,8 @@ const SearchResults = () => {
   const { data, isLoading, error } = useFilteredProducts(filterParams);
   
   const products = data?.data?.products || [];
-  const totalResults = data?.data?.pagination?.total || 0;
+  // Use actual products length if pagination total is 0 but we have products (fallback case)
+  const totalResults = data?.data?.pagination?.totalItems || data?.data?.pagination?.total || products.length;
 
   // Debug logging
   console.log('🔍 Search Results Debug:', {
@@ -113,32 +114,26 @@ const SearchResults = () => {
           
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
-              Search Results
-            </h1>
-            
-            <div className="text-sm md:text-base text-muted-foreground">
               {query ? (
                 <>
-                  <span>Searching for: </span>
-                  <span className="font-semibold text-primary">"{query}"</span>
-                  {category !== 'All' && (
-                    <>
-                      <span> in </span>
-                      <span className="font-semibold text-primary">{category}</span>
-                    </>
-                  )}
+                  Found {totalResults} {totalResults === 1 ? 'result' : 'results'} for "{query}"
                 </>
               ) : (
                 <>
-                  <span>Showing all </span>
-                  <span className="font-semibold text-primary">{category.toLowerCase()}</span>
+                  {totalResults} {totalResults === 1 ? 'result' : 'results'} found
+                  {category !== 'All' && (
+                    <> in <span className="text-primary">{category}</span></>
+                  )}
                 </>
               )}
-            </div>
+            </h1>
             
-            <div className="mt-2 text-xs md:text-sm text-muted-foreground/70">
-              {totalResults} {totalResults === 1 ? 'result' : 'results'} found
-            </div>
+            {category !== 'All' && query && (
+              <div className="text-sm md:text-base text-muted-foreground mt-2">
+                <span>Category: </span>
+                <span className="font-semibold text-primary">{category}</span>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -148,13 +143,10 @@ const SearchResults = () => {
         {products.length === 0 ? (
           <div className="text-center py-8 md:py-12">
             <Search className="h-12 w-12 md:h-16 md:w-16 text-muted-foreground/30 mx-auto mb-4" />
-            <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">
-              No products found
-            </h3>
             <p className="text-sm md:text-base text-muted-foreground mb-6">
               {query ? 
-                `No products match your search for "${query}"` :
-                `No ${category.toLowerCase()} found`
+                `Try adjusting your search terms or browse our categories below.` :
+                `No ${category.toLowerCase()} found. Try browsing other categories.`
               }
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

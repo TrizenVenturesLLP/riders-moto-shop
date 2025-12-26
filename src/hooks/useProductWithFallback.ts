@@ -12,6 +12,7 @@ interface ProductImage {
 
 interface Product {
   id: string;
+  slug?: string;
   name: string;
   sku: string;
   price: string | number;
@@ -148,7 +149,12 @@ export const useProductWithFallback = (productId: string) => {
   }
 
   if (fallbackQuery.isSuccess && fallbackQuery.data?.data?.products) {
-    const foundProduct = fallbackQuery.data.data.products.find(p => p.id === productId);
+    // Check if productId is a UUID or a slug
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(productId);
+    
+    const foundProduct = fallbackQuery.data.data.products.find(p => 
+      isUUID ? p.id === productId : (p.slug === productId || p.id === productId)
+    );
     if (foundProduct) {
       console.log('✅ Found product in fallback list:', foundProduct.name);
       return {
