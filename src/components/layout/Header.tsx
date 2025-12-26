@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Search, ShoppingCart, User, Menu, X, ChevronDown, Wrench, Shield, Zap, Settings, Headphones, Camera, Lock, Star, LogOut, UserCircle, Loader2 } from 'lucide-react';
+import { Search, ShoppingCart, User, Menu, X, ChevronDown, Wrench, Shield, Zap, Settings, Headphones, Camera, Lock, Star, LogOut, UserCircle, Loader2, Heart } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/hooks/useCart';
+import { scrollToTop } from '@/hooks/useScrollToTop';
 import { useBikeModels } from '@/hooks/useBikeModels';
 import { getProductTypesForCategory } from '@/config/productTypes';
 import { Button } from '@/components/ui/button';
@@ -503,6 +504,15 @@ const Header = () => {
                         Orders
                       </Link>
                       
+                      <Link
+                        to="/wishlist"
+                        className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-accent"
+                        onClick={() => setIsUserMenuOpen(false)}
+                      >
+                        <Heart className="h-4 w-4 mr-2" />
+                        Wishlist
+                      </Link>
+                      
                       <button
                         onClick={handleLogout}
                         className="flex items-center w-full px-4 py-2 text-sm text-foreground hover:bg-accent"
@@ -569,7 +579,7 @@ const Header = () => {
               {navigationData.map((item, index) => (
                 <NavigationMenuItem key={index}>
                   {item.submenu ? (
-                    <NavigationMenuTrigger className="text-foreground hover:text-primary font-medium text-sm bg-transparent hover:bg-transparent focus:bg-transparent data-[active]:bg-transparent data-[state=open]:bg-transparent rounded-none px-3 py-1.5 h-auto">
+                    <NavigationMenuTrigger className="text-foreground hover:text-primary focus:text-foreground data-[active]:text-foreground data-[state=open]:text-foreground font-medium text-sm bg-transparent hover:bg-transparent focus:bg-transparent data-[active]:bg-transparent data-[state=open]:bg-transparent rounded-none px-3 py-1.5 h-auto">
                       {item.title}
                     </NavigationMenuTrigger>
                   ) : (
@@ -1046,7 +1056,7 @@ const Header = () => {
               <Button 
                 size="sm" 
                 className="rounded-full w-12 h-12 bg-gray-900 hover:bg-gray-800 text-white shadow-lg"
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                onClick={() => scrollToTop()}
               >
                 <ChevronDown className="h-4 w-4 rotate-180" />
               </Button>

@@ -4,6 +4,7 @@ import { useBikeModels } from '@/hooks/useBikeModels';
 import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { scrollToTop } from '@/hooks/useScrollToTop';
 
 const AllBikes = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -30,7 +31,7 @@ const AllBikes = () => {
     params.set('page', String(newPage));
     setSearchParams(params, { replace: true });
     // Scroll to top when page changes
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollToTop();
   };
 
   // Handle items per page change

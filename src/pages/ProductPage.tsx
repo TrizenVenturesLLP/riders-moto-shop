@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { useProductWithFallback } from '@/hooks/useProductWithFallback';
 import { useCart } from '@/hooks/useCart';
+import { useWishlist } from '@/contexts/WishlistContext';
 import { useAuth } from '@/hooks/useAuth';
 import { trackEvent } from '@/hooks/useAnalytics';
 import { toast } from 'sonner';
@@ -70,7 +71,6 @@ const ProductPage = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState('black');
-  const [isWishlisted, setIsWishlisted] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const trackedProductIdRef = useRef<string | null>(null);
 
@@ -79,6 +79,9 @@ const ProductPage = () => {
   
   // Cart functionality
   const { addToCart, isInCart, getCartItem } = useCart();
+  
+  // Wishlist functionality
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   
   // Get user data for analytics
   const { user } = useAuth();
@@ -398,10 +401,27 @@ const ProductPage = () => {
                 <Button
                   variant="outline"
                   className="flex-1 py-2 text-sm rounded"
-                  onClick={() => setIsWishlisted(!isWishlisted)}
+                  onClick={async () => {
+                    if (!product) return;
+                    const productIsInWishlist = isInWishlist(product.id);
+                    if (productIsInWishlist) {
+                      await removeFromWishlist(product.id);
+                    } else {
+                      await addToWishlist({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        image: product.images?.[0]?.url || product.images?.[selectedImage]?.url,
+                        sku: product.sku,
+                        brand: product.brand?.name,
+                        slug: product.slug,
+                        inStock: product.stockQuantity > 0 && product.isActive,
+                      });
+                    }
+                  }}
                 >
-                  <Heart className={`h-3.5 w-3.5 mr-2 ${isWishlisted ? 'text-red-600 fill-current' : ''}`} />
-                  {isWishlisted ? 'Wishlisted' : 'Add to Wishlist'}
+                  <Heart className={`h-3.5 w-3.5 mr-2 ${isInWishlist(product?.id || '') ? 'text-red-600 fill-current' : ''}`} />
+                  {isInWishlist(product?.id || '') ? 'Wishlisted' : 'Add to Wishlist'}
                 </Button>
                 <Button variant="outline" className="flex-1 py-2 text-sm rounded">
                   <Share2 className="h-3.5 w-3.5 mr-2" />

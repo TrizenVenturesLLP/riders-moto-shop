@@ -5,6 +5,7 @@ import ProductCard from '@/components/ProductCard';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { scrollToTop } from '@/hooks/useScrollToTop';
 
 const FeaturedProducts = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -31,7 +32,7 @@ const FeaturedProducts = () => {
     const params = new URLSearchParams(searchParams);
     params.set('page', String(newPage));
     setSearchParams(params, { replace: true });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollToTop();
   };
 
   if (isLoading) {

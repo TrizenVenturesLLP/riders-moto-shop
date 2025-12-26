@@ -6,8 +6,10 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
+import { WishlistProvider } from "@/contexts/WishlistContext";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { trackEvent } from "@/hooks/useAnalytics";
+import { useScrollToTop } from "@/hooks/useScrollToTop";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ProductPage from "./pages/ProductPage";
@@ -29,13 +31,17 @@ import About from "@/pages/About";
 import AllBikes from "@/pages/AllBikes";
 import FeaturedProducts from "@/pages/FeaturedProducts";
 import Apparels from "@/pages/Apparels";
+import Wishlist from "@/pages/Wishlist";
 import LoginPromptModal from "@/components/LoginPromptModal";
 
 const queryClient = new QueryClient();
 
-// Component to track page views on route changes
+// Component to track page views on route changes and scroll to top
 const PageViewTracker = () => {
   const location = useLocation();
+
+  // Scroll to top on route change
+  useScrollToTop();
 
   useEffect(() => {
     // Track page view on route change
@@ -57,9 +63,10 @@ const App = () => (
     <TooltipProvider>
       <AuthProvider>
         <CartProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
+          <WishlistProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
           <PageViewTracker />
           <div className="min-h-screen bg-background flex flex-col">
             <Header />
@@ -96,6 +103,7 @@ const App = () => (
                   />
 
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/payment" element={<Payment />} />
                   <Route
@@ -146,6 +154,7 @@ const App = () => (
             <Footer />
           </div>
         </BrowserRouter>
+          </WishlistProvider>
         </CartProvider>
       </AuthProvider>
     </TooltipProvider>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { scrollToTop as scrollToTopUtil } from '@/hooks/useScrollToTop';
 import { Truck, Clock, Shield, CreditCard, Facebook, Instagram, Youtube, ChevronUp, Calendar, ChevronDown } from 'lucide-react';
 import rmsLogo from '@/assets/rms-logo.jpg';
 
@@ -6,9 +7,6 @@ const Footer = () => {
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [isPolicyOpen, setIsPolicyOpen] = useState(false);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
 
   return (
     <footer className="bg-background border-t border-border">
@@ -201,7 +199,7 @@ const Footer = () => {
               
               {/* Scroll to Top Button */}
               <button
-                onClick={scrollToTop}
+                onClick={() => scrollToTopUtil()}
                 className="ml-1 p-2 sm:p-2.5 bg-primary/10 text-primary rounded-full hover:bg-primary/20 transition-colors shadow-md hover:shadow-lg"
                 aria-label="Back to top"
               >
