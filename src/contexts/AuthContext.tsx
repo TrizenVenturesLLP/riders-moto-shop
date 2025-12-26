@@ -112,6 +112,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       if (!response.ok || !result.success) {
         console.error('❌ Login failed:', result);
+        
+        // If there are validation errors, show them
+        if (result.errors && Array.isArray(result.errors) && result.errors.length > 0) {
+          const errorMessages = result.errors.map((err: any) => err.message).join(', ');
+          throw new Error(`Validation error: ${errorMessages}`);
+        }
+        
         throw new Error(result.message || 'Login failed. Please try again.');
       }
 

@@ -5,7 +5,8 @@ import { useHeroCarousel } from '@/hooks/useHeroCarousel';
 import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
-  const { data: carouselData, isLoading } = useHeroCarousel();
+  // Fetch only home page carousel items (not apparels)
+  const { data: carouselData, isLoading } = useHeroCarousel('home');
   
   const [currentSlide, setCurrentSlide] = useState(0);
 
