@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -72,6 +72,7 @@ const ProductPage = () => {
   const [selectedColor, setSelectedColor] = useState('black');
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const trackedProductIdRef = useRef<string | null>(null);
 
   // Fetch product data from API with fallback
   const { data: productData, isLoading, error, source } = useProductWithFallback(id || '');
@@ -82,10 +83,24 @@ const ProductPage = () => {
   // Get user data for analytics
   const { user } = useAuth();
 
-  // Track product view
+  // Reset tracking ref when product ID changes
   useEffect(() => {
-    if (productData?.data?.product) {
+    if (id && trackedProductIdRef.current !== id) {
+      trackedProductIdRef.current = null;
+    }
+  }, [id]);
+
+  // Track product view - only once per product load
+  useEffect(() => {
+    if (productData?.data?.product && !isLoading) {
       const product = productData.data.product;
+      
+      // Only track if we haven't tracked this product ID yet
+      if (trackedProductIdRef.current === product.id) {
+        return;
+      }
+      
+      trackedProductIdRef.current = product.id;
       
       // Get user bike preferences
       const userBikeBrand = user?.bikeBrand || null;
@@ -116,7 +131,7 @@ const ProductPage = () => {
         },
       });
     }
-  }, [productData?.data?.product?.id, source, user?.bikeBrand, user?.bikeModel]);
+  }, [productData?.data?.product?.id, isLoading, source, user?.bikeBrand, user?.bikeModel]);
 
   if (isLoading) {
     return (

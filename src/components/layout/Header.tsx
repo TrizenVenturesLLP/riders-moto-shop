@@ -476,13 +476,13 @@ const Header = () => {
                 
                 {/* User Dropdown Menu */}
                 {isUserMenuOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-48 bg-card border border-border rounded-lg shadow-lg z-50">
+                  <div className="absolute right-0 top-full mt-2 w-56 bg-card border border-border rounded-lg shadow-lg z-50">
                     <div className="py-2">
                       <div className="px-4 py-2 border-b border-border">
-                        <p className="text-sm font-medium text-foreground">
+                        <p className="text-sm font-medium text-foreground truncate">
                           {user?.firstName} {user?.lastName}
                         </p>
-                        <p className="text-xs text-muted-foreground">{user?.email}</p>
+                        <p className="text-xs text-muted-foreground truncate" title={user?.email}>{user?.email}</p>
                       </div>
                       
                       <Link
@@ -585,7 +585,7 @@ const Header = () => {
                     <NavigationMenuContent className="overflow-visible">
                       <div className="max-h-[70vh] overflow-y-auto overflow-x-visible scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent bg-popover">
                         {item.title === "Shop by Bike" ? (
-                          <div className="grid grid-cols-4 gap-8 p-6 w-[1400px] max-w-[calc(100vw-80px)] mx-auto bg-popover">
+                          <div className="grid grid-cols-4 gap-6 p-4 w-[900px] max-w-[calc(100vw-80px)] mx-auto bg-popover">
                             {isLoadingBikes ? (
                               <div className="col-span-4 flex items-center justify-center py-8">
                                 <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -601,9 +601,9 @@ const Header = () => {
                                 const isLastColumn = brandIndex % 4 === 3;
                                 
                                 return (
-                                  <div key={brandKey} className="space-y-2">
-                                    <h4 className="font-bold text-base text-primary uppercase">{brandData.brandName}</h4>
-                                    <div className="space-y-1">
+                                  <div key={brandKey} className="space-y-1.5">
+                                    <h4 className="font-bold text-sm text-primary uppercase">{brandData.brandName}</h4>
+                                    <div className="space-y-0.5">
                                       {brandData.bikes
                                         .sort((a, b) => a.name.localeCompare(b.name))
                                         .map((bike) => (
@@ -615,28 +615,28 @@ const Header = () => {
                                             >
                                               {bike.name}
                                             </Link>
-                                            {/* Show categories submenu on hover - position right after the text */}
-                                            <div className={`invisible group-hover/bike:visible absolute ${isLastColumn ? 'right-full mr-2' : 'left-full ml-2'} top-0 bg-card border border-border rounded shadow-lg p-4 min-w-[280px] z-[200] whitespace-normal`}>
-                                              <div className="space-y-2">
+                                            {/* Show categories submenu on hover - position right after the text, closer to the item */}
+                                            <div className={`invisible group-hover/bike:visible absolute ${isLastColumn ? 'right-full mr-1' : 'left-full ml-1'} top-0 bg-card border border-border rounded shadow-lg p-3 min-w-[240px] max-w-[280px] z-[200] whitespace-normal`}>
+                                              <div className="space-y-1.5">
                                                 {accessoryCategories.map((category) => {
                                                   const productTypes = getProductTypesForCategory(category.slug);
                                                   return (
                                                     <div key={category.slug} className="group/category relative">
                                                       <Link
                                                         to={`/collections/bikes/${bike.slug}?category=${category.slug}`}
-                                                        className="block text-sm font-semibold text-primary hover:text-primary/90 transition-colors py-1"
+                                                        className="block text-sm font-semibold text-primary hover:text-primary/90 transition-colors py-0.5"
                                                       >
                                                         {category.name}
                                                       </Link>
-                                                      {/* Show product types on hover - position right after the category text */}
+                                                      {/* Show product types on hover - position right after the category text, closer and prevent overlap */}
                                                       {productTypes.length > 0 && (
-                                                        <div className={`invisible group-hover/category:visible absolute ${isLastColumn ? 'right-full mr-2' : 'left-full ml-2'} top-0 bg-card border border-border rounded shadow-lg p-3 min-w-[220px] z-[300]`}>
-                                                          <div className="space-y-1">
+                                                        <div className={`invisible group-hover/category:visible absolute ${isLastColumn ? 'right-full mr-1' : 'left-full ml-1'} top-0 bg-card border border-border rounded shadow-lg p-2 min-w-[200px] max-w-[240px] z-[300] max-h-[400px] overflow-y-auto`}>
+                                                          <div className="space-y-0.5">
                                                             {productTypes.map((productType) => (
                                                               <Link
                                                                 key={productType.slug}
                                                                 to={`/collections/bikes/${bike.slug}?category=${category.slug}&productType=${productType.slug}`}
-                                                                className="block text-sm text-muted-foreground hover:text-primary transition-colors py-1.5 px-2 rounded hover:bg-accent whitespace-nowrap"
+                                                                className="block text-xs text-muted-foreground hover:text-primary transition-colors py-1 px-2 rounded hover:bg-accent whitespace-nowrap"
                                                               >
                                                                 {productType.label}
                                                               </Link>

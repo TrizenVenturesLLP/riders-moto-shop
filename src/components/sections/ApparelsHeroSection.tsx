@@ -9,7 +9,6 @@ const ApparelsHeroSection = () => {
   
   // Fetch apparels hero carousel from backend
   const { data: carouselData, isLoading } = useHeroCarousel('apparels');
-  
   // Use backend data if available, otherwise fallback to static slides
   const apparelsCarouselSlides = useMemo(() => {
     if (carouselData?.data?.carouselItems && carouselData.data.carouselItems.length > 0) {

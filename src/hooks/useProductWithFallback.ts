@@ -109,11 +109,15 @@ export const useProductWithFallback = (productId: string) => {
     enabled: !!productId && !foundInMock, // Enable API if not found in mock
     staleTime: 5 * 60 * 1000,
     cacheTime: 10 * 60 * 1000,
+    retry: false, // Don't retry on failure
+    refetchOnWindowFocus: false, // Don't refetch on window focus
+    refetchOnMount: false, // Don't refetch on mount if data exists
+    refetchOnReconnect: false, // Don't refetch on reconnect
   });
 
   // If direct query fails, try to find the product in the products list
   const fallbackQuery = useQuery<ProductsResponse>({
-    queryKey: ['products'],
+    queryKey: ['products', 'fallback', productId],
     queryFn: async () => {
       console.log('🔍 Fallback: Fetching all products to find:', productId);
       const response = await fetch(`${API_BASE_URL}/products`);
@@ -124,9 +128,13 @@ export const useProductWithFallback = (productId: string) => {
       
       return response.json();
     },
-    enabled: !!productId && !foundInMock && directQuery.isError, // Enable fallback if not in mock and direct query failed
+    enabled: !!productId && !foundInMock && directQuery.isError && !directQuery.isLoading, // Enable fallback only if direct query failed and is not loading
     staleTime: 5 * 60 * 1000,
     cacheTime: 10 * 60 * 1000,
+    retry: false, // Don't retry on failure
+    refetchOnWindowFocus: false, // Don't refetch on window focus
+    refetchOnMount: false, // Don't refetch on mount if data exists
+    refetchOnReconnect: false, // Don't refetch on reconnect
   });
 
   // Determine which data to use

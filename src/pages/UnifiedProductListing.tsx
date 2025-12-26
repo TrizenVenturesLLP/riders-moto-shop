@@ -668,19 +668,19 @@ const UnifiedProductListing = () => {
         </div>
 
         {/* Filters Section - Always Visible */}
-        <Card className="mb-6 border-border bg-card">
-          <CardContent className="pt-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <Card className="mb-4 md:mb-6 border-border bg-card">
+          <CardContent className="p-3 sm:p-4 md:pt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
 
               {/* Brand Filter - For both Bike and Accessory Pages */}
               {availableBrands.length > 0 && (
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Brand</label>
+                  <label className="block text-xs sm:text-sm font-medium text-foreground mb-1.5 sm:mb-2">Brand</label>
                   <Select
                     value={searchParams.get('brand') || 'all-brands'}
                     onValueChange={(value) => updateURL({ brand: value === 'all-brands' ? '' : value })}
                   >
-                    <SelectTrigger className="bg-background border-border">
+                    <SelectTrigger className="bg-background border-border h-8 sm:h-10 text-xs sm:text-sm">
                       <SelectValue placeholder="All Brands" />
                     </SelectTrigger>
                     <SelectContent>
@@ -698,20 +698,20 @@ const UnifiedProductListing = () => {
               {/* Category Filter - Hide on Apparels page (category is always "apparels") */}
               {availableCategories.length > 0 && !isApparelsPage && (
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Category</label>
+                  <label className="block text-xs sm:text-sm font-medium text-foreground mb-1.5 sm:mb-2">Category</label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
                         role="combobox"
-                        className="w-full justify-between bg-background border-border"
+                        className="w-full justify-between bg-background border-border h-8 sm:h-10 text-xs sm:text-sm"
                       >
                         {selectedCategories.length === 0
                           ? 'All Categories'
                           : selectedCategories.length === 1
                           ? availableCategories.find(cat => cat.slug === selectedCategories[0])?.name || 'Selected'
                           : `${selectedCategories.length} selected`}
-                        <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        <ChevronDown className="ml-2 h-3 w-3 sm:h-4 sm:w-4 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-full p-0" align="start">
@@ -769,20 +769,20 @@ const UnifiedProductListing = () => {
               {/* Product Type Filter - For both Bike and Accessory Pages - Multi-select */}
               {availableProductTypes.length > 0 && (
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Product Type</label>
+                  <label className="block text-xs sm:text-sm font-medium text-foreground mb-1.5 sm:mb-2">Product Type</label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
                         role="combobox"
-                        className="w-full justify-between bg-background border-border"
+                        className="w-full justify-between bg-background border-border h-8 sm:h-10 text-xs sm:text-sm"
                       >
                         {selectedProductTypes.length === 0
                           ? 'All Products'
                           : selectedProductTypes.length === 1
                           ? availableProductTypes.find(pt => pt.slug === selectedProductTypes[0])?.name || 'Selected'
                           : `${selectedProductTypes.length} selected`}
-                        <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        <ChevronDown className="ml-2 h-3 w-3 sm:h-4 sm:w-4 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-full p-0" align="start">
@@ -840,20 +840,20 @@ const UnifiedProductListing = () => {
               {/* Sub Product Type Filter - Only for Apparels when Product Type is selected */}
               {isApparelsPage && selectedProductTypes.length > 0 && availableSubProductTypes.length > 0 && (
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Sub Product Type</label>
+                  <label className="block text-xs sm:text-sm font-medium text-foreground mb-1.5 sm:mb-2">Sub Product Type</label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
                         role="combobox"
-                        className="w-full justify-between bg-background border-border"
+                        className="w-full justify-between bg-background border-border h-8 sm:h-10 text-xs sm:text-sm"
                       >
                         {selectedSubProductTypes.length === 0
                           ? 'All Sub Types'
                           : selectedSubProductTypes.length === 1
                           ? availableSubProductTypes.find(spt => spt.slug === selectedSubProductTypes[0])?.name || 'Selected'
                           : `${selectedSubProductTypes.length} selected`}
-                        <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        <ChevronDown className="ml-2 h-3 w-3 sm:h-4 sm:w-4 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-full p-0" align="start">
@@ -941,28 +941,28 @@ const UnifiedProductListing = () => {
 
               {/* Price Range */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Price Range</label>
-                <div className="flex gap-2">
+                <label className="block text-xs sm:text-sm font-medium text-foreground mb-1.5 sm:mb-2">Price Range</label>
+                <div className="flex gap-1.5 sm:gap-2">
                   <Input
                     type="number"
                     placeholder="Min ₹"
                     value={priceRange.min}
                     onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })}
-                    className="bg-background border-border"
+                    className="bg-background border-border text-xs sm:text-sm h-8 sm:h-10"
                   />
                   <Input
                     type="number"
                     placeholder="Max ₹"
                     value={priceRange.max}
                     onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })}
-                    className="bg-background border-border"
+                    className="bg-background border-border text-xs sm:text-sm h-8 sm:h-10"
                   />
                 </div>
               </div>
 
               {/* Stock Status */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Stock Status</label>
+                <label className="block text-xs sm:text-sm font-medium text-foreground mb-1.5 sm:mb-2">Stock Status</label>
                 <Select
                   value={searchParams.get('inStock') || 'all'}
                   onValueChange={(value) => {
@@ -977,7 +977,7 @@ const UnifiedProductListing = () => {
                     }
                   }}
                 >
-                  <SelectTrigger className="bg-background border-border">
+                  <SelectTrigger className="bg-background border-border h-8 sm:h-10 text-xs sm:text-sm">
                     <SelectValue placeholder="All Products" />
                   </SelectTrigger>
                   <SelectContent>
@@ -993,14 +993,14 @@ const UnifiedProductListing = () => {
 
             {/* Clear All Filters Button */}
             {hasActiveFilters && (
-              <div className="mt-4 flex justify-end">
+              <div className="mt-2 sm:mt-4 flex justify-end">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={clearAllFilters}
-                  className="text-primary hover:text-primary/80"
+                  className="text-primary hover:text-primary/80 text-xs sm:text-sm h-7 sm:h-9 px-2 sm:px-3"
                 >
-                  <X className="h-4 w-4 mr-2" />
+                  <X className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                   Clear All Filters
                 </Button>
               </div>
