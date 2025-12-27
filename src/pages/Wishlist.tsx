@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useCart } from '@/hooks/useCart';
+import { useAuth } from '@/hooks/useAuth';
 import { 
   Heart, 
   ArrowLeft, 
@@ -18,9 +19,21 @@ import { toast } from 'sonner';
 const Wishlist = () => {
   const { items, totalItems, removeFromWishlist, clearWishlist, isLoading } = useWishlist();
   const { addToCart } = useCart();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   const handleAddToCart = (item: typeof items[0]) => {
+    if (!isAuthenticated) {
+      toast.error('Please log in to add items to cart', {
+        description: 'You need to be logged in to add items to your cart.',
+        action: {
+          label: 'Log In',
+          onClick: () => navigate('/login'),
+        },
+      });
+      return;
+    }
+    
     addToCart({
       id: item.id,
       name: item.name,
@@ -180,7 +193,8 @@ const Wishlist = () => {
                       size="sm"
                       className="flex-1 text-xs"
                       onClick={() => handleAddToCart(item)}
-                      disabled={!item.inStock}
+                      disabled={!item.inStock || !isAuthenticated}
+                      title={!isAuthenticated ? 'Please log in to add items to cart' : !item.inStock ? 'Out of stock' : 'Add to cart'}
                     >
                       <ShoppingCart className="h-3.5 w-3.5 mr-1.5" />
                       Add to Cart

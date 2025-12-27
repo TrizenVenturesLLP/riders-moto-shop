@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { signInWithPopup } from 'firebase/auth';
+import { auth, googleProvider } from '@/config/firebase';
 import { trackEvent } from '@/hooks/useAnalytics';
 import { API_BASE_URL } from '@/config/api';
 
@@ -27,6 +29,7 @@ interface AuthContextType {
     bikeModel: string;
     password: string;
   }) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
   updateProfile: (userData: Partial<User>) => Promise<void>;
   getActiveSessions: () => Promise<any[]>;
@@ -221,6 +224,78 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const signInWithGoogle = async (): Promise<void> => {
+    setIsLoading(true);
+    try {
+      console.log('🔐 Attempting Google sign-in...');
+      
+      // Sign in with Firebase
+      const result = await signInWithPopup(auth, googleProvider);
+      const idToken = await result.user.getIdToken();
+      
+      console.log('✅ Firebase authentication successful, sending token to backend...');
+      
+      // Send Firebase ID token to your backend
+      const response = await fetch(`${API_BASE_URL}/customer/auth/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // Include httpOnly cookies
+        body: JSON.stringify({ idToken }),
+      });
+
+      console.log('📡 Google sign-in response status:', response.status, response.statusText);
+
+      // Check if response is JSON before parsing
+      const contentType = response.headers.get('content-type');
+      let apiResult;
+      
+      if (contentType && contentType.includes('application/json')) {
+        apiResult = await response.json();
+      } else {
+        const text = await response.text();
+        console.error('❌ Non-JSON response:', text);
+        throw new Error('Invalid response from server');
+      }
+
+      if (!response.ok || !apiResult.success) {
+        console.error('❌ Google sign-in failed:', apiResult);
+        throw new Error(apiResult.message || 'Google sign-in failed. Please try again.');
+      }
+
+      // Tokens are in httpOnly cookies, just store user data
+      const userData = apiResult.data.user;
+      setUser(userData);
+      // Store user data in localStorage for analytics
+      localStorage.setItem('user_data', JSON.stringify(userData));
+      
+      console.log('✅ Google sign-in successful, user:', userData.email);
+      
+      // Track login event
+      trackEvent('login', {
+        metadata: {
+          loginMethod: 'google',
+        },
+      });
+    } catch (error: any) {
+      console.error('❌ Google sign-in error:', error);
+      
+      // Handle Firebase-specific errors
+      if (error.code === 'auth/popup-closed-by-user') {
+        throw new Error('Sign-in was cancelled. Please try again.');
+      } else if (error.code === 'auth/popup-blocked') {
+        throw new Error('Popup was blocked. Please allow popups for this site.');
+      } else if (error.code === 'auth/network-request-failed') {
+        throw new Error('Network error. Please check your connection.');
+      } else if (error.message) {
+        throw new Error(error.message);
+      } else {
+        throw new Error('Google sign-in failed. Please try again.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const logout = async (): Promise<void> => {
     try {
       // Call logout endpoint to clear httpOnly cookies
@@ -290,6 +365,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isLoading,
     login,
     signup,
+    signInWithGoogle,
     logout,
     updateProfile,
     getActiveSessions,
