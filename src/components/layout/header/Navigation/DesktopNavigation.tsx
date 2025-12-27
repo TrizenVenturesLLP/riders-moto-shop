@@ -85,7 +85,7 @@ export const DesktopNavigation = ({
 }: DesktopNavigationProps) => {
   return (
     <div
-      className={`hidden md:flex items-center py-1.5 bg-background border-t border-border w-full transition-[transform,opacity,height] duration-300 ease-in-out ${
+      className={`hidden md:flex items-center py-1.5 bg-background border-t border-border w-full transition-[transform,opacity,height] duration-300 ease-in-out relative z-10 ${
         isScrolledDown
           ? "-translate-y-full opacity-0 h-0 overflow-hidden pointer-events-none"
           : "translate-y-0 opacity-100"

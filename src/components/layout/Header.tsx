@@ -99,7 +99,7 @@ const Header = () => {
           <HeaderLogo isScrolledDown={isScrolledDown} />
 
           {/* Search Bar - Desktop Only (Centered) */}
-          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-full max-w-2xl px-4">
+          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-full max-w-2xl px-4 z-[100]">
             <HeaderSearch isScrolledDown={isScrolledDown} />
           </div>
 

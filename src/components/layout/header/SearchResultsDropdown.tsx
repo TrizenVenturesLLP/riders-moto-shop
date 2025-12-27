@@ -53,15 +53,15 @@ export const SearchResultsDropdown = ({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <Loader2 className="h-5 w-5 animate-spin text-gray-600" />
-        <span className="ml-2 text-sm text-gray-600">Searching...</span>
+        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+        <span className="ml-2 text-sm text-muted-foreground">Searching...</span>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="text-center py-8 text-sm text-gray-500">
+      <div className="text-center py-8 text-sm text-muted-foreground">
         Failed to load results
       </div>
     );
@@ -70,20 +70,20 @@ export const SearchResultsDropdown = ({
   if (products.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-sm text-gray-500">No results found.</p>
+        <p className="text-sm text-muted-foreground">No results found.</p>
       </div>
     );
   }
 
   return (
-    <div className="max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+    <div className="max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-muted">
       <div className="p-2">
         {products.map((product) => (
           <Link
             key={product.id}
             to={`/products/${product.slug || product.id}`}
             onClick={onProductClick}
-            className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors rounded border-b border-gray-100 last:border-b-0"
+            className="block px-4 py-3 text-sm text-foreground hover:bg-muted/80 transition-colors rounded border-b border-border last:border-b-0"
           >
             <div className="flex items-center gap-3">
               {product.images && product.images.length > 0 && (
@@ -95,13 +95,13 @@ export const SearchResultsDropdown = ({
               )}
               <div className="flex-1 min-w-0">
                 {product.brand && (
-                  <p className="text-xs text-gray-500 uppercase mb-0.5">
+                  <p className="text-xs text-muted-foreground uppercase mb-0.5">
                     {product.brand.name}
                   </p>
                 )}
-                <p className="font-medium text-gray-900 truncate">{product.name}</p>
+                <p className="font-medium text-foreground truncate">{product.name}</p>
                 {product.price && (
-                  <p className="text-xs text-gray-500 mt-0.5">
+                  <p className="text-xs text-muted-foreground mt-0.5">
                     ₹{typeof product.price === 'string' 
                       ? parseFloat(product.price).toLocaleString('en-IN', { maximumFractionDigits: 0 })
                       : product.price.toLocaleString('en-IN', { maximumFractionDigits: 0 })}

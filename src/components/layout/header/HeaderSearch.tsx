@@ -97,7 +97,7 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({ isScrolledDown }) => {
   return (
     <div
       ref={searchContainerRef}
-      className={`hidden md:flex w-full transition-all duration-300 relative ${
+      className={`hidden md:flex w-full transition-all duration-300 relative z-[100] ${
         isScrolledDown ? "h-12" : "h-12"
       }`}
     >
@@ -110,7 +110,7 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({ isScrolledDown }) => {
         >
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className={`h-full bg-transparent text-foreground font-normal cursor-pointer focus:outline-none hover:bg-accent transition-all duration-300 border-0 flex items-center justify-between ${
+            className={`h-full bg-transparent text-foreground font-normal cursor-pointer focus:outline-none hover:bg-muted/80 transition-all duration-300 border-0 flex items-center justify-between ${
               isScrolledDown
                 ? "pl-3 pr-2 py-2 text-xs min-w-[80px]"
                 : "pl-3 pr-2 py-2.5 text-xs min-w-[90px]"
@@ -127,7 +127,7 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({ isScrolledDown }) => {
           {/* Custom Dropdown Menu */}
           {isDropdownOpen && (
             <div
-              className={`absolute top-full left-0 mt-2 bg-popover border border-border rounded shadow-lg z-[100] ${
+              className={`absolute top-full left-0 mt-2 bg-popover border border-border rounded shadow-lg z-[9999] ${
                 searchCategory === "All" 
                   ? "w-[500px] max-w-[calc(100vw-2rem)]" 
                   : isScrolledDown 
@@ -154,14 +154,14 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({ isScrolledDown }) => {
                     <button
                       key={category}
                       onClick={() => handleCategorySelect(category)}
-                      className={`w-full text-left px-4 py-2.5 text-sm hover:bg-accent transition-colors ${
+                      className={`w-full text-left px-4 py-2.5 text-sm hover:bg-muted/80 transition-colors text-foreground ${
                         searchCategory === category
-                          ? "bg-accent font-medium"
+                          ? "bg-muted font-medium"
                           : "font-normal"
                       } ${
                         category === "All"
-                          ? "font-medium text-foreground"
-                          : "text-foreground"
+                          ? "font-medium"
+                          : ""
                       }`}
                     >
                       {category}
@@ -193,7 +193,7 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({ isScrolledDown }) => {
           
           {/* Search Results Dropdown */}
           {isSearchResultsOpen && searchQuery.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border rounded shadow-lg z-[100] max-h-[60vh] overflow-y-auto">
+            <div className="absolute top-full left-0 right-0 mt-1 bg-popover border border-border rounded shadow-lg z-[9999] max-h-[60vh] overflow-y-auto">
               <SearchResultsDropdown
                 searchQuery={searchQuery}
                 onProductClick={() => {
