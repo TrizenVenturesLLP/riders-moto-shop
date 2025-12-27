@@ -14,7 +14,7 @@ export const GuestUserMenu = ({
   isLoading = false,
 }: GuestUserMenuProps) => {
   return (
-    <div className="relative hidden md:block" data-user-menu>
+    <div className="relative" data-user-menu>
       <Button 
         variant="ghost" 
         size="sm" 
@@ -23,12 +23,12 @@ export const GuestUserMenu = ({
         onClick={onToggle}
       >
         <User className="h-5 w-5" />
-        <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`hidden md:block h-4 w-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
       </Button>
       
       {/* Guest User Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-56 bg-card border border-border rounded-lg shadow-lg z-50">
+        <div className="absolute right-0 top-full mt-2 w-56 bg-card border border-border rounded-lg shadow-lg z-[10000]">
           <div className="py-2">
             <div className="px-4 py-2 border-b border-border">
               <p className="text-sm font-medium text-foreground">Guest</p>

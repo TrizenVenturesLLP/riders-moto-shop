@@ -97,7 +97,7 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({ isScrolledDown }) => {
   return (
     <div
       ref={searchContainerRef}
-      className={`hidden md:flex w-full transition-all duration-300 relative z-[100] ${
+      className={`flex w-full transition-all duration-300 relative z-[100] ${
         isScrolledDown ? "h-12" : "h-12"
       }`}
     >

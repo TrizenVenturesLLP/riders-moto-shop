@@ -25,18 +25,18 @@ export const AuthenticatedUserMenu = ({
         variant="ghost"
         size="sm"
         onClick={onToggle}
-        className="hidden md:flex items-center space-x-2"
+        className="flex items-center space-x-2"
       >
         <UserCircle className="h-5 w-5" />
-        <span className="text-sm font-medium">
+        <span className="hidden md:inline text-sm font-medium">
           {user.firstName}
         </span>
-        <ChevronDown className="h-4 w-4" />
+        <ChevronDown className="hidden md:block h-4 w-4" />
       </Button>
       
       {/* User Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-56 bg-card border border-border rounded-lg shadow-lg z-50">
+        <div className="absolute right-0 top-full mt-2 w-56 bg-card border border-border rounded-lg shadow-lg z-[10000]">
           <div className="py-2">
             <div className="px-4 py-2 border-b border-border">
               <p className="text-sm font-medium text-foreground truncate">

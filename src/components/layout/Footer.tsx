@@ -98,17 +98,17 @@ const Footer = () => {
             </div>
 
             {/* Info Links - Middle Column */}
-            <div className="md:col-span-1 md:ml-28 border-t md:border-t-0 border-border pt-4 md:pt-0 mt-4 md:mt-0">
+            <div className="md:col-span-1 md:ml-28 border-t md:border-t-0 border-border pt-3 md:pt-0 mt-3 md:mt-0">
               <button
                 onClick={() => setIsInfoOpen(!isInfoOpen)}
-                className="w-full md:w-auto flex items-center justify-between md:justify-start gap-2 text-sm font-bold text-foreground mb-3 md:mb-4 uppercase tracking-wide text-left py-2 md:py-0"
+                className="w-full md:w-auto flex items-center justify-between md:justify-start gap-2 text-sm font-bold text-foreground mb-2 md:mb-4 uppercase tracking-wide text-left py-1.5 md:py-0"
               >
                 <span>Info</span>
                 <ChevronDown 
                   className={`h-4 w-4 md:hidden transition-transform ${isInfoOpen ? 'rotate-180' : ''}`}
                 />
               </button>
-              <ul className={`space-y-2 mt-2 text-left transition-all duration-200 ${isInfoOpen ? 'block' : 'hidden md:block'}`}>
+              <ul className={`space-y-1.5 mt-1.5 text-left transition-all duration-200 ${isInfoOpen ? 'block' : 'hidden md:block'}`}>
                 <li>
                   <a href="/about" className="text-muted-foreground hover:text-primary transition-colors text-xs sm:text-sm inline-block">
                     About Us
@@ -128,17 +128,17 @@ const Footer = () => {
             </div>
 
             {/* Policy Links - Right Column */}
-            <div className="md:col-span-1 md:ml-10 border-t md:border-t-0 border-border pt-4 md:pt-0 mt-4 md:mt-0">
+            <div className="md:col-span-1 md:ml-10 border-t md:border-t-0 border-border pt-3 md:pt-0 mt-3 md:mt-0">
               <button
                 onClick={() => setIsPolicyOpen(!isPolicyOpen)}
-                className="w-full md:w-auto flex items-center justify-between md:justify-start gap-2 text-sm font-bold text-foreground mb-3 md:mb-4 uppercase tracking-wide text-left py-2 md:py-0"
+                className="w-full md:w-auto flex items-center justify-between md:justify-start gap-2 text-sm font-bold text-foreground mb-2 md:mb-4 uppercase tracking-wide text-left py-1.5 md:py-0"
               >
                 <span>Policy</span>
                 <ChevronDown 
                   className={`h-4 w-4 md:hidden transition-transform ${isPolicyOpen ? 'rotate-180' : ''}`}
                 />
               </button>
-              <ul className={`space-y-2 mt-2 text-left transition-all duration-200 ${isPolicyOpen ? 'block' : 'hidden md:block'}`}>
+              <ul className={`space-y-1.5 mt-1.5 text-left transition-all duration-200 ${isPolicyOpen ? 'block' : 'hidden md:block'}`}>
                 <li>
                   <a href="/privacy-policy" className="text-muted-foreground hover:text-primary transition-colors text-xs sm:text-sm inline-block">
                     Privacy Policy
