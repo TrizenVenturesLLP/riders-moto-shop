@@ -52,3 +52,4 @@ export const CollapsibleAccessoryCategory = ({ title, accessories }: Collapsible
   );
 };
 
+

@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Checkbox } from "@/components/ui/checkbox";
 import ProductCard from "@/components/ProductCard";
 import { useProducts, ProductsResponse } from "@/hooks/useProducts";
 import { mockProducts } from "@/mock/products";
@@ -15,7 +17,8 @@ import {
   Search,
   Loader2,
   Home,
-  X
+  X,
+  ChevronDown
 } from "lucide-react";
 
 const formatTitle = (slug?: string) => {
@@ -41,7 +44,11 @@ const BikePage = () => {
 
   // Extract category and productType from query params (new structure) or URL params (old structure)
   const [searchParams, setSearchParams] = useSearchParams();
-  const category = searchParams.get('category') || params.category || undefined;
+  // Support multiple categories (comma-separated)
+  const categoryParam = searchParams.get('category') || params.category || undefined;
+  const categories = categoryParam 
+    ? categoryParam.split(',').map(c => c.trim()).filter(Boolean)
+    : [];
   const productType = searchParams.get('productType') || params.productType || undefined;
 
   // State for filters and view - persist viewMode in URL
@@ -118,12 +125,12 @@ const BikePage = () => {
     return uniqueCategories.sort((a, b) => a.name.localeCompare(b.name));
   }, [model]);
 
-  // Extract unique product types for the selected category
+  // Extract unique product types for the selected categories
   const availableProductTypes = useMemo(() => {
     const productTypes = mockProducts
       .filter(p => 
         p.compatibleModels.includes(model || '') &&
-        (!category || p.category.slug === category)
+        (categories.length === 0 || categories.includes(p.category.slug))
       )
       .filter(p => p.productType)  // Only products with productType
       .map(p => ({ name: p.productType!.name, slug: p.productType!.slug }));
@@ -134,7 +141,7 @@ const BikePage = () => {
     );
     
     return uniqueProductTypes.sort((a, b) => a.name.localeCompare(b.name));
-  }, [model, category]);
+  }, [model, categories]);
 
   // Build filter parameters
   // Map sort options to backend field names
@@ -178,7 +185,7 @@ const BikePage = () => {
     order: getSortOrder(sortBy),
     brand: searchParams.get('brand') || brand || undefined,  // From query params (new) or URL params (old)
     model: model,  // Required - bike model slug
-    category: category,  // From query params (new) or URL params (old)
+    category: categories.length > 0 ? categories.join(',') : undefined,  // Multiple categories (comma-separated)
     productType: productType,  // From query params (new) or URL params (old)
     minPrice: priceRange.min ? parseFloat(priceRange.min) : undefined,
     maxPrice: priceRange.max ? parseFloat(priceRange.max) : undefined,
@@ -243,10 +250,41 @@ const BikePage = () => {
     setSearchParams(params, { replace: true });
   };
 
+  // Handle category selection (multi-select)
+  const handleCategoryToggle = (categorySlug: string) => {
+    const params = new URLSearchParams(searchParams);
+    const currentCategories = categories;
+    
+    if (currentCategories.includes(categorySlug)) {
+      // Remove category
+      const newCategories = currentCategories.filter(c => c !== categorySlug);
+      if (newCategories.length === 0) {
+        params.delete('category');
+        params.delete('productType'); // Clear productType when clearing all categories
+      } else {
+        params.set('category', newCategories.join(','));
+      }
+    } else {
+      // Add category
+      const newCategories = [...currentCategories, categorySlug];
+      params.set('category', newCategories.join(','));
+    }
+    
+    setSearchParams(params, { replace: true });
+  };
+
+  // Clear all categories
+  const handleClearAllCategories = () => {
+    const params = new URLSearchParams(searchParams);
+    params.delete('category');
+    params.delete('productType'); // Clear productType when clearing categories
+    setSearchParams(params, { replace: true });
+  };
+
   // Check if any filters are active
   const hasActiveFilters = useMemo(() => {
     return !!(
-      category ||
+      categories.length > 0 ||
       productType ||
       searchParams.get('brand') ||
       searchParams.get('minPrice') ||
@@ -255,7 +293,7 @@ const BikePage = () => {
       (sortBy && sortBy !== 'featured') ||
       searchQuery
     );
-  }, [category, productType, searchParams, sortBy, searchQuery]);
+  }, [categories, productType, searchParams, sortBy, searchQuery]);
 
   if (isLoading) {
     return (
@@ -420,37 +458,108 @@ const BikePage = () => {
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 md:gap-6">
-                {/* Category Filter */}
+                {/* Category Filter - Multi-select */}
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-foreground">
                     Category
                   </label>
-                  <Select 
-                    value={category || 'all'} 
-                    onValueChange={(value) => {
-                      const params = new URLSearchParams(searchParams);
-                      if (value === 'all') {
-                        params.delete('category');
-                        params.delete('productType'); // Also clear productType when clearing category
-                      } else {
-                        params.set('category', value);
-                        params.delete('productType'); // Clear productType when changing category
-                      }
-                      setSearchParams(params, { replace: true });
-                    }}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Categories</SelectItem>
-                      {availableCategories.map(cat => (
-                        <SelectItem key={cat.slug} value={cat.slug}>
-                          {cat.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className="w-full justify-between bg-background hover:bg-accent"
+                      >
+                        <span className="truncate">
+                          {categories.length === 0
+                            ? "All Categories"
+                            : categories.length === 1
+                            ? availableCategories.find(c => c.slug === categories[0])?.name || "Selected"
+                            : `${categories.length} categories selected`}
+                        </span>
+                        <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[300px] p-0" align="start">
+                      <div className="border-b border-border px-4 py-2.5 bg-muted/50 sticky top-0 z-10">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-sm font-semibold text-foreground">
+                            Select Categories
+                          </h3>
+                          {categories.length > 0 && (
+                            <button
+                              onClick={handleClearAllCategories}
+                              className="text-xs text-primary hover:text-primary/80"
+                            >
+                              Clear all
+                            </button>
+                          )}
+                        </div>
+                        {/* Search input for categories */}
+                        <div className="relative mt-2">
+                          <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            placeholder="Search categories..."
+                            className="pl-8 h-8 text-sm"
+                            // TODO: Add search functionality if needed
+                          />
+                        </div>
+                      </div>
+                      <div className="max-h-[300px] overflow-y-auto p-2">
+                        <div className="space-y-1">
+                          {availableCategories.map((cat) => {
+                            const isSelected = categories.includes(cat.slug);
+                            return (
+                              <div
+                                key={cat.slug}
+                                className="flex items-center space-x-2 px-2 py-1.5 rounded hover:bg-accent cursor-pointer"
+                                onClick={() => handleCategoryToggle(cat.slug)}
+                              >
+                                <Checkbox
+                                  checked={isSelected}
+                                  onCheckedChange={() => handleCategoryToggle(cat.slug)}
+                                />
+                                <label
+                                  className="flex-1 text-sm font-medium leading-none cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  {cat.name}
+                                </label>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        {availableCategories.length === 0 && (
+                          <div className="text-center py-8 text-sm text-muted-foreground">
+                            No categories available
+                          </div>
+                        )}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                  {/* Show selected categories as badges */}
+                  {categories.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {categories.map((catSlug) => {
+                        const cat = availableCategories.find(c => c.slug === catSlug);
+                        return cat ? (
+                          <Badge
+                            key={catSlug}
+                            variant="secondary"
+                            className="text-xs"
+                          >
+                            {cat.name}
+                            <button
+                              onClick={() => handleCategoryToggle(catSlug)}
+                              className="ml-1 hover:text-destructive"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </Badge>
+                        ) : null;
+                      })}
+                    </div>
+                  )}
                 </div>
 
                 {/* Brand Filter */}

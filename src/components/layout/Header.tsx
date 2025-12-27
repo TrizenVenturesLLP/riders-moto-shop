@@ -77,8 +77,9 @@ const Header = () => {
     <header className="sticky top-0 z-50 bg-background border-b border-border">
       {/* Main Header - White Background - Reduces size when scrolled */}
       <div className="container mx-auto px-4 relative">
+        {/* Top Row: Menu, Logo, Actions (Mobile) */}
         <div
-          className={`flex items-center justify-between transition-[height] duration-300 ease-in-out ${
+          className={`flex items-center justify-between transition-[height] duration-300 ease-in-out relative ${
             isScrolledDown ? "h-16" : "h-20"
           }`}
         >
@@ -97,8 +98,10 @@ const Header = () => {
           {/* Logo */}
           <HeaderLogo isScrolledDown={isScrolledDown} />
 
-          {/* Search Bar - Desktop */}
-          <HeaderSearch isScrolledDown={isScrolledDown} />
+          {/* Search Bar - Desktop Only (Centered) */}
+          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-full max-w-2xl px-4">
+            <HeaderSearch isScrolledDown={isScrolledDown} />
+          </div>
 
           {/* Actions */}
           <HeaderActions
@@ -106,6 +109,11 @@ const Header = () => {
             setIsUserMenuOpen={setIsUserMenuOpen}
             onLogout={handleLogout}
           />
+        </div>
+
+        {/* Search Bar - Mobile Only (Below top row) */}
+        <div className="md:hidden pt-2 pb-3">
+          <HeaderSearch isScrolledDown={isScrolledDown} />
         </div>
       </div>
 

@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useTheme } from 'next-themes';
 import { scrollToTop as scrollToTopUtil } from '@/hooks/useScrollToTop';
 import { Truck, Clock, Shield, CreditCard, Facebook, Instagram, Youtube, ChevronUp, Calendar, ChevronDown } from 'lucide-react';
 import rmsLogo from '@/assets/rms-logo.jpg';
+import rmsLogoDark from '@/assets/rms-logo-dark.png';
 
 const Footer = () => {
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [isPolicyOpen, setIsPolicyOpen] = useState(false);
+  const { theme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && (resolvedTheme === 'dark' || theme === 'dark');
 
 
   return (
@@ -75,7 +85,7 @@ const Footer = () => {
             <div className="md:col-span-1 md:-mt-10">
               <div className="mb-3 md:mb-2">
                 <img 
-                  src={rmsLogo}
+                  src={isDark ? rmsLogoDark : rmsLogo}
                   alt="Riders Moto Shop" 
                   className="h-20 sm:h-24 md:h-[150px] w-auto object-contain mx-auto md:mx-0"
                 />

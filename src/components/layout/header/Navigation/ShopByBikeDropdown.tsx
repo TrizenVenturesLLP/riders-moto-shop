@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Loader2, ChevronRight } from "lucide-react";
+import { Loader2, ChevronRight, ChevronDown } from "lucide-react";
 import { BikeBrandGroup } from "../hooks/useBikesByBrand";
 import { getProductTypesForCategory } from "@/config/productTypes";
 import { useState } from "react";
@@ -20,6 +20,21 @@ export const ShopByBikeDropdown = ({
     slug: string;
     name: string;
   } | null>(null);
+  
+  // Track which categories are expanded (using Set for O(1) lookup)
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+  
+  const toggleCategory = (categorySlug: string) => {
+    setExpandedCategories(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(categorySlug)) {
+        newSet.delete(categorySlug);
+      } else {
+        newSet.add(categorySlug);
+      }
+      return newSet;
+    });
+  };
 
   return (
     <div className="flex w-[1200px] max-w-[calc(100vw-80px)] mx-auto bg-popover">
@@ -83,10 +98,14 @@ export const ShopByBikeDropdown = ({
             <div className="grid grid-cols-2 gap-3">
               {accessoryCategories.map((category) => {
                 const productTypes = getProductTypesForCategory(category.slug);
+                const isExpanded = expandedCategories.has(category.slug);
+                const displayCount = isExpanded ? productTypes.length : 3;
+                const hasMore = productTypes.length > 3;
+                
                 return (
                   <div
                     key={category.slug}
-                        className="group/category p-3 border border-border rounded-lg"
+                    className="group/category p-3 border border-border rounded-lg"
                   >
                     <Link
                       to={`/collections/bikes/${hoveredBike.slug}?category=${category.slug}`}
@@ -96,7 +115,7 @@ export const ShopByBikeDropdown = ({
                     </Link>
                     {productTypes.length > 0 && (
                       <div className="space-y-1">
-                        {productTypes.slice(0, 3).map((productType) => (
+                        {productTypes.slice(0, displayCount).map((productType) => (
                           <Link
                             key={productType.slug}
                             to={`/collections/bikes/${hoveredBike.slug}?category=${category.slug}&productType=${productType.slug}`}
@@ -105,13 +124,27 @@ export const ShopByBikeDropdown = ({
                             • {productType.label}
                           </Link>
                         ))}
-                        {productTypes.length > 3 && (
-                          <Link
-                            to={`/collections/bikes/${hoveredBike.slug}?category=${category.slug}`}
-                            className="block text-xs text-muted-foreground hover:text-primary transition-colors"
+                        {hasMore && (
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              toggleCategory(category.slug);
+                            }}
+                            className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors w-full text-left"
                           >
-                            + {productTypes.length - 3} more
-                          </Link>
+                            {isExpanded ? (
+                              <>
+                                <ChevronDown className="h-3 w-3 rotate-180 transition-transform" />
+                                Show less
+                              </>
+                            ) : (
+                              <>
+                                <ChevronDown className="h-3 w-3 transition-transform" />
+                                + {productTypes.length - 3} more
+                              </>
+                            )}
+                          </button>
                         )}
                       </div>
                     )}

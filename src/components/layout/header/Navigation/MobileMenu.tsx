@@ -1,15 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { X, Search, ChevronDown, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { useTheme } from 'next-themes';
+import { X, ChevronDown, Loader2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/hooks/useCart';
-import { useHeaderSearch } from '../hooks/useHeaderSearch';
 import { useBikesByBrand } from '../hooks/useBikesByBrand';
 import { getProductTypesForCategory } from '@/config/productTypes';
 import { CollapsibleAccessoryCategory } from './CollapsibleAccessoryCategory';
 import rmsLogo from '@/assets/rms-logo.jpg';
+import rmsLogoDark from '@/assets/rms-logo-dark.png';
 import navbarData from '@/data/navbar.json';
 import { NavbarItem } from '@/types/navbar';
 
@@ -36,14 +35,14 @@ export const MobileMenu = ({ isOpen, onClose, onLogout }: MobileMenuProps) => {
   const { user, isAuthenticated, isLoading } = useAuth();
   const { totalItems } = useCart();
   const { bikesByBrand, isLoading: isLoadingBikes } = useBikesByBrand();
-  const {
-    searchQuery,
-    setSearchQuery,
-    searchCategory,
-    setSearchCategory,
-    handleSearch,
-    handleKeyPress,
-  } = useHeaderSearch();
+  const { theme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && (resolvedTheme === 'dark' || theme === 'dark');
 
   if (!isOpen) return null;
 
@@ -63,7 +62,7 @@ export const MobileMenu = ({ isOpen, onClose, onLogout }: MobileMenuProps) => {
           </button>
           <Link to="/" onClick={onClose} className="flex items-center">
             <img 
-              src={rmsLogo}
+              src={isDark ? rmsLogoDark : rmsLogo}
               alt="Riders Moto Shop" 
               className="h-10 max-h-10 cursor-pointer hover:opacity-80 transition-opacity"
             />
@@ -73,42 +72,6 @@ export const MobileMenu = ({ isOpen, onClose, onLogout }: MobileMenuProps) => {
 
         {/* Content Container - Scrollable */}
         <div className="flex-1 overflow-y-auto">
-          {/* Search */}
-          <div className="px-4 py-4 bg-background border-b border-border">
-            <div className="flex w-full">
-              {/* Category Filter */}
-              <select 
-                value={searchCategory}
-                onChange={(e) => setSearchCategory(e.target.value)}
-                className="px-3 py-3 bg-muted/50 border border-border rounded-l-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
-              >
-                <option value="All">All</option>
-                <option value="Bikes">Bikes</option>
-                <option value="Accessories">Accessories</option>
-                <option value="Apparels">Apparels</option>
-              </select>
-              
-              {/* Search Input */}
-              <div className="relative flex-1">
-                <Input
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="What are you looking for?"
-                  className="rounded-none border-l-0 border-r-0 bg-background border-border focus:border-primary focus:ring-0 h-12"
-                />
-              </div>
-              
-              {/* Search Button */}
-              <Button 
-                onClick={handleSearch}
-                className="bg-primary hover:bg-primary/90 rounded-l-none px-4 h-12"
-              >
-                <Search className="h-4 w-4 text-primary-foreground" />
-              </Button>
-            </div>
-          </div>
-
           {/* Auth Section - Mobile */}
           {isAuthenticated && user ? (
             <div className="bg-background px-4 py-4 border-b border-border">

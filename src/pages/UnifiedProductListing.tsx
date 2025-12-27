@@ -697,123 +697,282 @@ const UnifiedProductListing = () => {
 
               {/* Category Filter - Hide on Apparels page (category is always "apparels") */}
               {availableCategories.length > 0 && !isApparelsPage && (
-                <div>
+                <div className="space-y-2">
                   <label className="block text-xs sm:text-sm font-medium text-foreground mb-1.5 sm:mb-2">Category</label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
                         role="combobox"
-                        className="w-full justify-between bg-background border-border h-8 sm:h-10 text-xs sm:text-sm"
+                        className="w-full justify-between bg-background hover:bg-accent border-border h-8 sm:h-10 text-xs sm:text-sm"
                       >
-                        {selectedCategories.length === 0
-                          ? 'All Categories'
-                          : selectedCategories.length === 1
-                          ? availableCategories.find(cat => cat.slug === selectedCategories[0])?.name || 'Selected'
-                          : `${selectedCategories.length} selected`}
+                        <span className="truncate">
+                          {selectedCategories.length === 0
+                            ? 'All Categories'
+                            : selectedCategories.length === 1
+                            ? availableCategories.find(cat => cat.slug === selectedCategories[0])?.name || 'Selected'
+                            : `${selectedCategories.length} categories selected`}
+                        </span>
                         <ChevronDown className="ml-2 h-3 w-3 sm:h-4 sm:w-4 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-full p-0" align="start">
-                      <Command>
-                        <CommandInput placeholder="Search categories..." />
-                        <CommandEmpty>No categories found.</CommandEmpty>
-                        <CommandGroup>
-                          <CommandItem
-                            onSelect={() => {
-                              const params = new URLSearchParams(searchParams);
-                              params.delete('category');
-                              params.delete('page');
-                              setSearchParams(params, { replace: true });
-                            }}
-                          >
-                            <Checkbox
-                              checked={selectedCategories.length === 0}
-                              className="mr-2"
-                            />
-                            All Categories
-                          </CommandItem>
-                          {availableCategories.map((cat) => (
-                            <CommandItem
-                              key={cat.slug}
-                              onSelect={() => {
+                    <PopoverContent className="w-[300px] p-0" align="start">
+                      <div className="border-b border-border px-4 py-2.5 bg-muted/50 sticky top-0 z-10">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-sm font-semibold text-foreground">
+                            Select Categories
+                          </h3>
+                          {selectedCategories.length > 0 && (
+                            <button
+                              onClick={() => {
                                 const params = new URLSearchParams(searchParams);
-                                const current = selectedCategories;
-                                const newSelection = current.includes(cat.slug)
-                                  ? current.filter(c => c !== cat.slug)
-                                  : [...current, cat.slug];
-                                
+                                params.delete('category');
+                                params.delete('productType'); // Clear productType when clearing categories
+                                params.delete('page');
+                                setSearchParams(params, { replace: true });
+                              }}
+                              className="text-xs text-primary hover:text-primary/80"
+                            >
+                              Clear all
+                            </button>
+                          )}
+                        </div>
+                        {/* Search input for categories */}
+                        <div className="relative mt-2">
+                          <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            placeholder="Search categories..."
+                            className="pl-8 h-8 text-sm"
+                            // TODO: Add search functionality if needed
+                          />
+                        </div>
+                      </div>
+                      <div className="max-h-[300px] overflow-y-auto p-2">
+                        <div className="space-y-1">
+                          {availableCategories.map((cat) => {
+                            const isSelected = selectedCategories.includes(cat.slug);
+                            return (
+                              <div
+                                key={cat.slug}
+                                className="flex items-center space-x-2 px-2 py-1.5 rounded hover:bg-accent cursor-pointer"
+                                onClick={() => {
+                                  const params = new URLSearchParams(searchParams);
+                                  const current = selectedCategories;
+                                  const newSelection = current.includes(cat.slug)
+                                    ? current.filter(c => c !== cat.slug)
+                                    : [...current, cat.slug];
+                                  
+                                  if (newSelection.length === 0) {
+                                    params.delete('category');
+                                    params.delete('productType'); // Clear productType when clearing all categories
+                                  } else {
+                                    params.set('category', newSelection.join(','));
+                                  }
+                                  params.delete('page');
+                                  setSearchParams(params, { replace: true });
+                                }}
+                              >
+                                <Checkbox
+                                  checked={isSelected}
+                                  onCheckedChange={() => {
+                                    const params = new URLSearchParams(searchParams);
+                                    const current = selectedCategories;
+                                    const newSelection = current.includes(cat.slug)
+                                      ? current.filter(c => c !== cat.slug)
+                                      : [...current, cat.slug];
+                                    
+                                    if (newSelection.length === 0) {
+                                      params.delete('category');
+                                      params.delete('productType'); // Clear productType when clearing all categories
+                                    } else {
+                                      params.set('category', newSelection.join(','));
+                                    }
+                                    params.delete('page');
+                                    setSearchParams(params, { replace: true });
+                                  }}
+                                />
+                                <label
+                                  className="flex-1 text-sm font-medium leading-none cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  {cat.name}
+                                </label>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        {availableCategories.length === 0 && (
+                          <div className="text-center py-8 text-sm text-muted-foreground">
+                            No categories available
+                          </div>
+                        )}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                  {/* Show selected categories as badges */}
+                  {selectedCategories.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {selectedCategories.map((catSlug) => {
+                        const cat = availableCategories.find(c => c.slug === catSlug);
+                        return cat ? (
+                          <Badge
+                            key={catSlug}
+                            variant="secondary"
+                            className="text-xs"
+                          >
+                            {cat.name}
+                            <button
+                              onClick={() => {
+                                const params = new URLSearchParams(searchParams);
+                                const newSelection = selectedCategories.filter(c => c !== catSlug);
                                 if (newSelection.length === 0) {
                                   params.delete('category');
+                                  params.delete('productType'); // Clear productType when clearing all categories
                                 } else {
                                   params.set('category', newSelection.join(','));
                                 }
                                 params.delete('page');
                                 setSearchParams(params, { replace: true });
                               }}
+                              className="ml-1 hover:text-destructive"
                             >
-                              <Checkbox
-                                checked={selectedCategories.includes(cat.slug)}
-                                className="mr-2"
-                              />
-                              {cat.name}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+                              <X className="h-3 w-3" />
+                            </button>
+                          </Badge>
+                        ) : null;
+                      })}
+                    </div>
+                  )}
                 </div>
               )}
 
               {/* Product Type Filter - For both Bike and Accessory Pages - Multi-select */}
               {availableProductTypes.length > 0 && (
-                <div>
+                <div className="space-y-2">
                   <label className="block text-xs sm:text-sm font-medium text-foreground mb-1.5 sm:mb-2">Product Type</label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
                         role="combobox"
-                        className="w-full justify-between bg-background border-border h-8 sm:h-10 text-xs sm:text-sm"
+                        className="w-full justify-between bg-background hover:bg-accent border-border h-8 sm:h-10 text-xs sm:text-sm"
                       >
-                        {selectedProductTypes.length === 0
-                          ? 'All Products'
-                          : selectedProductTypes.length === 1
-                          ? availableProductTypes.find(pt => pt.slug === selectedProductTypes[0])?.name || 'Selected'
-                          : `${selectedProductTypes.length} selected`}
+                        <span className="truncate">
+                          {selectedProductTypes.length === 0
+                            ? 'All Product Types'
+                            : selectedProductTypes.length === 1
+                            ? availableProductTypes.find(pt => pt.slug === selectedProductTypes[0])?.name || 'Selected'
+                            : `${selectedProductTypes.length} product types selected`}
+                        </span>
                         <ChevronDown className="ml-2 h-3 w-3 sm:h-4 sm:w-4 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-full p-0" align="start">
-                      <Command>
-                        <CommandInput placeholder="Search products..." />
-                        <CommandEmpty>No products found.</CommandEmpty>
-                        <CommandGroup>
-                          <CommandItem
-                            onSelect={() => {
-                              const params = new URLSearchParams(searchParams);
-                              params.delete('productType');
-                              params.delete('page');
-                              setSearchParams(params, { replace: true });
-                            }}
-                          >
-                            <Checkbox
-                              checked={selectedProductTypes.length === 0}
-                              className="mr-2"
-                            />
-                            All Products
-                          </CommandItem>
-                          {availableProductTypes.map((pt) => (
-                            <CommandItem
-                              key={pt.slug}
-                              onSelect={() => {
+                    <PopoverContent className="w-[300px] p-0" align="start">
+                      <div className="border-b border-border px-4 py-2.5 bg-muted/50 sticky top-0 z-10">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-sm font-semibold text-foreground">
+                            Select Product Types
+                          </h3>
+                          {selectedProductTypes.length > 0 && (
+                            <button
+                              onClick={() => {
                                 const params = new URLSearchParams(searchParams);
-                                const current = selectedProductTypes;
-                                const newSelection = current.includes(pt.slug)
-                                  ? current.filter(p => p !== pt.slug)
-                                  : [...current, pt.slug];
-                                
+                                params.delete('productType');
+                                params.delete('page');
+                                setSearchParams(params, { replace: true });
+                              }}
+                              className="text-xs text-primary hover:text-primary/80"
+                            >
+                              Clear all
+                            </button>
+                          )}
+                        </div>
+                        {/* Search input for product types */}
+                        <div className="relative mt-2">
+                          <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            placeholder="Search product types..."
+                            className="pl-8 h-8 text-sm"
+                            // TODO: Add search functionality if needed
+                          />
+                        </div>
+                      </div>
+                      <div className="max-h-[300px] overflow-y-auto p-2">
+                        <div className="space-y-1">
+                          {availableProductTypes.map((pt) => {
+                            const isSelected = selectedProductTypes.includes(pt.slug);
+                            return (
+                              <div
+                                key={pt.slug}
+                                className="flex items-center space-x-2 px-2 py-1.5 rounded hover:bg-accent cursor-pointer"
+                                onClick={() => {
+                                  const params = new URLSearchParams(searchParams);
+                                  const current = selectedProductTypes;
+                                  const newSelection = current.includes(pt.slug)
+                                    ? current.filter(p => p !== pt.slug)
+                                    : [...current, pt.slug];
+                                  
+                                  if (newSelection.length === 0) {
+                                    params.delete('productType');
+                                  } else {
+                                    params.set('productType', newSelection.join(','));
+                                  }
+                                  params.delete('page');
+                                  setSearchParams(params, { replace: true });
+                                }}
+                              >
+                                <Checkbox
+                                  checked={isSelected}
+                                  onCheckedChange={() => {
+                                    const params = new URLSearchParams(searchParams);
+                                    const current = selectedProductTypes;
+                                    const newSelection = current.includes(pt.slug)
+                                      ? current.filter(p => p !== pt.slug)
+                                      : [...current, pt.slug];
+                                    
+                                    if (newSelection.length === 0) {
+                                      params.delete('productType');
+                                    } else {
+                                      params.set('productType', newSelection.join(','));
+                                    }
+                                    params.delete('page');
+                                    setSearchParams(params, { replace: true });
+                                  }}
+                                />
+                                <label
+                                  className="flex-1 text-sm font-medium leading-none cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  {pt.name}
+                                </label>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        {availableProductTypes.length === 0 && (
+                          <div className="text-center py-8 text-sm text-muted-foreground">
+                            No product types available
+                          </div>
+                        )}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                  {/* Show selected product types as badges */}
+                  {selectedProductTypes.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {selectedProductTypes.map((ptSlug) => {
+                        const pt = availableProductTypes.find(p => p.slug === ptSlug);
+                        return pt ? (
+                          <Badge
+                            key={ptSlug}
+                            variant="secondary"
+                            className="text-xs"
+                          >
+                            {pt.name}
+                            <button
+                              onClick={() => {
+                                const params = new URLSearchParams(searchParams);
+                                const newSelection = selectedProductTypes.filter(p => p !== ptSlug);
                                 if (newSelection.length === 0) {
                                   params.delete('productType');
                                 } else {
@@ -822,18 +981,15 @@ const UnifiedProductListing = () => {
                                 params.delete('page');
                                 setSearchParams(params, { replace: true });
                               }}
+                              className="ml-1 hover:text-destructive"
                             >
-                              <Checkbox
-                                checked={selectedProductTypes.includes(pt.slug)}
-                                className="mr-2"
-                              />
-                              {pt.name}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+                              <X className="h-3 w-3" />
+                            </button>
+                          </Badge>
+                        ) : null;
+                      })}
+                    </div>
+                  )}
                 </div>
               )}
 

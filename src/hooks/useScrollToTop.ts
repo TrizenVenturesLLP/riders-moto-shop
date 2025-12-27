@@ -70,3 +70,4 @@ export const scrollToTop = (options: { smooth?: boolean; offset?: number } = {})
   });
 };
 
+
