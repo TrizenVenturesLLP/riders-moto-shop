@@ -59,6 +59,7 @@ export interface UseProductsParams {
   model?: string;
   category?: string;
   productType?: string;
+  subProductType?: string;
   page?: number;
   limit?: number;
   sort?: string;
@@ -68,6 +69,7 @@ export interface UseProductsParams {
   inStock?: boolean;
   featured?: boolean;
   search?: string;
+  endpoint?: string; // Optional: specify custom endpoint (e.g., '/products/apparels')
 }
 
 const fetchProducts = async (
@@ -75,14 +77,20 @@ const fetchProducts = async (
 ): Promise<ProductsResponse> => {
   const searchParams = new URLSearchParams();
 
+  // Determine endpoint - use custom endpoint if provided, otherwise default to /products
+  const endpoint = params.endpoint || '/products';
+  
+  // Remove endpoint from params before building query string
+  const { endpoint: _, ...queryParams } = params;
+
   // Add all parameters
-  Object.entries(params).forEach(([key, value]) => {
+  Object.entries(queryParams).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== '') {
       searchParams.append(key, value.toString());
     }
   });
 
-  const url = `${API_BASE_URL}/products?${searchParams.toString()}`;
+  const url = `${API_BASE_URL}${endpoint}?${searchParams.toString()}`;
 
   console.log("🔍 Fetching products:", url);
   console.log("🔍 API Base URL:", API_BASE_URL);

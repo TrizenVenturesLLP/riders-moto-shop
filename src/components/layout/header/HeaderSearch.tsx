@@ -174,7 +174,7 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({ isScrolledDown }) => {
         </div>
 
         {/* Search Input */}
-        <div className="flex-1 relative">
+        <div className="flex-1 relative flex items-center">
           <input
             type="text"
             value={searchQuery}
@@ -186,9 +186,13 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({ isScrolledDown }) => {
               }
             }}
             placeholder="What are you looking for?"
-            className={`w-full bg-card text-foreground placeholder-muted-foreground focus:outline-none transition-all duration-300 text-left ${
-              isScrolledDown ? "px-3 py-2 text-xs" : "px-3 py-2.5 text-sm"
+            className={`w-full h-full bg-card text-foreground placeholder-muted-foreground focus:outline-none transition-all duration-300 text-left ${
+              isScrolledDown ? "px-3 text-xs" : "px-3 text-sm"
             }`}
+            style={{
+              lineHeight: '1.5',
+              display: 'block'
+            }}
           />
           
           {/* Search Results Dropdown */}

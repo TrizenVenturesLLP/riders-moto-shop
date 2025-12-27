@@ -5,7 +5,6 @@ import { X, ChevronDown, Loader2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/hooks/useCart';
 import { useBikesByBrand } from '../hooks/useBikesByBrand';
-import { getProductTypesForCategory } from '@/config/productTypes';
 import { CollapsibleAccessoryCategory } from './CollapsibleAccessoryCategory';
 import rmsLogo from '@/assets/rms-logo.jpg';
 import rmsLogoDark from '@/assets/rms-logo-dark.png';

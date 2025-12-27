@@ -51,6 +51,60 @@ export const CATEGORY_PRODUCT_TYPES: Record<string, ProductTypeOption[]> = {
     { value: 'side-stand-base', label: 'Side Stand Base', slug: 'side-stand-base' },
     { value: 'tail-tidy', label: 'Tail Tidy', slug: 'tail-tidy' },
   ],
+  
+  // Apparels (Category: Apparels, Product Types: jackets, pants, t-shirts, etc.)
+  'apparels': [
+    { value: 'jacket', label: 'Jacket', slug: 'jacket' },
+    { value: 'pants', label: 'Pants', slug: 'pants' },
+    { value: 't-shirt', label: 'T-Shirt', slug: 't-shirt' },
+    { value: 'gloves', label: 'Gloves', slug: 'gloves' },
+    { value: 'apparel-accessory', label: 'Apparel Accessory', slug: 'apparel-accessory' },
+  ],
+};
+
+// Sub-product types for apparels (shown when product type is selected)
+export const APPAREL_SUB_PRODUCT_TYPES: Record<string, ProductTypeOption[]> = {
+  'jacket': [
+    { value: 'riding-jacket', label: 'Riding Jacket', slug: 'riding-jacket' },
+    { value: 'leather-jacket', label: 'Leather Jacket', slug: 'leather-jacket' },
+    { value: 'textile-jacket', label: 'Textile Jacket', slug: 'textile-jacket' },
+    { value: 'mesh-jacket', label: 'Mesh Jacket', slug: 'mesh-jacket' },
+    { value: 'winter-jacket', label: 'Winter Jacket', slug: 'winter-jacket' },
+  ],
+  'pants': [
+    { value: 'riding-pants', label: 'Riding Pants', slug: 'riding-pants' },
+    { value: 'leather-pants', label: 'Leather Pants', slug: 'leather-pants' },
+    { value: 'textile-pants', label: 'Textile Pants', slug: 'textile-pants' },
+    { value: 'jeans', label: 'Riding Jeans', slug: 'jeans' },
+    { value: 'overpants', label: 'Overpants', slug: 'overpants' },
+  ],
+  't-shirt': [
+    { value: 'casual-t-shirt', label: 'Casual T-Shirt', slug: 'casual-t-shirt' },
+    { value: 'graphic-t-shirt', label: 'Graphic T-Shirt', slug: 'graphic-t-shirt' },
+    { value: 'polo-t-shirt', label: 'Polo T-Shirt', slug: 'polo-t-shirt' },
+    { value: 'v-neck-t-shirt', label: 'V-Neck T-Shirt', slug: 'v-neck-t-shirt' },
+    { value: 'crew-neck-t-shirt', label: 'Crew Neck T-Shirt', slug: 'crew-neck-t-shirt' },
+  ],
+  'gloves': [
+    { value: 'summer-gloves', label: 'Summer Gloves', slug: 'summer-gloves' },
+    { value: 'winter-gloves', label: 'Winter Gloves', slug: 'winter-gloves' },
+    { value: 'racing-gloves', label: 'Racing Gloves', slug: 'racing-gloves' },
+    { value: 'touring-gloves', label: 'Touring Gloves', slug: 'touring-gloves' },
+    { value: 'waterproof-gloves', label: 'Waterproof Gloves', slug: 'waterproof-gloves' },
+  ],
+  'apparel-accessory': [
+    { value: 'knee-guards', label: 'Knee Guards', slug: 'knee-guards' },
+    { value: 'elbow-guards', label: 'Elbow Guards', slug: 'elbow-guards' },
+    { value: 'back-protector', label: 'Back Protector', slug: 'back-protector' },
+    { value: 'neck-warmer', label: 'Neck Warmer', slug: 'neck-warmer' },
+    { value: 'balaclava', label: 'Balaclava', slug: 'balaclava' },
+    { value: 'socks', label: 'Riding Socks', slug: 'socks' },
+  ],
+};
+
+// Get sub-product types for an apparel product type
+export const getSubProductTypesForApparel = (productType: string): ProductTypeOption[] => {
+  return APPAREL_SUB_PRODUCT_TYPES[productType] || [];
 };
 
 // Get product types for a category

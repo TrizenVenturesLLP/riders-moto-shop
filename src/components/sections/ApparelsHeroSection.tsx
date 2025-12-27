@@ -12,14 +12,40 @@ const ApparelsHeroSection = () => {
   // Use backend data if available, otherwise fallback to static slides
   const apparelsCarouselSlides = useMemo(() => {
     if (carouselData?.data?.carouselItems && carouselData.data.carouselItems.length > 0) {
-      return carouselData.data.carouselItems.map((item) => ({
-        id: item.id,
-        title: item.title,
-        subtitle: item.subtitle || '',
-        image: item.image,
-        link: item.link || '/collections/apparels',
-        buttonText: item.buttonText || 'Shop Now',
-      }));
+      return carouselData.data.carouselItems.map((item) => {
+        // Handle product links - if link contains a product ID or slug, format as /products/{id}
+        let productLink = item.link || '/collections/apparels';
+        
+        // Check if link is a product ID (UUID format) or product slug
+        if (item.link) {
+          // If link is a UUID (product ID), format as /products/{id}
+          const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+          if (uuidPattern.test(item.link)) {
+            productLink = `/products/${item.link}`;
+          } 
+          // If link doesn't start with /, assume it's a product slug
+          else if (!item.link.startsWith('/')) {
+            productLink = `/products/${item.link}`;
+          }
+          // If link already starts with /products/, use it as-is
+          else if (item.link.startsWith('/products/')) {
+            productLink = item.link;
+          }
+          // Otherwise, use the link as-is (could be /collections/apparels or other routes)
+          else {
+            productLink = item.link;
+          }
+        }
+        
+        return {
+          id: item.id,
+          title: item.title,
+          subtitle: item.subtitle || '',
+          image: item.image,
+          link: productLink,
+          buttonText: item.buttonText || 'Shop Now',
+        };
+      });
     }
     
     // Fallback static slides

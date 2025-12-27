@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
@@ -78,8 +78,8 @@ const App = () => (
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/all-bikes" element={<AllBikes />} />
-                  <Route path="/products" element={<FeaturedProducts />} />
-                  <Route path="/apparels" element={<Apparels />} />
+                <Route path="/products" element={<FeaturedProducts />} />
+                <Route path="/apparels" element={<Apparels />} />
                 <Route path="/products/:id" element={<ProductPage />} />
                 <Route path="/search" element={<SearchResults />} />
                   
@@ -87,19 +87,25 @@ const App = () => (
                   {/* Bike model routes - for bike-specific product browsing */}
                   <Route
                     path="/collections/bikes/:model"
-                    element={<UnifiedProductListing />}
+                    element={<UnifiedProductListing pageType="bike" />}
                   />
                   
                   {/* Accessory/Category routes - for browsing by accessory type */}
                   <Route
                     path="/collections/accessories/:category"
-                    element={<UnifiedProductListing />}
+                    element={<UnifiedProductListing pageType="accessory" />}
                   />
                   
-                  {/* Generic collections route - fallback */}
+                  {/* Apparels route - specific route */}
+                  <Route
+                    path="/collections/apparels"
+                    element={<UnifiedProductListing pageType="apparel" />}
+                  />
+                  
+                  {/* Generic collections route - fallback (must be last) */}
                   <Route
                     path="/collections/:slug"
-                    element={<UnifiedProductListing />}
+                    element={<UnifiedProductListing pageType="generic" />}
                   />
 
                 <Route path="/cart" element={<Cart />} />

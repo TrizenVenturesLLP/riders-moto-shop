@@ -7,12 +7,20 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
+// Removed Command import - using Popover structure for consistency
 import { ChevronDown } from 'lucide-react';
 import ProductCard from '@/components/ProductCard';
 import { useProducts, ProductsResponse } from '@/hooks/useProducts';
 import { mockProducts } from '@/mock/products';
 import { trackEvent } from '@/hooks/useAnalytics';
+import { ProductTypeOption } from '@/config/productTypes';
+import { 
+  useProductTypesByCategory, 
+  useSubProductTypesByProductType, 
+  useAllSubProductTypesForApparels,
+  convertToProductTypeOption, 
+  convertSubToProductTypeOption 
+} from '@/hooks/useProductTypes';
 import {
   Grid3X3,
   List,
@@ -36,15 +44,19 @@ const ACCESSORY_PRODUCT_TYPES = [
   // For now, most accessories are categories, not productTypes
 ];
 
-const UnifiedProductListing = () => {
+interface UnifiedProductListingProps {
+  pageType?: 'bike' | 'accessory' | 'apparel' | 'generic';
+}
+
+const UnifiedProductListing = ({ pageType }: UnifiedProductListingProps = {}) => {
   const location = useLocation();
   const params = useParams<{ model?: string; category?: string; slug?: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Determine page context
-  const isBikePage = location.pathname.includes('/bikes/');
-  const isAccessoryPage = location.pathname.includes('/accessories/');
-  const isApparelsPage = location.pathname.includes('/apparels');
+  // Use prop if provided, otherwise infer from pathname (backward compatibility)
+  const isBikePage = pageType === 'bike' || (!pageType && location.pathname.includes('/bikes/'));
+  const isAccessoryPage = pageType === 'accessory' || (!pageType && location.pathname.includes('/accessories/'));
+  const isApparelsPage = pageType === 'apparel' || (!pageType && location.pathname.includes('/apparels'));
 
   // Extract identifiers
   const model = params.model;
@@ -52,12 +64,14 @@ const UnifiedProductListing = () => {
   
   // Get categories from query params (supporting multiple selections)
   const categoriesFromQuery = searchParams.get('category')?.split(',').filter(Boolean) || [];
-  // For apparels page, always set category to "apparels" if not explicitly set
+  // For apparels page, always set category to "apparels" - only show apparel products
   const categoryFromRoute = identifier && !ACCESSORY_PRODUCT_TYPES.includes(identifier) ? [identifier] : [];
-  // If on apparels page and no category in query, set to "apparels"
-  const selectedCategories = categoriesFromQuery.length > 0 
-    ? categoriesFromQuery 
-    : (isApparelsPage && identifier === 'apparels' ? ['apparels'] : categoryFromRoute);
+  // If on apparels page, always filter by "apparels" category only
+  const selectedCategories = isApparelsPage
+    ? ['apparels'] // Always filter by apparels category only
+    : (categoriesFromQuery.length > 0 
+        ? categoriesFromQuery 
+        : categoryFromRoute);
   
   // Determine if identifier is a productType or category
   // In our database: crash-guard, foot-rest, etc. are CATEGORIES, not productTypes
@@ -194,7 +208,10 @@ const UnifiedProductListing = () => {
   // For multiple categories/productTypes, we'll send them as comma-separated or handle in backend
   // When sort_by=featured, also filter to show only featured products
   const isFeaturedSort = sortBy === 'featured';
+  
+  // Use apparels endpoint if on apparels page
   const filterParams = {
+    endpoint: isApparelsPage ? '/products/apparels' : undefined,
     page: parseInt(searchParams.get('page') || '1'),
     limit: parseInt(searchParams.get('limit') || '20'),
     sort: getSortField(sortBy),
@@ -203,8 +220,10 @@ const UnifiedProductListing = () => {
     // Send model slug as-is (with hyphens) - backend will handle matching both slug and name formats
     model: model || undefined,
     // Send all selected categories as comma-separated (backend supports multiple)
-    category: selectedCategories.length > 0 ? selectedCategories.join(',') : undefined,
+    // For apparels page, don't send category as it's handled by the endpoint
+    category: isApparelsPage ? undefined : (selectedCategories.length > 0 ? selectedCategories.join(',') : undefined),
     productType: selectedProductTypes.length > 0 ? selectedProductTypes.join(',') : undefined,
+    subProductType: isApparelsPage && selectedSubProductTypes.length > 0 ? selectedSubProductTypes.join(',') : undefined,
     minPrice: debouncedPriceRange.min ? parseFloat(debouncedPriceRange.min) : undefined,
     maxPrice: debouncedPriceRange.max ? parseFloat(debouncedPriceRange.max) : undefined,
     inStock: (() => {
@@ -227,6 +246,7 @@ const UnifiedProductListing = () => {
     ...filterParams,
     category: undefined, // Remove category filter to get all products
     productType: undefined, // Remove productType filter to get all products
+    subProductType: undefined, // Remove subProductType filter to get all products
     limit: 1000, // Get more products to have complete category/product type list
   };
   const { data: allProductsData } = useProducts(allProductsParams);
@@ -237,17 +257,8 @@ const UnifiedProductListing = () => {
   let products = (data as ProductsResponse)?.data?.products || [];
   const pagination = (data as ProductsResponse)?.data?.pagination;
 
-  // Filter by sub product type on frontend (if backend doesn't support it yet)
-  if (isApparelsPage && selectedSubProductTypes.length > 0) {
-    products = products.filter(p => {
-      // @ts-ignore - attributes might not be in the type definition
-      const subTypes = p.attributes?.subProductTypes || [];
-      if (!Array.isArray(subTypes)) return false;
-      return selectedSubProductTypes.some(selectedSpt => 
-        subTypes.some((st: string) => st?.toLowerCase().replace(/\s+/g, '-') === selectedSpt)
-      );
-    });
-  }
+  // Note: Sub product type filtering is now handled by the backend apparels endpoint
+  // No need for client-side filtering anymore
 
   // Track bike page view
   useEffect(() => {
@@ -366,45 +377,74 @@ const UnifiedProductListing = () => {
     return [];
   }, [model, isBikePage, isAccessoryPage, isApparelsPage, allProducts]);
 
-  // Get available sub product types for selected product type (for apparels)
-  // Use the config file mapping for sub product types
+  // Fetch sub product types from API
+  const { data: subProductTypesData } = useSubProductTypesByProductType(
+    isApparelsPage && selectedProductTypes.length > 0 ? selectedProductTypes : undefined
+  );
+  
+  const { data: allSubProductTypesData } = useAllSubProductTypesForApparels();
+
+  // Get available sub product types for apparels
+  // Use API to fetch sub product types
   const availableSubProductTypes = useMemo(() => {
-    if (!isApparelsPage || selectedProductTypes.length === 0) {
+    if (!isApparelsPage) {
       return [];
     }
 
-    // Import the sub product types config (we'll need to import it)
-    // For now, get from products that match the selected product types
-    const matchingProducts = allProducts.filter(p => {
-      if (!p.productType) return false;
-      const ptSlug = typeof p.productType === 'string' 
-        ? p.productType.toLowerCase().replace(/\s+/g, '-')
-        : p.productType?.toLowerCase().replace(/\s+/g, '-') || '';
-      return selectedProductTypes.includes(ptSlug);
-    });
+    // If product types are selected, show sub types for those product types only
+    if (selectedProductTypes.length > 0) {
+      if (subProductTypesData?.data?.subProductTypes) {
+        // Convert API sub product types to ProductTypeOption format
+        const apiSubProductTypes = subProductTypesData.data.subProductTypes
+          .filter(spt => spt.isActive)
+          .map(convertSubToProductTypeOption);
 
-    // Extract sub product types from attributes.subProductTypes
-    const subProductTypesSet = new Set<string>();
-    matchingProducts.forEach(p => {
-      // @ts-ignore - attributes might not be in the type definition
-      const subTypes = p.attributes?.subProductTypes;
-      if (Array.isArray(subTypes)) {
-        subTypes.forEach((st: string) => {
-          if (st) {
-            subProductTypesSet.add(st);
+        // Also get from actual products to show only those that exist
+        const matchingProducts = allProducts.filter(p => {
+          if (!p.productType) return false;
+          const ptSlug = typeof p.productType === 'string' 
+            ? p.productType.toLowerCase().replace(/\s+/g, '-')
+            : p.productType?.toLowerCase().replace(/\s+/g, '-') || '';
+          return selectedProductTypes.includes(ptSlug);
+        });
+
+        // Extract sub product types from attributes.subProductTypes
+        const subProductTypesSet = new Set<string>();
+        matchingProducts.forEach(p => {
+          // @ts-ignore - attributes might not be in the type definition
+          const subTypes = p.attributes?.subProductTypes;
+          if (Array.isArray(subTypes)) {
+            subTypes.forEach((st: string) => {
+              if (st) {
+                subProductTypesSet.add(st.toLowerCase().replace(/\s+/g, '-'));
+              }
+            });
           }
         });
-      }
-    });
 
-    // Convert to array and format
-    return Array.from(subProductTypesSet)
-      .map(st => ({
-        name: formatTitle(st),
-        slug: st.toLowerCase().replace(/\s+/g, '-')
-      }))
-      .sort((a, b) => a.name.localeCompare(b.name));
-  }, [isApparelsPage, selectedProductTypes, allProducts]);
+        // Filter API sub types to only show those that exist in products
+        const filteredSubTypes = apiSubProductTypes.filter(apiSpt => 
+          subProductTypesSet.has(apiSpt.slug)
+        );
+
+        return filteredSubTypes.length > 0 ? filteredSubTypes : apiSubProductTypes;
+      }
+      
+      // Fallback: return empty array if API data not available yet
+      return [];
+    }
+
+    // If no product types selected, show all sub product types from API
+    if (allSubProductTypesData?.data?.subProductTypes) {
+      return allSubProductTypesData.data.subProductTypes
+        .filter(spt => spt.isActive)
+        .map(convertSubToProductTypeOption)
+        .sort((a, b) => (a.name || a.label).localeCompare(b.name || b.label));
+    }
+
+    // Fallback: return empty array if API data not available yet
+    return [];
+  }, [isApparelsPage, selectedProductTypes, allProducts, subProductTypesData, allSubProductTypesData]);
 
   // Clear sub product types when product type changes (for apparels)
   useEffect(() => {
@@ -432,6 +472,12 @@ const UnifiedProductListing = () => {
       setSearchParams(params, { replace: true });
     }
   }, [selectedProductTypes, availableSubProductTypes, isApparelsPage, selectedSubProductTypes, searchParams, setSearchParams]);
+
+  // Fetch product types from API for apparels page
+  const { data: productTypesData } = useProductTypesByCategory(
+    isApparelsPage ? 'apparels' : undefined,
+    false
+  );
 
   const availableProductTypes = useMemo(() => {
     // For bike pages, filter by model compatibility
@@ -464,6 +510,42 @@ const UnifiedProductListing = () => {
       return uniqueProductTypes.sort((a, b) => a.name.localeCompare(b.name));
     }
 
+    // For apparels pages, use API to get product types
+    if (isApparelsPage) {
+      if (productTypesData?.data?.productTypes) {
+        // Convert API product types to ProductTypeOption format
+        const apiProductTypes = productTypesData.data.productTypes
+          .filter(pt => pt.isActive)
+          .map(convertToProductTypeOption);
+        
+        // Also get product types from actual products to show only those that exist
+        const productProductTypes = allProducts
+          .filter(p => p.productType)
+          .map(p => {
+            const pt = p.productType;
+            return {
+              name: typeof pt === 'string' ? pt : pt.name || '',
+              slug: typeof pt === 'string' ? pt.toLowerCase().replace(/\s+/g, '-') : pt.slug || pt.name?.toLowerCase().replace(/\s+/g, '-') || ''
+            };
+          })
+          .filter(pt => pt.name && pt.slug);
+
+        const uniqueProductProductTypes = Array.from(
+          new Map(productProductTypes.map(pt => [pt.slug, pt])).values()
+        );
+
+        // Filter API product types to only show those that exist in products
+        const filteredProductTypes = apiProductTypes.filter(apiPt => 
+          uniqueProductProductTypes.some(ppt => ppt.slug === apiPt.slug)
+        );
+
+        return filteredProductTypes.length > 0 ? filteredProductTypes : apiProductTypes;
+      }
+      
+      // Fallback: return empty array if API data not available yet
+      return [];
+    }
+
     // For accessory pages, show all product types from products
     if (isAccessoryPage) {
       const apiProductTypes = allProducts
@@ -485,7 +567,7 @@ const UnifiedProductListing = () => {
     }
 
     return [];
-  }, [model, isBikePage, isAccessoryPage, allProducts]);
+  }, [model, isBikePage, isAccessoryPage, isApparelsPage, allProducts, productTypesData]);
 
   // Handle filter changes
   const updateURL = (newParams: Record<string, string>) => {
@@ -530,6 +612,12 @@ const UnifiedProductListing = () => {
 
   // Generate page title
   const getPageTitle = () => {
+    if (isApparelsPage) {
+      if (selectedProductTypes.length > 0) {
+        return formatTitle(selectedProductTypes[0]);
+      }
+      return 'Apparels';
+    }
     if (model) {
       return formatTitle(model);
     } else if (selectedProductTypes.length > 0) {
@@ -846,8 +934,8 @@ const UnifiedProductListing = () => {
                 </div>
               )}
 
-              {/* Product Type Filter - For both Bike and Accessory Pages - Multi-select */}
-              {availableProductTypes.length > 0 && (
+              {/* Product Type Filter - For Apparels, Bike, and Accessory Pages - Multi-select */}
+              {(isApparelsPage || availableProductTypes.length > 0) && (
                 <div className="space-y-2">
                   <label className="block text-xs sm:text-sm font-medium text-foreground mb-1.5 sm:mb-2">Product Type</label>
                   <Popover>
@@ -861,7 +949,9 @@ const UnifiedProductListing = () => {
                           {selectedProductTypes.length === 0
                             ? 'All Product Types'
                             : selectedProductTypes.length === 1
-                            ? availableProductTypes.find(pt => pt.slug === selectedProductTypes[0])?.name || 'Selected'
+                            ? (isApparelsPage 
+                                ? availableProductTypes.find(pt => pt.slug === selectedProductTypes[0])?.name || availableProductTypes.find(pt => pt.slug === selectedProductTypes[0])?.label || 'Selected'
+                                : availableProductTypes.find(pt => pt.slug === selectedProductTypes[0])?.name || 'Selected')
                             : `${selectedProductTypes.length} product types selected`}
                         </span>
                         <ChevronDown className="ml-2 h-3 w-3 sm:h-4 sm:w-4 shrink-0 opacity-50" />
@@ -914,6 +1004,7 @@ const UnifiedProductListing = () => {
                                   
                                   if (newSelection.length === 0) {
                                     params.delete('productType');
+                                    params.delete('subProductType'); // Clear sub product type when clearing all product types
                                   } else {
                                     params.set('productType', newSelection.join(','));
                                   }
@@ -932,6 +1023,7 @@ const UnifiedProductListing = () => {
                                     
                                     if (newSelection.length === 0) {
                                       params.delete('productType');
+                                      params.delete('subProductType'); // Clear sub product type when clearing all product types
                                     } else {
                                       params.set('productType', newSelection.join(','));
                                     }
@@ -975,6 +1067,7 @@ const UnifiedProductListing = () => {
                                 const newSelection = selectedProductTypes.filter(p => p !== ptSlug);
                                 if (newSelection.length === 0) {
                                   params.delete('productType');
+                                  params.delete('subProductType'); // Clear sub product type when clearing all product types
                                 } else {
                                   params.set('productType', newSelection.join(','));
                                 }
@@ -993,9 +1086,9 @@ const UnifiedProductListing = () => {
                 </div>
               )}
 
-              {/* Sub Product Type Filter - Only for Apparels when Product Type is selected */}
-              {isApparelsPage && selectedProductTypes.length > 0 && availableSubProductTypes.length > 0 && (
-                <div>
+              {/* Sub Product Type Filter - For Apparels (show all or filtered by selected product types) */}
+              {isApparelsPage && availableSubProductTypes.length > 0 && (
+                <div className="space-y-2">
                   <label className="block text-xs sm:text-sm font-medium text-foreground mb-1.5 sm:mb-2">Sub Product Type</label>
                   <Popover>
                     <PopoverTrigger asChild>
@@ -1012,67 +1105,105 @@ const UnifiedProductListing = () => {
                         <ChevronDown className="ml-2 h-3 w-3 sm:h-4 sm:w-4 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-full p-0" align="start">
-                      <Command>
-                        <CommandInput placeholder="Search sub product types..." />
-                        <CommandEmpty>No sub product types found.</CommandEmpty>
-                        <CommandGroup>
-                          <CommandItem
-                            onSelect={() => {
-                              const params = new URLSearchParams(searchParams);
-                              params.delete('subProductType');
-                              params.delete('page');
-                              setSearchParams(params, { replace: true });
-                            }}
-                          >
-                            <Checkbox
-                              checked={selectedSubProductTypes.length === 0}
-                              className="mr-2"
-                            />
-                            All Sub Types
-                          </CommandItem>
-                          {availableSubProductTypes.map((spt) => (
-                            <CommandItem
-                              key={spt.slug}
-                              onSelect={() => {
+                    <PopoverContent className="w-[300px] p-0" align="start">
+                      <div className="border-b border-border px-4 py-2.5 bg-muted/50 sticky top-0 z-10">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-sm font-semibold text-foreground">
+                            Select Sub Product Types
+                          </h3>
+                          {selectedSubProductTypes.length > 0 && (
+                            <button
+                              onClick={() => {
                                 const params = new URLSearchParams(searchParams);
-                                const current = selectedSubProductTypes;
-                                const newSelection = current.includes(spt.slug)
-                                  ? current.filter(s => s !== spt.slug)
-                                  : [...current, spt.slug];
-                                
-                                if (newSelection.length === 0) {
-                                  params.delete('subProductType');
-                                } else {
-                                  params.set('subProductType', newSelection.join(','));
-                                }
+                                params.delete('subProductType');
                                 params.delete('page');
                                 setSearchParams(params, { replace: true });
                               }}
+                              className="text-xs text-primary hover:text-primary/80"
                             >
-                              <Checkbox
-                                checked={selectedSubProductTypes.includes(spt.slug)}
-                                className="mr-2"
-                              />
-                              {spt.name}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </Command>
+                              Clear all
+                            </button>
+                          )}
+                        </div>
+                        {/* Search input for sub product types */}
+                        <div className="relative mt-2">
+                          <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            placeholder="Search sub product types..."
+                            className="pl-8 h-8 text-sm"
+                            // TODO: Add search functionality if needed
+                          />
+                        </div>
+                      </div>
+                      <div className="max-h-[300px] overflow-y-auto p-2">
+                        <div className="space-y-1">
+                          {availableSubProductTypes.map((spt) => {
+                            const isSelected = selectedSubProductTypes.includes(spt.slug);
+                            return (
+                              <div
+                                key={spt.slug}
+                                className="flex items-center space-x-2 px-2 py-1.5 rounded hover:bg-accent cursor-pointer"
+                                onClick={() => {
+                                  const params = new URLSearchParams(searchParams);
+                                  const current = selectedSubProductTypes;
+                                  const newSelection = current.includes(spt.slug)
+                                    ? current.filter(s => s !== spt.slug)
+                                    : [...current, spt.slug];
+                                  
+                                  if (newSelection.length === 0) {
+                                    params.delete('subProductType');
+                                  } else {
+                                    params.set('subProductType', newSelection.join(','));
+                                  }
+                                  params.delete('page');
+                                  setSearchParams(params, { replace: true });
+                                }}
+                              >
+                                <Checkbox
+                                  checked={isSelected}
+                                  onCheckedChange={() => {
+                                    const params = new URLSearchParams(searchParams);
+                                    const current = selectedSubProductTypes;
+                                    const newSelection = current.includes(spt.slug)
+                                      ? current.filter(s => s !== spt.slug)
+                                      : [...current, spt.slug];
+                                    
+                                    if (newSelection.length === 0) {
+                                      params.delete('subProductType');
+                                    } else {
+                                      params.set('subProductType', newSelection.join(','));
+                                    }
+                                    params.delete('page');
+                                    setSearchParams(params, { replace: true });
+                                  }}
+                                />
+                                <label
+                                  className="flex-1 text-sm font-medium leading-none cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  {spt.name}
+                                </label>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        {availableSubProductTypes.length === 0 && (
+                          <div className="text-center py-8 text-sm text-muted-foreground">
+                            No sub product types available
+                          </div>
+                        )}
+                      </div>
                     </PopoverContent>
                   </Popover>
+                  {/* Show selected sub product types as badges */}
                   {selectedSubProductTypes.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-2">
+                    <div className="flex flex-wrap gap-1 mt-2">
                       {selectedSubProductTypes.map(slug => {
                         const spt = availableSubProductTypes.find(s => s.slug === slug);
                         return (
-                          <Badge key={slug} variant="secondary" className="gap-1">
+                          <Badge key={slug} variant="secondary" className="text-xs">
                             {spt?.name || slug}
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="sm"
-                              className="h-auto p-0 ml-1 hover:bg-transparent"
+                            <button
                               onClick={() => {
                                 const params = new URLSearchParams(searchParams);
                                 const current = selectedSubProductTypes.filter(s => s !== slug);
@@ -1084,9 +1215,10 @@ const UnifiedProductListing = () => {
                                 params.delete('page');
                                 setSearchParams(params, { replace: true });
                               }}
+                              className="ml-1 hover:text-destructive"
                             >
-                              <X className="w-3 h-3" />
-                            </Button>
+                              <X className="h-3 w-3" />
+                            </button>
                           </Badge>
                         );
                       })}

@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import { Loader2, ChevronRight, ChevronDown } from "lucide-react";
+import { Loader2, ChevronRight } from "lucide-react";
 import { BikeBrandGroup } from "../hooks/useBikesByBrand";
-import { getProductTypesForCategory } from "@/config/productTypes";
-import { useState } from "react";
+import { ProductTypesForCategory } from "./ProductTypesForCategory";
+import { useState, useRef, useEffect } from "react";
 
 interface ShopByBikeDropdownProps {
   bikesByBrand: Record<string, BikeBrandGroup>;
@@ -21,8 +21,79 @@ export const ShopByBikeDropdown = ({
     name: string;
   } | null>(null);
   
+  // Track which bike is "locked" (when user is interacting with accessories)
+  const [lockedBike, setLockedBike] = useState<{
+    id: string;
+    slug: string;
+    name: string;
+  } | null>(null);
+  
   // Track which categories are expanded (using Set for O(1) lookup)
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+  
+  // Use refs to track hover timeout and pending bike
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const pendingBikeRef = useRef<{ id: string; slug: string; name: string } | null>(null);
+  
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, []);
+  
+  const handleBikeHover = (bike: { id: string; slug: string; name: string }) => {
+    // If a bike is locked, don't change it
+    if (lockedBike) {
+      return;
+    }
+    
+    // Store the pending bike
+    pendingBikeRef.current = bike;
+    
+    // Clear any existing timeout
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    
+    // Set a delay before switching (200ms)
+    hoverTimeoutRef.current = setTimeout(() => {
+      // Only update if the pending bike hasn't changed
+      if (pendingBikeRef.current === bike && !lockedBike) {
+        setHoveredBike(bike);
+      }
+      hoverTimeoutRef.current = null;
+    }, 200);
+  };
+  
+  const handleBikeLeave = () => {
+    // Clear pending bike when leaving
+    pendingBikeRef.current = null;
+    // Don't clear the timeout - let it complete if user is moving to accessories
+  };
+  
+  const handleAccessoriesEnter = () => {
+    // Lock the current hovered bike when entering accessories area
+    if (hoveredBike) {
+      setLockedBike(hoveredBike);
+    }
+    // Clear any pending hover changes
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
+    pendingBikeRef.current = null;
+  };
+  
+  const handleAccessoriesLeave = () => {
+    // Unlock when leaving accessories area
+    setLockedBike(null);
+  };
+  
+  // Use locked bike if available, otherwise use hovered bike
+  const activeBike = lockedBike || hoveredBike;
   
   const toggleCategory = (categorySlug: string) => {
     setExpandedCategories(prev => {
@@ -63,12 +134,15 @@ export const ShopByBikeDropdown = ({
                   .map((bike) => (
                     <div
                       key={bike.id}
-                      onMouseEnter={() => setHoveredBike(bike)}
+                      onMouseEnter={() => handleBikeHover(bike)}
+                      onMouseLeave={handleBikeLeave}
                       className="group/bike"
                     >
                       <Link
                         to={`/collections/bikes/${bike.slug}`}
-                        className="block text-sm text-popover-foreground hover:text-primary transition-colors py-1 px-2 rounded truncate flex items-center justify-between"
+                        className={`block text-sm text-popover-foreground hover:text-primary transition-colors py-1 px-2 rounded truncate flex items-center justify-between ${
+                          activeBike?.id === bike.id ? 'text-primary font-medium' : ''
+                        }`}
                         title={bike.name}
                       >
                         <span>{bike.name}</span>
@@ -83,12 +157,16 @@ export const ShopByBikeDropdown = ({
       </div>
 
       {/* Right side: Accessories for hovered bike - STICKY */}
-      <div className="flex-1 p-4 sticky top-0 self-start max-h-[70vh] overflow-y-auto">
-        {hoveredBike ? (
+      <div 
+        className="flex-1 p-4 sticky top-0 self-start max-h-[70vh] overflow-y-auto"
+        onMouseEnter={handleAccessoriesEnter}
+        onMouseLeave={handleAccessoriesLeave}
+      >
+        {activeBike ? (
           <div className="space-y-4">
             <div className="pb-3 border-b border-border sticky top-0 bg-popover z-10">
               <h3 className="font-bold text-lg text-foreground">
-                {hoveredBike.name}
+                {activeBike.name}
               </h3>
               <p className="text-xs text-muted-foreground mt-1">
                 Select accessory category
@@ -97,58 +175,16 @@ export const ShopByBikeDropdown = ({
 
             <div className="grid grid-cols-2 gap-3">
               {accessoryCategories.map((category) => {
-                const productTypes = getProductTypesForCategory(category.slug);
                 const isExpanded = expandedCategories.has(category.slug);
-                const displayCount = isExpanded ? productTypes.length : 3;
-                const hasMore = productTypes.length > 3;
                 
                 return (
-                  <div
+                  <ProductTypesForCategory
                     key={category.slug}
-                    className="group/category p-3 border border-border rounded-lg"
-                  >
-                    <Link
-                      to={`/collections/bikes/${hoveredBike.slug}?category=${category.slug}`}
-                      className="block font-semibold text-sm text-primary hover:text-primary/80 transition-colors mb-2"
-                    >
-                      {category.name}
-                    </Link>
-                    {productTypes.length > 0 && (
-                      <div className="space-y-1">
-                        {productTypes.slice(0, displayCount).map((productType) => (
-                          <Link
-                            key={productType.slug}
-                            to={`/collections/bikes/${hoveredBike.slug}?category=${category.slug}&productType=${productType.slug}`}
-                            className="block text-xs text-muted-foreground hover:text-primary transition-colors"
-                          >
-                            • {productType.label}
-                          </Link>
-                        ))}
-                        {hasMore && (
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              toggleCategory(category.slug);
-                            }}
-                            className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors w-full text-left"
-                          >
-                            {isExpanded ? (
-                              <>
-                                <ChevronDown className="h-3 w-3 rotate-180 transition-transform" />
-                                Show less
-                              </>
-                            ) : (
-                              <>
-                                <ChevronDown className="h-3 w-3 transition-transform" />
-                                + {productTypes.length - 3} more
-                              </>
-                            )}
-                          </button>
-                        )}
-                      </div>
-                    )}
-                  </div>
+                    category={category}
+                    bikeSlug={activeBike.slug}
+                    isExpanded={isExpanded}
+                    onToggle={() => toggleCategory(category.slug)}
+                  />
                 );
               })}
             </div>
